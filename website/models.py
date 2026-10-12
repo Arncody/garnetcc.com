@@ -391,7 +391,7 @@ class ProjectImage(models.Model):
 
     def __str__(self):
         return f"تصویر {self.order} - {self.project.title}"
-
+#aaaajj
 
 class PhilosophyFeature(models.Model):
     """ویژگی‌های بخش «فلسفه طراحی و اصالت ساخت» (کارت‌های سه‌گانه)."""
