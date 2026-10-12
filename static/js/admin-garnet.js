@@ -1,0 +1,1 @@
+document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('.fieldBox img').forEach(i=>{i.style.maxWidth='220px';i.style.maxHeight='140px';i.style.objectFit='cover';i.style.borderRadius='12px';i.style.boxShadow='0 8px 24px rgba(7,29,43,.12)'});});

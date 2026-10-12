@@ -1,0 +1,32 @@
+{% extends "website/base.html" %}
+{% block title %}{% if is_en %}Projects{% else %}پروژه‌ها{% endif %} | {{ site_settings.brand_name }}{% endblock %}
+{% block content %}
+<section class="section section-light page-compact projects-page">
+  <div class="container">
+    <div class="compact-heading">
+      <div><span class="eyebrow">{% if is_en %}GARNET PROJECTS{% else %}پروژه‌های گارنت{% endif %}</span><h1>{% if is_en %}Projects{% else %}پروژه‌ها{% endif %}</h1></div>
+    </div>
+
+    <nav class="projects-tabs" aria-label="{% if is_en %}Project groups{% else %}دسته‌بندی پروژه‌ها{% endif %}">
+      <a href="#ongoing"><i class="tab-dot tab-ongoing"></i>{% if is_en %}In progress{% else %}در حال اجرا{% endif %}<b>{{ ongoing_projects|length }}</b></a>
+      <a href="#completed"><i class="tab-dot tab-completed"></i>{% if is_en %}Completed{% else %}اتمام شده{% endif %}<b>{{ completed_projects|length }}</b></a>
+    </nav>
+
+    <div class="projects-block" id="ongoing">
+      <div class="projects-block-head"><h2>{% if is_en %}In progress{% else %}پروژه‌های در حال اجرا{% endif %}</h2></div>
+      <div class="cards-grid">
+        {% for project in ongoing_projects %}{% include "website/_project_card.html" with project=project %}
+        {% empty %}<p class="empty-state">{% if is_en %}No projects in progress yet.{% else %}فعلاً پروژه در حال اجرایی ثبت نشده است.{% endif %}</p>{% endfor %}
+      </div>
+    </div>
+
+    <div class="projects-block" id="completed">
+      <div class="projects-block-head"><h2>{% if is_en %}Completed projects{% else %}پروژه‌های اتمام شده{% endif %}</h2></div>
+      <div class="cards-grid">
+        {% for project in completed_projects %}{% include "website/_project_card.html" with project=project %}
+        {% empty %}<p class="empty-state">{% if is_en %}No completed projects yet.{% else %}فعلاً پروژه اتمام‌شده‌ای ثبت نشده است.{% endif %}</p>{% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

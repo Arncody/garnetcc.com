@@ -1,0 +1,87 @@
+{% extends "website/base.html" %}
+{% block title %}{% if is_en %}{{ project.title_en|default:project.title }}{% else %}{{ project.title }}{% endif %} | {{ site_settings.brand_name }}{% endblock %}
+{% block meta_description %}{% if is_en %}{{ project.short_description_en|default:project.short_description }}{% else %}{{ project.short_description }}{% endif %}{% endblock %}
+{% block content %}
+{% with cover=project.cover_image %}
+<section class="pd-hero" id="project-top">
+  {% if cover %}<div class="hero-backdrop pd-backdrop" style="background-image:url('{{ cover.url }}')" role="img" aria-label="{{ project.title }}"></div>{% else %}<div class="hero-backdrop hero-fallback"></div>{% endif %}
+  <div class="container pd-hero-inner">
+    <div class="pd-copy">
+      {% if project.location or project.location_en %}<span class="pd-loc">{% if is_en %}{{ project.location_en|default:project.location }}{% else %}{{ project.location }}{% endif %}</span>{% endif %}
+      <h1>{% if is_en %}{{ project.title_en|default:project.title }}{% else %}{{ project.title }}{% endif %}</h1>
+      {% if project.short_description or project.short_description_en %}<p class="pd-lead">{% if is_en %}{{ project.short_description_en|default:project.short_description }}{% else %}{{ project.short_description }}{% endif %}</p>{% endif %}
+      <ul class="pd-chips">
+        {% if project.code %}<li><span>{% if is_en %}Code{% else %}کد{% endif %}</span><strong>{{ project.code }}</strong></li>{% endif %}
+        <li class="pd-chip-status pd-st-{{ project.status }}"><i aria-hidden="true"></i><span>{% if is_en %}Status{% else %}وضعیت{% endif %}</span><strong>{% if is_en %}{% if project.status == "completed" %}Completed{% else %}In progress{% endif %}{% else %}{{ project.get_status_display }}{% endif %}</strong></li>
+        {% if project.year %}<li><span>{% if is_en %}Year{% else %}سال{% endif %}</span><strong>{{ project.year }}</strong></li>{% endif %}
+      </ul>
+      <div class="pd-actions">
+        <button type="button" class="pd-btn pd-btn-primary" data-consult-open><span class="pd-btn-label">{% if is_en %}Request consultation{% else %}درخواست مشاوره{% endif %}</span><span class="pd-btn-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 15a2 2 0 0 1-2 2H9l-4 3v-3H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/><path d="M8.5 9.5h7M8.5 12.5h4"/></svg></span></button>
+        {% if gallery %}<a href="#project-gallery" class="pd-btn pd-btn-glass"><span class="pd-btn-label">{% if is_en %}Gallery{% else %}گالری تصاویر{% endif %}</span><span class="pd-btn-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.6"/><path d="m4 17 5-4.5 3.5 3L16 12l4 4"/></svg></span></a>{% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endwith %}
+
+<section class="section section-light pd-body">
+  <div class="container pd-grid">
+    <div class="pd-story">
+      <span class="eyebrow">{% if is_en %}ABOUT THE PROJECT{% else %}درباره پروژه{% endif %}</span>
+      <h2>{% if is_en %}{{ project.title_en|default:project.title }}{% else %}{{ project.title }}{% endif %}</h2>
+      {% if project.status_note or project.status_note_en %}<p class="pd-note">{% if is_en %}{{ project.status_note_en|default:project.status_note }}{% else %}{{ project.status_note }}{% endif %}</p>{% endif %}
+      <div class="pd-text">{% if is_en %}{{ project.full_description_en|default:project.full_description|linebreaks }}{% else %}{{ project.full_description|default:project.short_description|linebreaks }}{% endif %}</div>
+    </div>
+    <aside class="pd-aside">
+      {% if is_en %}{% with feats=project.features_en %}{% if feats %}<h3>Project information</h3><ul class="pd-features">{% for f in feats %}<li>{{ f }}</li>{% endfor %}</ul>{% endif %}{% endwith %}
+      {% else %}{% with feats=project.features %}{% if feats %}<h3>اطلاعات پروژه</h3><ul class="pd-features">{% for f in feats %}<li>{{ f }}</li>{% endfor %}</ul>{% endif %}{% endwith %}{% endif %}
+      <button type="button" class="btn btn-primary btn-sm pd-cta" data-consult-open>{% if is_en %}{{ project.cta_text_en|default:"Request consultation" }}{% else %}{{ project.cta_text|default:"درخواست مشاوره" }}{% endif %}</button>
+    </aside>
+  </div>
+
+  {% if gallery %}
+  <div class="container pd-gallery-wrap" id="project-gallery">
+    <div class="compact-heading"><div><span class="eyebrow">{% if is_en %}GALLERY{% else %}گالری{% endif %}</span><h2>{% if is_en %}Project gallery{% else %}گالری تصاویر پروژه{% endif %}</h2></div></div>
+    <div class="pd-gallery">
+      {% for image in gallery %}
+      <figure>
+        <button type="button" class="pd-zoom" data-full="{{ image.image.url }}" data-caption="{% if is_en %}{{ image.caption_en|default:image.caption }}{% else %}{{ image.caption }}{% endif %}" aria-label="{% if is_en %}Enlarge image{% else %}بزرگ‌نمایی تصویر{% endif %}">
+          <img src="{{ image.image.url }}" alt="{% if is_en %}{{ image.caption_en|default:image.caption|default:project.title }}{% else %}{{ image.caption|default:project.title }}{% endif %}" loading="lazy" draggable="false">
+        </button>
+        {% if image.caption or image.caption_en %}<figcaption>{% if is_en %}{{ image.caption_en|default:image.caption }}{% else %}{{ image.caption }}{% endif %}</figcaption>{% endif %}
+      </figure>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if related_projects %}
+  <div class="container pd-related">
+    <div class="compact-heading"><div><span class="eyebrow">{% if is_en %}MORE FROM GARNET{% else %}پروژه‌های دیگر{% endif %}</span><h2>{% if is_en %}Explore other projects{% else %}پروژه‌های دیگر گارنت{% endif %}</h2></div></div>
+    <div class="showcase-strip">
+      {% for item in related_projects %}
+      {% include "website/_project_card.html" with project=item %}
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</section>
+
+<dialog class="pd-lightbox" id="pdLightbox" aria-label="{% if is_en %}Image viewer{% else %}نمایش تصویر{% endif %}">
+  <button type="button" class="pd-lightbox-close" aria-label="{% if is_en %}Close{% else %}بستن{% endif %}">×</button>
+  <img alt="" src="">
+  <p></p>
+</dialog>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+(function(){
+  var box=document.getElementById('pdLightbox'); if(!box||!box.showModal) return;
+  var img=box.querySelector('img'), cap=box.querySelector('p');
+  document.querySelectorAll('.pd-zoom').forEach(function(b){
+    b.addEventListener('click',function(){img.src=b.dataset.full;cap.textContent=b.dataset.caption||'';box.showModal();});
+  });
+  box.addEventListener('click',function(e){ if(e.target===box||e.target.classList.contains('pd-lightbox-close')) box.close(); });
+})();
+</script>
+{% endblock %}

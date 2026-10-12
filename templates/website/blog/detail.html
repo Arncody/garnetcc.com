@@ -1,0 +1,13 @@
+{% extends "website/base.html" %}{% load site_dates %}
+{% block title %}{% if is_en %}{{ post.seo_title_en|default:post.title_en|default:post.title }}{% else %}{{ post.seo_title|default:post.title }}{% endif %}{% endblock %}
+{% block meta_description %}{% if is_en %}{{ post.seo_description_en|default:post.excerpt_en|default:post.excerpt }}{% else %}{{ post.seo_description|default:post.excerpt }}{% endif %}{% endblock %}
+{% block content %}
+<section class="section section-light page-compact">
+<div class="container article-shell">
+{% if post.cover %}<img class="article-cover" src="{{ post.cover.url }}" alt="{{ post.title }}">{% endif %}
+<span class="eyebrow">{% if is_en %}{{ post.category_en|default:post.category }}{% else %}{{ post.category }}{% endif %}</span>
+<h1>{% if is_en %}{{ post.title_en|default:post.title }}{% else %}{{ post.title }}{% endif %}</h1>
+<p class="article-meta"><span>{% if is_en %}Published{% else %}زمان انتشار{% endif %}:</span> <time datetime="{{ post.display_date|date:'c' }}">{{ post.display_date|site_datetime:lang }}</time></p>
+<div class="article-content">{% if is_en %}{{ post.content_en|default:post.content|linebreaks }}{% else %}{{ post.content|linebreaks }}{% endif %}</div>
+</div></section>
+{% endblock %}
