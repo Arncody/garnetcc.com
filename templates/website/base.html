@@ -34,7 +34,7 @@ small,.small{font-weight:var(--small-weight)}
 .site-header{border-radius:0}
 {% if site_theme.custom_css %}{{ site_theme.custom_css|safe }}{% endif %}
 </style>
-<link rel="stylesheet" href="{% static 'css/consult-modal-fix.css' %}?v=20261013-rootfix">
+<link rel="stylesheet" href="{% static 'css/consult-modal-fix.css' %}?v=20261013-statefix">
 {% block extra_head %}{% endblock %}
 </head>
 <body class="site-shell">
@@ -113,6 +113,6 @@ small,.small{font-weight:var(--small-weight)}
   </div>
   <div class="container footer-bottom"><span>© {% now "Y" %} {{ site_settings.brand_name }}. {% if is_en %}All rights reserved.{% else %}تمامی حقوق محفوظ است.{% endif %}</span><a href="#main-content">{% if is_en %}Back to top ↑{% else %}بازگشت به بالا ↑{% endif %}</a></div>
 </footer>
-<script src="{% static 'js/main.js' %}?v=20261013-rootfix" defer></script>
+<script src="{% static 'js/main.js' %}?v=20261013-statefix" defer></script>
 {% block extra_scripts %}{% endblock %}
 </body></html>
