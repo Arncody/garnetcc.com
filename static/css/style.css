@@ -1342,30 +1342,39 @@ html[dir="rtl"] .more-btn em svg{transform:scaleX(-1)}
   .home-cards .mini-project.project-preview.post-preview{flex:0 0 min(64vw,270px)!important;aspect-ratio:1/1!important;min-height:0}
 }
 
-/* V18 — iPhone/Safari fix: consultation dialog rendered as an empty strip.
-   Cause: stacked backdrop-filter blur (dialog + ::backdrop) over the hero media and
-   percentage/svh heights inside <dialog>. Mobile only; desktop is unchanged. */
+/* V19 — iPhone/Safari fix: consultation dialog collapsed into a thin strip.
+   Cause: the dialog used height:auto + align-self:center + height:100% on the inner box,
+   which WebKit resolves to ~0 for a centered <dialog>. Fix: on mobile the dialog gets an
+   explicit top/bottom box (no auto/percent/svh heights) and the inner box scrolls inside it.
+   Mobile only (<=800px); desktop is unchanged. */
 @media (max-width:800px){
   .consult-modal{
+    position:fixed!important;
+    top:10px!important;right:10px!important;bottom:10px!important;left:10px!important;
+    width:auto!important;
+    max-width:760px!important;
+    height:auto!important;
+    max-height:none!important;
+    margin:0 auto!important;
+    align-self:auto!important;
+    justify-self:auto!important;
+    transform:none!important;
+    padding:0!important;
+    overflow:hidden!important;
     -webkit-backdrop-filter:none!important;
     backdrop-filter:none!important;
     isolation:auto!important;
     background:rgba(248,249,248,.98)!important;
     background-color:rgba(248,249,248,.98)!important;
-    height:auto!important;
-    max-height:calc(100vh - 20px)!important;
-    max-height:calc(var(--app-vh,1vh)*100 - 20px)!important;
-    overflow:hidden!important;
   }
-  .consult-modal[open]{display:flex!important;flex-direction:column}
   .consult-modal::backdrop{
     -webkit-backdrop-filter:none!important;
     backdrop-filter:none!important;
     background:rgba(7,29,43,.62)!important;
   }
   .consult-modal-inner{
-    flex:1 1 auto;
-    min-height:0;
+    position:absolute!important;
+    top:0!important;right:0!important;bottom:0!important;left:0!important;
     height:auto!important;
     max-height:none!important;
     overflow-y:auto!important;
@@ -1374,4 +1383,16 @@ html[dir="rtl"] .more-btn em svg{transform:scaleX(-1)}
     background:transparent!important;
     isolation:auto!important;
   }
+}
+@media (max-width:520px){
+  .consult-modal{top:6px!important;right:6px!important;bottom:6px!important;left:6px!important}
+}
+
+/* V19b — safety nets for every iOS/Safari version */
+/* Browsers without <dialog> support (iOS < 15.4) never hide a closed dialog by themselves. */
+.consult-modal:not([open]){display:none!important}
+/* Self-healing mode (enabled by main.js only if the dialog collapses): plain fixed overlay. */
+.consult-modal.is-fallback{
+  z-index:2000!important;
+  box-shadow:0 0 0 100vmax rgba(7,29,43,.62)!important;
 }

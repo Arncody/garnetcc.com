@@ -69,12 +69,22 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       modal.setAttribute('open', '');
     }
+    // Safety net: if a browser still collapses the dialog on phones, switch to a plain fixed overlay.
+    window.setTimeout(() => {
+      if (!modal.open || window.innerWidth > 800) return;
+      if (modal.getBoundingClientRect().height < window.innerHeight * 0.4) {
+        modal.classList.add('is-fallback');
+        if (typeof modal.close === 'function') modal.close();
+        modal.setAttribute('open', '');
+      }
+    }, 150);
     window.setTimeout(() => modal.querySelector('input:not([type="hidden"]):not([name="gender"])')?.focus(), 80);
   };
 
   const closeModal = () => {
     if (typeof modal.close === 'function' && modal.open) modal.close();
     else modal.removeAttribute('open');
+    modal.classList.remove('is-fallback');
     document.body.classList.remove('modal-open');
   };
 
