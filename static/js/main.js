@@ -51,6 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const modal = document.getElementById('consultModal');
   if (!modal) return;
+  // Keep the overlay outside any transformed/filtered site containers.
+  if (modal.parentElement !== document.body) document.body.appendChild(modal);
 
   const openers = document.querySelectorAll('[data-consult-open]');
   const closer = modal.querySelector('[data-consult-close]');
@@ -74,9 +76,8 @@ document.addEventListener('DOMContentLoaded', () => {
     previousFocus = document.activeElement;
     lockedScrollY = window.scrollY;
     updateViewport();
-    document.body.style.position = 'fixed';
-    document.body.style.top = `-${lockedScrollY}px`;
-    document.body.style.width = '100%';
+    document.documentElement.classList.add('consult-scroll-locked');
+    document.body.style.overflow = 'hidden';
     document.body.classList.add('modal-open');
     modal.hidden = false;
     modal.classList.add('is-open');
@@ -85,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.setAttribute('aria-hidden', 'false');
     modalScroll.scrollTop = 0;
     // Focus the container rather than an input: prevent Safari keyboard/viewport jumps.
-    modal.focus({preventScroll: true});
+    try { modal.focus({preventScroll: true}); } catch (_) { modal.focus(); }
   };
   const closeModal = () => {
     if (!modal.classList.contains('is-open')) return;
@@ -96,9 +97,8 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.style.pointerEvents = '';
     modal.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('modal-open');
-    document.body.style.position = '';
-    document.body.style.top = '';
-    document.body.style.width = '';
+    document.documentElement.classList.remove('consult-scroll-locked');
+    document.body.style.overflow = '';
     window.scrollTo(0, lockedScrollY);
     if (previousFocus && previousFocus.isConnected) previousFocus.focus({preventScroll:true});
   };
@@ -129,6 +129,9 @@ document.addEventListener('DOMContentLoaded', () => {
   modal.classList.remove('is-open');
   modal.hidden = true;
   modal.setAttribute('aria-hidden', 'true');
+
+  // Server-side validation errors keep the user inside the form.
+  if (modal.dataset.autoOpen === 'true' || modal.classList.contains('has-form-errors')) openModal();
 
   // Friendly client-side validation: no page navigation and errors stay beside the field.
   if (form) {

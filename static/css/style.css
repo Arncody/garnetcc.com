@@ -1398,3 +1398,26 @@ html[dir="rtl"] .more-btn em svg{transform:scaleX(-1)}
 /* Open-state must override legacy hidden-state rules. */
 #consultModal.is-open:not([hidden]) {display:flex!important;visibility:visible!important;pointer-events:auto!important;opacity:1!important;}
 #consultModal.is-open:not([hidden]) .consult-modal-inner {visibility:visible!important;opacity:1!important;}
+
+/* V3: deterministic overlay placement, independent of old dialog CSS. */
+html.consult-scroll-locked{overflow:hidden!important}
+#consultModal[hidden]{display:none!important}
+#consultModal.is-open:not([hidden]){
+ display:flex!important; position:fixed!important; inset:0 auto auto 0!important;
+ top:var(--consult-viewport-top,0px)!important; left:0!important; right:auto!important; bottom:auto!important;
+ width:100vw!important; height:var(--consult-viewport-height,100dvh)!important;
+ max-width:none!important; max-height:none!important; min-width:0!important; min-height:0!important;
+ margin:0!important; padding:12px!important; box-sizing:border-box!important;
+ border:0!important; border-radius:0!important; transform:none!important;
+ display:flex!important; align-items:center!important; justify-content:center!important;
+ overflow:hidden!important; visibility:visible!important; opacity:1!important; pointer-events:auto!important;
+ z-index:2147483647!important; background:rgba(7,29,43,.48)!important;
+}
+#consultModal.is-open:not([hidden])>.consult-modal-inner{
+ display:block!important; position:relative!important; flex:0 1 760px!important;
+ width:100%!important; height:auto!important; max-height:100%!important; min-height:0!important;
+ margin:0!important; overflow-y:auto!important; overflow-x:hidden!important;
+ visibility:visible!important; opacity:1!important; transform:none!important;
+}
+@media(max-width:800px){#consultModal.is-open:not([hidden]){padding:10px!important}}
+@media(max-width:520px){#consultModal.is-open:not([hidden]){padding:6px!important}}

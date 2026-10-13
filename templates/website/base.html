@@ -7,7 +7,13 @@
 <meta name="description" content="{% block meta_description %}{{ site_settings.meta_description }}{% endblock %}">
 <link rel="canonical" href="{{ request.build_absolute_uri }}">
 <meta name="theme-color" content="#071d2b">
-<link rel="stylesheet" href="{% static 'css/fonts.css' %}"><link rel="stylesheet" href="{% static 'css/style.css' %}?v=20261013b">
+{% if site_settings.favicon %}<link rel="icon" type="image/png" sizes="48x48" href="{{ site_settings.favicon.url }}">
+<link rel="icon" type="image/png" sizes="192x192" href="{{ site_settings.favicon.url }}">
+<link rel="shortcut icon" href="{{ site_settings.favicon.url }}">
+<link rel="apple-touch-icon" href="{{ site_settings.favicon.url }}">{% else %}<link rel="icon" href="{% url 'website:favicon' %}">{% endif %}
+<meta property="og:site_name" content="{{ site_settings.brand_name }}"><meta property="og:type" content="website"><meta property="og:url" content="{{ request.build_absolute_uri }}">{% if site_settings.logo %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ site_settings.logo.url }}">{% endif %}
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"{{ site_settings.brand_name|escapejs }}","legalName":"{{ site_settings.legal_name|escapejs }}","url":"{{ request.scheme }}://{{ request.get_host }}/"{% if site_settings.logo %},"logo":"{{ request.scheme }}://{{ request.get_host }}{{ site_settings.logo.url }}"{% endif %}{% if site_settings.instagram_url %},"sameAs":["{{ site_settings.instagram_url|escapejs }}"]{% endif %}}</script>
+<link rel="stylesheet" href="{% static 'css/fonts.css' %}"><link rel="stylesheet" href="{% static 'css/style.css' %}?v=20261013d">
 <style id="garnet-theme">
 :root{
  --theme-bg:{{ site_theme.background }};--theme-surface:{{ site_theme.surface }};--theme-primary:{{ site_theme.primary }};
@@ -64,7 +70,7 @@ small,.small{font-weight:var(--small-weight)}
 {% block content %}{% endblock %}
 </main>
 {% with consult_form=form|default:consultation_form %}
-<div class="consult-modal" id="consultModal" hidden role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="consultTitle" tabindex="-1">
+<div class="consult-modal{% if consult_form.errors %} has-form-errors{% endif %}" id="consultModal" hidden role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="consultTitle" tabindex="-1"{% if consult_form.errors or consult_keep_open %} data-auto-open="true"{% endif %}>
   <div class="consult-modal-inner">
     <button type="button" class="modal-close" data-consult-close aria-label="{% if is_en %}Close{% else %}بستن{% endif %}">×</button>
     <div class="modal-heading"><span class="eyebrow">{{ T.modal_eyebrow }}</span><h2 id="consultTitle">{{ T.modal_title }}</h2><p>{{ T.modal_subtitle }}</p></div>
@@ -106,6 +112,6 @@ small,.small{font-weight:var(--small-weight)}
   </div>
   <div class="container footer-bottom"><span>© {% now "Y" %} {{ site_settings.brand_name }}. {% if is_en %}All rights reserved.{% else %}تمامی حقوق محفوظ است.{% endif %}</span><a href="#main-content">{% if is_en %}Back to top ↑{% else %}بازگشت به بالا ↑{% endif %}</a></div>
 </footer>
-<script src="{% static 'js/main.js' %}?v=20261013b" defer></script>
+<script src="{% static 'js/main.js' %}?v=20261013d" defer></script>
 {% block extra_scripts %}{% endblock %}
 </body></html>
