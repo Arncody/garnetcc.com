@@ -7,12 +7,6 @@
 <meta name="description" content="{% block meta_description %}{{ site_settings.meta_description }}{% endblock %}">
 <link rel="canonical" href="{{ request.build_absolute_uri }}">
 <meta name="theme-color" content="#071d2b">
-{% if site_settings.favicon %}<link rel="icon" type="image/png" sizes="48x48" href="{{ site_settings.favicon.url }}">
-<link rel="icon" type="image/png" sizes="192x192" href="{{ site_settings.favicon.url }}">
-<link rel="shortcut icon" href="{{ site_settings.favicon.url }}">
-<link rel="apple-touch-icon" href="{{ site_settings.favicon.url }}">{% else %}<link rel="icon" href="{% url 'website:favicon' %}">{% endif %}
-<meta property="og:site_name" content="{{ site_settings.brand_name }}"><meta property="og:type" content="website"><meta property="og:url" content="{{ request.build_absolute_uri }}">{% if site_settings.logo %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ site_settings.logo.url }}">{% endif %}
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"{{ site_settings.brand_name|escapejs }}","legalName":"{{ site_settings.legal_name|escapejs }}","url":"{{ request.scheme }}://{{ request.get_host }}/"{% if site_settings.logo %},"logo":"{{ request.scheme }}://{{ request.get_host }}{{ site_settings.logo.url }}"{% endif %}{% if site_settings.instagram_url %},"sameAs":["{{ site_settings.instagram_url|escapejs }}"]{% endif %}}</script>
 <link rel="stylesheet" href="{% static 'css/fonts.css' %}"><link rel="stylesheet" href="{% static 'css/style.css' %}">
 <style id="garnet-theme">
 :root{
@@ -70,7 +64,7 @@ small,.small{font-weight:var(--small-weight)}
 {% block content %}{% endblock %}
 </main>
 {% with consult_form=form|default:consultation_form %}
-<dialog class="consult-modal{% if consult_form.errors %} has-form-errors{% endif %}" id="consultModal" aria-labelledby="consultTitle"{% if consult_form.errors or consult_keep_open %} data-auto-open="true"{% endif %}>
+<div class="consult-modal{% if consult_form.errors %} has-form-errors{% endif %}" id="consultModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="consultTitle" tabindex="-1"{% if consult_form.errors or consult_keep_open %} data-auto-open="true"{% endif %}>
   <div class="consult-modal-inner">
     <button type="button" class="modal-close" data-consult-close aria-label="{% if is_en %}Close{% else %}بستن{% endif %}">×</button>
     <div class="modal-heading"><span class="eyebrow">{{ T.modal_eyebrow }}</span><h2 id="consultTitle">{{ T.modal_title }}</h2><p>{{ T.modal_subtitle }}</p></div>
@@ -86,7 +80,7 @@ small,.small{font-weight:var(--small-weight)}
       {% if consult_form.non_field_errors %}<div class="form-alert" role="alert">{{ consult_form.non_field_errors|striptags }}</div>{% endif %}<button type="submit" class="btn btn-primary btn-block">{{ T.submit_text }}</button>
     </form>
   </div>
-</dialog>
+</div>
 {% endwith %}
 {% if request.path != '/' %}<a class="mobile-back" href="javascript:history.back()" aria-label="{% if is_en %}Back{% else %}بازگشت{% endif %}"><span aria-hidden="true">{% if is_en %}←{% else %}→{% endif %}</span><b>{% if is_en %}Back{% else %}بازگشت{% endif %}</b></a>{% endif %}
 <footer class="site-footer">

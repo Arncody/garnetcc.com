@@ -56,50 +56,66 @@ document.addEventListener('DOMContentLoaded', () => {
   const closer = modal.querySelector('[data-consult-close]');
   const form = modal.querySelector('[data-consult-form]');
 
-  // iOS 26 / modern Safari collapses a top-layer <dialog> opened with showModal() into a thin strip.
-  // On phones/tablets (iOS or narrow screens) we therefore open it as a plain fixed overlay
-  // (explicit top/bottom box + our own dim layer). Desktop keeps the native modal dialog.
-  const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) ||
-    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  const useOverlay = () => isIOS || window.innerWidth <= 800;
-  let backdrop = null;
-
+  // One predictable overlay implementation across iOS Safari, Android and desktop.
+  // No native <dialog> top-layer sizing and no automatic keyboard activation.
+  let previousFocus = null;
+  let lockedScrollY = 0;
+  const modalScroll = modal.querySelector('.consult-modal-inner');
+  const updateViewport = () => {
+    const viewport = window.visualViewport;
+    const height = viewport ? viewport.height : window.innerHeight;
+    const top = viewport ? viewport.offsetTop : 0;
+    modal.style.setProperty('--consult-viewport-height', `${Math.max(200, height)}px`);
+    modal.style.setProperty('--consult-viewport-top', `${Math.max(0, top)}px`);
+  };
   const openModal = () => {
+    if (modal.classList.contains('is-open')) return;
     closeNav();
+    previousFocus = document.activeElement;
+    lockedScrollY = window.scrollY;
+    updateViewport();
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${lockedScrollY}px`;
+    document.body.style.width = '100%';
     document.body.classList.add('modal-open');
-    if (useOverlay() || typeof modal.showModal !== 'function') {
-      modal.classList.add('is-fallback');
-      modal.setAttribute('open', '');
-      if (!backdrop) {
-        backdrop = document.createElement('div');
-        backdrop.className = 'consult-backdrop';
-        backdrop.addEventListener('click', () => closeModal());
-        document.body.appendChild(backdrop);
-      }
-    } else if (!modal.open) {
-      modal.showModal();
-    }
-    window.setTimeout(() => modal.querySelector('input:not([type="hidden"]):not([name="gender"])')?.focus({ preventScroll: true }), 80);
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    modalScroll.scrollTop = 0;
+    // Focus the container rather than an input: prevent Safari keyboard/viewport jumps.
+    modal.focus({preventScroll: true});
   };
-
   const closeModal = () => {
-    if (typeof modal.close === 'function' && modal.open) modal.close();
-    else modal.removeAttribute('open');
-    modal.removeAttribute('open');
-    modal.classList.remove('is-fallback');
-    if (backdrop) { backdrop.remove(); backdrop = null; }
+    if (!modal.classList.contains('is-open')) return;
+    if (modal.contains(document.activeElement)) document.activeElement.blur();
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('modal-open');
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+    window.scrollTo(0, lockedScrollY);
+    if (previousFocus && previousFocus.isConnected) previousFocus.focus({preventScroll:true});
   };
-
   openers.forEach((button) => button.addEventListener('click', (event) => {
     event.preventDefault();
     openModal();
   }));
   closer?.addEventListener('click', closeModal);
   modal.addEventListener('click', (event) => { if (event.target === modal) closeModal(); });
-  document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && modal.open) closeModal(); });
-
-  // Server-side validation errors keep the user inside the form.
+  document.addEventListener('keydown', (event) => {
+    if (!modal.classList.contains('is-open')) return;
+    if (event.key === 'Escape') { event.preventDefault(); closeModal(); return; }
+    if (event.key !== 'Tab') return;
+    const focusable = [...modal.querySelectorAll('button:not([disabled]), input:not([disabled]):not([type="hidden"]), textarea:not([disabled]), select:not([disabled]), a[href]')].filter(el => el.getClientRects().length);
+    if (!focusable.length) { event.preventDefault(); modal.focus(); return; }
+    const first = focusable[0], last = focusable[focusable.length - 1];
+    if (event.shiftKey && (document.activeElement === first || document.activeElement === modal)) { event.preventDefault(); last.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+  });
+  window.visualViewport?.addEventListener('resize', updateViewport);
+  window.visualViewport?.addEventListener('scroll', updateViewport);
+  window.addEventListener('resize', updateViewport);
+  window.addEventListener('orientationchange', updateViewport);
   if (modal.dataset.autoOpen === 'true' || modal.classList.contains('has-form-errors')) openModal();
 
   // Friendly client-side validation: no page navigation and errors stay beside the field.

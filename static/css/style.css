@@ -1342,56 +1342,52 @@ html[dir="rtl"] .more-btn em svg{transform:scaleX(-1)}
   .home-cards .mini-project.project-preview.post-preview{flex:0 0 min(64vw,270px)!important;aspect-ratio:1/1!important;min-height:0}
 }
 
-/* V19 — iPhone/Safari fix: consultation dialog collapsed into a thin strip.
-   Cause: the dialog used height:auto + align-self:center + height:100% on the inner box,
-   which WebKit resolves to ~0 for a centered <dialog>. Fix: on mobile the dialog gets an
-   explicit top/bottom box (no auto/percent/svh heights) and the inner box scrolls inside it.
-   Mobile only (<=800px); desktop is unchanged. */
-@media (max-width:800px){
-  .consult-modal{
-    position:fixed!important;
-    top:10px!important;right:10px!important;bottom:10px!important;left:10px!important;
-    width:auto!important;
-    max-width:760px!important;
-    height:auto!important;
-    max-height:none!important;
-    margin:0 auto!important;
-    align-self:auto!important;
-    justify-self:auto!important;
-    transform:none!important;
-    padding:0!important;
-    overflow:hidden!important;
-    -webkit-backdrop-filter:none!important;
-    backdrop-filter:none!important;
-    isolation:auto!important;
-    background:rgba(248,249,248,.98)!important;
-    background-color:rgba(248,249,248,.98)!important;
-  }
-  .consult-modal::backdrop{
-    -webkit-backdrop-filter:none!important;
-    backdrop-filter:none!important;
-    background:rgba(7,29,43,.62)!important;
-  }
-  .consult-modal-inner{
-    position:absolute!important;
-    top:0!important;right:0!important;bottom:0!important;left:0!important;
-    height:auto!important;
-    max-height:none!important;
-    overflow-y:auto!important;
-    overflow-x:hidden!important;
-    -webkit-overflow-scrolling:touch;
-    background:transparent!important;
-    isolation:auto!important;
-  }
+/* Consultation overlay reliability patch — preserves original glass, colors and form design.
+   This block intentionally supersedes historical <dialog> layout rules. */
+.consult-modal:not(.is-open){display:none!important}
+.consult-modal.is-open{
+  display:flex!important;
+  position:fixed!important;
+  top:var(--consult-viewport-top,0px)!important;
+  left:0!important;right:0!important;bottom:auto!important;
+  inset-inline:0!important;
+  width:100%!important;max-width:none!important;
+  height:var(--consult-viewport-height,100dvh)!important;
+  max-height:none!important;
+  margin:0!important;padding:12px!important;
+  box-sizing:border-box!important;
+  align-items:center!important;justify-content:center!important;
+  overflow:hidden!important;
+  border:0!important;border-radius:0!important;
+  background:rgba(7,29,43,.48)!important;
+  box-shadow:none!important;
+  backdrop-filter:blur(5px) saturate(105%)!important;
+  -webkit-backdrop-filter:blur(5px) saturate(105%)!important;
+  isolation:isolate!important;z-index:2147483000!important;
+  transform:none!important;
 }
-@media (max-width:520px){
-  .consult-modal{top:6px!important;right:6px!important;bottom:6px!important;left:6px!important}
+.consult-modal.is-open .consult-modal-inner{
+  position:relative!important;
+  flex:0 1 760px!important;
+  width:100%!important;
+  height:auto!important;
+  max-height:100%!important;
+  min-height:0!important;
+  box-sizing:border-box!important;
+  overflow-y:auto!important;overflow-x:hidden!important;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+  border:1px solid rgba(255,255,255,.96)!important;
+  border-radius:24px!important;
+  padding:32px 34px 28px!important;
+  background:rgba(248,249,248,.90)!important;
+  box-shadow:0 34px 110px rgba(7,29,43,.28)!important;
 }
-
-/* V19b — safety nets for every iOS/Safari version */
-/* Browsers without <dialog> support (iOS < 15.4) never hide a closed dialog by themselves. */
-.consult-modal:not([open]){display:none!important}
-/* Phones/tablets: the dialog is opened as a plain fixed overlay (see main.js) with its own dim layer. */
-.consult-backdrop{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1999;background:rgba(7,29,43,.62)}
-.consult-modal.is-fallback{z-index:2000!important;box-shadow:0 24px 70px rgba(7,29,43,.38)!important}
-@media (max-width:800px){body.modal-open{overflow:hidden}}
+@media(max-width:800px){
+  .consult-modal.is-open{padding:10px!important}
+  .consult-modal.is-open .consult-modal-inner{border-radius:20px!important;padding:18px 15px 15px!important}
+}
+@media(max-width:520px){
+  .consult-modal.is-open{padding:6px!important}
+  .consult-modal.is-open .consult-modal-inner{border-radius:18px!important;padding:14px 12px 12px!important}
+}
