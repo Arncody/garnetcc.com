@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const updateViewport = () => {
     const viewport = window.visualViewport;
     const height = viewport ? viewport.height : window.innerHeight;
-    const top = viewport ? viewport.offsetTop : 0;
+    const top = 0; // Fixed overlay anchored to the layout viewport; avoid double offset on iOS
     modal.style.setProperty('--consult-viewport-height', `${Math.max(200, height)}px`);
     modal.style.setProperty('--consult-viewport-top', `${Math.max(0, top)}px`);
   };
@@ -77,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     lockedScrollY = window.scrollY;
     updateViewport();
     document.documentElement.classList.add('consult-scroll-locked');
+    document.body.dataset.consultPreviousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     document.body.classList.add('modal-open');
     modal.hidden = false;
@@ -98,7 +99,8 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('modal-open');
     document.documentElement.classList.remove('consult-scroll-locked');
-    document.body.style.overflow = '';
+    document.body.style.overflow = document.body.dataset.consultPreviousOverflow || '';
+    delete document.body.dataset.consultPreviousOverflow;
     window.scrollTo(0, lockedScrollY);
     if (previousFocus && previousFocus.isConnected) previousFocus.focus({preventScroll:true});
   };
