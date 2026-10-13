@@ -80,6 +80,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.add('modal-open');
     modal.hidden = false;
     modal.classList.add('is-open');
+    modal.style.visibility = 'visible';
+    modal.style.pointerEvents = 'auto';
     modal.setAttribute('aria-hidden', 'false');
     modalScroll.scrollTop = 0;
     // Focus the container rather than an input: prevent Safari keyboard/viewport jumps.
@@ -90,6 +92,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (modal.contains(document.activeElement)) document.activeElement.blur();
     modal.classList.remove('is-open');
     modal.hidden = true;
+    modal.style.visibility = '';
+    modal.style.pointerEvents = '';
     modal.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('modal-open');
     document.body.style.position = '';
@@ -98,10 +102,13 @@ document.addEventListener('DOMContentLoaded', () => {
     window.scrollTo(0, lockedScrollY);
     if (previousFocus && previousFocus.isConnected) previousFocus.focus({preventScroll:true});
   };
-  openers.forEach((button) => button.addEventListener('click', (event) => {
+  // Delegated handling covers buttons inserted after initial page load.
+  document.addEventListener('click', (event) => {
+    const trigger = event.target.closest('[data-consult-open]');
+    if (!trigger) return;
     event.preventDefault();
     openModal();
-  }));
+  });
   closer?.addEventListener('click', closeModal);
   modal.addEventListener('click', (event) => { if (event.target === modal) closeModal(); });
   document.addEventListener('keydown', (event) => {

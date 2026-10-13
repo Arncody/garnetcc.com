@@ -1394,3 +1394,7 @@ html[dir="rtl"] .more-btn em svg{transform:scaleX(-1)}
 
 /* Explicit click-only consultation modal; hidden even before JS initializes. */
 #consultModal[hidden], #consultModal:not(.is-open) { display:none!important; visibility:hidden!important; pointer-events:none!important; }
+
+/* Open-state must override legacy hidden-state rules. */
+#consultModal.is-open:not([hidden]) {display:flex!important;visibility:visible!important;pointer-events:auto!important;opacity:1!important;}
+#consultModal.is-open:not([hidden]) .consult-modal-inner {visibility:visible!important;opacity:1!important;}

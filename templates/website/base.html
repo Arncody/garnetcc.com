@@ -7,7 +7,7 @@
 <meta name="description" content="{% block meta_description %}{{ site_settings.meta_description }}{% endblock %}">
 <link rel="canonical" href="{{ request.build_absolute_uri }}">
 <meta name="theme-color" content="#071d2b">
-<link rel="stylesheet" href="{% static 'css/fonts.css' %}"><link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" href="{% static 'css/fonts.css' %}"><link rel="stylesheet" href="{% static 'css/style.css' %}?v=20261013b">
 <style id="garnet-theme">
 :root{
  --theme-bg:{{ site_theme.background }};--theme-surface:{{ site_theme.surface }};--theme-primary:{{ site_theme.primary }};
@@ -106,6 +106,6 @@ small,.small{font-weight:var(--small-weight)}
   </div>
   <div class="container footer-bottom"><span>© {% now "Y" %} {{ site_settings.brand_name }}. {% if is_en %}All rights reserved.{% else %}تمامی حقوق محفوظ است.{% endif %}</span><a href="#main-content">{% if is_en %}Back to top ↑{% else %}بازگشت به بالا ↑{% endif %}</a></div>
 </footer>
-<script src="{% static 'js/main.js' %}" defer></script>
+<script src="{% static 'js/main.js' %}?v=20261013b" defer></script>
 {% block extra_scripts %}{% endblock %}
 </body></html>
