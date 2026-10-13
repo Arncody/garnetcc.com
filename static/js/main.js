@@ -56,35 +56,38 @@ document.addEventListener('DOMContentLoaded', () => {
   const closer = modal.querySelector('[data-consult-close]');
   const form = modal.querySelector('[data-consult-form]');
 
-  // iOS Safari: 100vh/svh are unreliable inside <dialog>; use the real visible height.
-  const setAppVh = () => document.documentElement.style.setProperty('--app-vh', (window.innerHeight * 0.01) + 'px');
-  window.addEventListener('resize', () => { if (modal.open) setAppVh(); });
+  // iOS 26 / modern Safari collapses a top-layer <dialog> opened with showModal() into a thin strip.
+  // On phones/tablets (iOS or narrow screens) we therefore open it as a plain fixed overlay
+  // (explicit top/bottom box + our own dim layer). Desktop keeps the native modal dialog.
+  const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const useOverlay = () => isIOS || window.innerWidth <= 800;
+  let backdrop = null;
 
   const openModal = () => {
-    setAppVh();
     closeNav();
     document.body.classList.add('modal-open');
-    if (typeof modal.showModal === 'function') {
-      if (!modal.open) modal.showModal();
-    } else {
+    if (useOverlay() || typeof modal.showModal !== 'function') {
+      modal.classList.add('is-fallback');
       modal.setAttribute('open', '');
-    }
-    // Safety net: if a browser still collapses the dialog on phones, switch to a plain fixed overlay.
-    window.setTimeout(() => {
-      if (!modal.open || window.innerWidth > 800) return;
-      if (modal.getBoundingClientRect().height < window.innerHeight * 0.4) {
-        modal.classList.add('is-fallback');
-        if (typeof modal.close === 'function') modal.close();
-        modal.setAttribute('open', '');
+      if (!backdrop) {
+        backdrop = document.createElement('div');
+        backdrop.className = 'consult-backdrop';
+        backdrop.addEventListener('click', () => closeModal());
+        document.body.appendChild(backdrop);
       }
-    }, 150);
-    window.setTimeout(() => modal.querySelector('input:not([type="hidden"]):not([name="gender"])')?.focus(), 80);
+    } else if (!modal.open) {
+      modal.showModal();
+    }
+    window.setTimeout(() => modal.querySelector('input:not([type="hidden"]):not([name="gender"])')?.focus({ preventScroll: true }), 80);
   };
 
   const closeModal = () => {
     if (typeof modal.close === 'function' && modal.open) modal.close();
     else modal.removeAttribute('open');
+    modal.removeAttribute('open');
     modal.classList.remove('is-fallback');
+    if (backdrop) { backdrop.remove(); backdrop = null; }
     document.body.classList.remove('modal-open');
   };
 

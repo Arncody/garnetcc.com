@@ -1391,8 +1391,7 @@ html[dir="rtl"] .more-btn em svg{transform:scaleX(-1)}
 /* V19b — safety nets for every iOS/Safari version */
 /* Browsers without <dialog> support (iOS < 15.4) never hide a closed dialog by themselves. */
 .consult-modal:not([open]){display:none!important}
-/* Self-healing mode (enabled by main.js only if the dialog collapses): plain fixed overlay. */
-.consult-modal.is-fallback{
-  z-index:2000!important;
-  box-shadow:0 0 0 100vmax rgba(7,29,43,.62)!important;
-}
+/* Phones/tablets: the dialog is opened as a plain fixed overlay (see main.js) with its own dim layer. */
+.consult-backdrop{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1999;background:rgba(7,29,43,.62)}
+.consult-modal.is-fallback{z-index:2000!important;box-shadow:0 24px 70px rgba(7,29,43,.38)!important}
+@media (max-width:800px){body.modal-open{overflow:hidden}}
