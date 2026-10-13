@@ -49,64 +49,64 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 5200);
   });
 
+  // Consultation modal: one authoritative state machine, no native dialog/open attribute.
   const modal = document.getElementById('consultModal');
   if (!modal) return;
-  // Keep the overlay outside any transformed/filtered site containers.
   if (modal.parentElement !== document.body) document.body.appendChild(modal);
-
-  const openers = document.querySelectorAll('[data-consult-open]');
   const closer = modal.querySelector('[data-consult-close]');
   const form = modal.querySelector('[data-consult-form]');
-
-  // One predictable overlay implementation across iOS Safari, Android and desktop.
-  // No native <dialog> top-layer sizing and no automatic keyboard activation.
+  const panel = modal.querySelector('.consult-modal-inner');
   let previousFocus = null;
-  let lockedScrollY = 0;
-  const modalScroll = modal.querySelector('.consult-modal-inner');
+  let previousOverflow = '';
+  let previousHtmlOverflow = '';
+  let isOpen = false;
+
   const updateViewport = () => {
+    if (!isOpen) return;
     const viewport = window.visualViewport;
+    // visualViewport.height changes when iOS keyboard opens; offsetTop is not
+    // added to the fixed overlay to avoid the double-offset Safari issue.
     const height = viewport ? viewport.height : window.innerHeight;
-    const top = 0; // Fixed overlay anchored to the layout viewport; avoid double offset on iOS
-    modal.style.setProperty('--consult-viewport-height', `${Math.max(200, height)}px`);
-    modal.style.setProperty('--consult-viewport-top', `${Math.max(0, top)}px`);
+    modal.style.setProperty('--consult-vh', `${Math.max(240, height)}px`);
+  };
+  const setModalState = (open) => {
+    isOpen = open;
+    modal.hidden = !open;
+    if (open) modal.removeAttribute('hidden');
+    else modal.setAttribute('hidden', '');
+    modal.classList.toggle('is-open', open);
+    modal.setAttribute('aria-hidden', String(!open));
+    modal.removeAttribute('open'); // DIV is not a native dialog.
+    document.body.classList.toggle('modal-open', open);
   };
   const openModal = () => {
-    if (modal.classList.contains('is-open')) return;
+    if (isOpen) return;
     closeNav();
     previousFocus = document.activeElement;
-    lockedScrollY = window.scrollY;
-    updateViewport();
-    document.documentElement.classList.add('consult-scroll-locked');
-    document.body.dataset.consultPreviousOverflow = document.body.style.overflow;
+    previousOverflow = document.body.style.overflow;
+    previousHtmlOverflow = document.documentElement.style.overflow;
+    setModalState(true);
     document.body.style.overflow = 'hidden';
-    document.body.classList.add('modal-open');
-    modal.hidden = false;
-    modal.classList.add('is-open');
-    modal.style.visibility = 'visible';
-    modal.style.pointerEvents = 'auto';
-    modal.setAttribute('aria-hidden', 'false');
-    modalScroll.scrollTop = 0;
-    // Focus the container rather than an input: prevent Safari keyboard/viewport jumps.
-    try { modal.focus({preventScroll: true}); } catch (_) { modal.focus(); }
+    document.documentElement.style.overflow = 'hidden';
+    updateViewport();
+    if (panel) panel.scrollTop = 0;
+    // Focus the dialog container, not a text input: don't trigger iOS keyboard.
+    try { modal.focus({ preventScroll: true }); } catch (_) { modal.focus(); }
   };
   const closeModal = () => {
-    if (!modal.classList.contains('is-open')) return;
-    if (modal.contains(document.activeElement)) document.activeElement.blur();
-    modal.classList.remove('is-open');
-    modal.hidden = true;
-    modal.style.visibility = '';
-    modal.style.pointerEvents = '';
-    modal.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('modal-open');
-    document.documentElement.classList.remove('consult-scroll-locked');
-    document.body.style.overflow = document.body.dataset.consultPreviousOverflow || '';
-    delete document.body.dataset.consultPreviousOverflow;
-    window.scrollTo(0, lockedScrollY);
-    if (previousFocus && previousFocus.isConnected) previousFocus.focus({preventScroll:true});
+    if (!isOpen) return;
+    if (modal.contains(document.activeElement) && document.activeElement.blur) document.activeElement.blur();
+    setModalState(false);
+    document.body.style.overflow = previousOverflow;
+    document.documentElement.style.overflow = previousHtmlOverflow;
+    if (previousFocus?.isConnected) {
+      try { previousFocus.focus({ preventScroll: true }); } catch (_) { previousFocus.focus(); }
+    }
   };
-  // Delegated handling covers buttons inserted after initial page load.
+  // One delegated click handler for every consultation / pre-purchase trigger.
   document.addEventListener('click', (event) => {
-    const trigger = event.target.closest('[data-consult-open]');
+    const target = event.target instanceof Element ? event.target : event.target?.parentElement;
+    const trigger = target?.closest('[data-consult-open]');
     if (!trigger) return;
     event.preventDefault();
     openModal();
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
   closer?.addEventListener('click', closeModal);
   modal.addEventListener('click', (event) => { if (event.target === modal) closeModal(); });
   document.addEventListener('keydown', (event) => {
-    if (!modal.classList.contains('is-open')) return;
+    if (!isOpen) return;
     if (event.key === 'Escape') { event.preventDefault(); closeModal(); return; }
     if (event.key !== 'Tab') return;
     const focusable = [...modal.querySelectorAll('button:not([disabled]), input:not([disabled]):not([type="hidden"]), textarea:not([disabled]), select:not([disabled]), a[href]')].filter(el => el.getClientRects().length);
@@ -127,12 +127,8 @@ document.addEventListener('DOMContentLoaded', () => {
   window.visualViewport?.addEventListener('scroll', updateViewport);
   window.addEventListener('resize', updateViewport);
   window.addEventListener('orientationchange', updateViewport);
-  // Deliberately closed on every page load; open only via [data-consult-open].
-  modal.classList.remove('is-open');
-  modal.hidden = true;
-  modal.setAttribute('aria-hidden', 'true');
-
-  // Server-side validation errors keep the user inside the form.
+  setModalState(false);
+  // Preserve the user's inputs when server-side form validation fails.
   if (modal.dataset.autoOpen === 'true' || modal.classList.contains('has-form-errors')) openModal();
 
   // Friendly client-side validation: no page navigation and errors stay beside the field.
