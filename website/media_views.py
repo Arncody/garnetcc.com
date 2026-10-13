@@ -78,13 +78,14 @@ def _iter_file(path, start, length):
             yield data
 
 
-def _harden(response, ext):
+def _harden(response, ext, public=False):
     response["Content-Disposition"] = "inline"
     response["X-Content-Type-Options"] = "nosniff"
-    response["Cross-Origin-Resource-Policy"] = "same-origin"
+    response["Cross-Origin-Resource-Policy"] = "cross-origin" if public else "same-origin"
     response["Cache-Control"] = "private, max-age=3600"
     response["Vary"] = "Sec-Fetch-Dest, Sec-Fetch-Site, Referer"
-    response["X-Robots-Tag"] = "noindex"
+    if not public:
+        response["X-Robots-Tag"] = "noindex"
     return response
 
 
@@ -98,6 +99,7 @@ def protected_media(request, path):
         raise Http404
     rel = path.replace("\\", "/").lstrip("/")
     ext = os.path.splitext(full)[1].lower()
+    public = rel.startswith(PUBLIC_PREFIXES)
     protected = ext in IMAGE_EXT or ext in VIDEO_EXT
 
     if protected and getattr(settings, "PROTECT_MEDIA", True) and not _allowed(request, rel, ext):
@@ -114,14 +116,14 @@ def protected_media(request, path):
     if accel:                                     # Nginx خودش Range/ارسال را انجام می‌دهد
         resp = HttpResponse(content_type=ctype)
         resp["X-Accel-Redirect"] = accel.rstrip("/") + "/" + rel
-        return _harden(resp, ext)
+        return _harden(resp, ext, public)
 
     stat = os.stat(full)
     size = stat.st_size
     mtime = int(stat.st_mtime)
     ims = parse_http_date_safe(request.headers.get("If-Modified-Since", ""))
     if ims is not None and mtime <= ims and "Range" not in request.headers:
-        return _harden(HttpResponseNotModified(), ext)
+        return _harden(HttpResponseNotModified(), ext, public)
 
     start, end, status = 0, size - 1, 200
     rng = request.headers.get("Range")
@@ -153,4 +155,4 @@ def protected_media(request, path):
     resp["Last-Modified"] = http_date(mtime)
     if status == 206:
         resp["Content-Range"] = f"bytes {start}-{end}/{size}"
-    return _harden(resp, ext)
+    return _harden(resp, ext, public)

@@ -108,6 +108,10 @@ class SiteSettings(SingletonModel):
         "لوگوی نسخه روشن برای هدر (اختیاری)", upload_to="site/", validators=IMAGE_VALIDATORS, blank=True,
         help_text="هدر سایت شیشه‌ای و تیره است؛ اگر متن لوگوی شما تیره است، نسخه‌ای با متن سفید/روشن اینجا آپلود کنید. در نبود آن، همان لوگوی اصلی نمایش داده می‌شود.",
     )
+    favicon = models.ImageField(
+        "فاویکون (آیکون تب مرورگر و گوگل)", upload_to="site/", validators=IMAGE_VALIDATORS, blank=True,
+        help_text="فقط نماد/آرم شرکت (بدون نوشته) به‌صورت مربع، PNG، حداقل 512×512 پیکسل. گوگل فقط آیکون‌های مربعی با اندازه مضرب 48 پیکسل را نمایش می‌دهد.",
+    )
     tagline_en = models.CharField("Tagline (EN)", max_length=250, blank=True)
     tagline = models.CharField(
         "شعار کوتاه شرکت", max_length=250, blank=True,
@@ -391,7 +395,7 @@ class ProjectImage(models.Model):
 
     def __str__(self):
         return f"تصویر {self.order} - {self.project.title}"
-#aaaajj
+
 
 class PhilosophyFeature(models.Model):
     """ویژگی‌های بخش «فلسفه طراحی و اصالت ساخت» (کارت‌های سه‌گانه)."""

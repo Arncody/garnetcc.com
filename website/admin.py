@@ -54,7 +54,7 @@ class SiteThemeAdmin(admin.ModelAdmin):
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):
     fieldsets=(
-        ("برند / Brand",{"fields":("brand_name","legal_name","logo","logo_light",("tagline","tagline_en"))}),
+        ("برند / Brand",{"fields":("brand_name","legal_name","logo","logo_light","favicon",("tagline","tagline_en"))}),
         ("تماس / Contact",{"fields":("phone","email","address","instagram_url")}),
         ("رزرو / Booking",{"fields":("booking_url","working_hours_weekday","working_hours_weekend")}),
         ("SEO",{"fields":("meta_title","meta_description")}),

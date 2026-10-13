@@ -56,7 +56,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const closer = modal.querySelector('[data-consult-close]');
   const form = modal.querySelector('[data-consult-form]');
 
+  // iOS Safari: 100vh/svh are unreliable inside <dialog>; use the real visible height.
+  const setAppVh = () => document.documentElement.style.setProperty('--app-vh', (window.innerHeight * 0.01) + 'px');
+  window.addEventListener('resize', () => { if (modal.open) setAppVh(); });
+
   const openModal = () => {
+    setAppVh();
     closeNav();
     document.body.classList.add('modal-open');
     if (typeof modal.showModal === 'function') {

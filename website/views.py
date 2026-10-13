@@ -180,3 +180,13 @@ def blog_list(request):
 def blog_detail(request, slug):
     post = get_object_or_404(BlogPost, slug=slug, is_published=True)
     return render(request, "website/blog/detail.html", {"post": post})
+
+
+def favicon_ico(request):
+    """/favicon.ico: گوگل و مرورگرها این مسیر را مستقیم درخواست می‌کنند."""
+    from django.http import HttpResponseRedirect, Http404
+    from .models import SiteSettings
+    fav = SiteSettings.load().favicon
+    if not fav:
+        raise Http404
+    return HttpResponseRedirect(fav.url)

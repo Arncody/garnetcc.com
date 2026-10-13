@@ -7,6 +7,12 @@
 <meta name="description" content="{% block meta_description %}{{ site_settings.meta_description }}{% endblock %}">
 <link rel="canonical" href="{{ request.build_absolute_uri }}">
 <meta name="theme-color" content="#071d2b">
+{% if site_settings.favicon %}<link rel="icon" type="image/png" sizes="48x48" href="{{ site_settings.favicon.url }}">
+<link rel="icon" type="image/png" sizes="192x192" href="{{ site_settings.favicon.url }}">
+<link rel="shortcut icon" href="{{ site_settings.favicon.url }}">
+<link rel="apple-touch-icon" href="{{ site_settings.favicon.url }}">{% else %}<link rel="icon" href="{% url 'website:favicon' %}">{% endif %}
+<meta property="og:site_name" content="{{ site_settings.brand_name }}"><meta property="og:type" content="website"><meta property="og:url" content="{{ request.build_absolute_uri }}">{% if site_settings.logo %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ site_settings.logo.url }}">{% endif %}
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"{{ site_settings.brand_name|escapejs }}","legalName":"{{ site_settings.legal_name|escapejs }}","url":"{{ request.scheme }}://{{ request.get_host }}/"{% if site_settings.logo %},"logo":"{{ request.scheme }}://{{ request.get_host }}{{ site_settings.logo.url }}"{% endif %}{% if site_settings.instagram_url %},"sameAs":["{{ site_settings.instagram_url|escapejs }}"]{% endif %}}</script>
 <link rel="stylesheet" href="{% static 'css/fonts.css' %}"><link rel="stylesheet" href="{% static 'css/style.css' %}">
 <style id="garnet-theme">
 :root{
