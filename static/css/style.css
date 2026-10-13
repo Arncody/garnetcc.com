@@ -1391,3 +1391,6 @@ html[dir="rtl"] .more-btn em svg{transform:scaleX(-1)}
   .consult-modal.is-open{padding:6px!important}
   .consult-modal.is-open .consult-modal-inner{border-radius:18px!important;padding:14px 12px 12px!important}
 }
+
+/* Explicit click-only consultation modal; hidden even before JS initializes. */
+#consultModal[hidden], #consultModal:not(.is-open) { display:none!important; visibility:hidden!important; pointer-events:none!important; }

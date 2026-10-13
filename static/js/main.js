@@ -78,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.top = `-${lockedScrollY}px`;
     document.body.style.width = '100%';
     document.body.classList.add('modal-open');
+    modal.hidden = false;
     modal.classList.add('is-open');
     modal.setAttribute('aria-hidden', 'false');
     modalScroll.scrollTop = 0;
@@ -88,6 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!modal.classList.contains('is-open')) return;
     if (modal.contains(document.activeElement)) document.activeElement.blur();
     modal.classList.remove('is-open');
+    modal.hidden = true;
     modal.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('modal-open');
     document.body.style.position = '';
@@ -116,7 +118,10 @@ document.addEventListener('DOMContentLoaded', () => {
   window.visualViewport?.addEventListener('scroll', updateViewport);
   window.addEventListener('resize', updateViewport);
   window.addEventListener('orientationchange', updateViewport);
-  if (modal.dataset.autoOpen === 'true' || modal.classList.contains('has-form-errors')) openModal();
+  // Deliberately closed on every page load; open only via [data-consult-open].
+  modal.classList.remove('is-open');
+  modal.hidden = true;
+  modal.setAttribute('aria-hidden', 'true');
 
   // Friendly client-side validation: no page navigation and errors stay beside the field.
   if (form) {

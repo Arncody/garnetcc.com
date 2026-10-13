@@ -64,7 +64,7 @@ small,.small{font-weight:var(--small-weight)}
 {% block content %}{% endblock %}
 </main>
 {% with consult_form=form|default:consultation_form %}
-<div class="consult-modal{% if consult_form.errors %} has-form-errors{% endif %}" id="consultModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="consultTitle" tabindex="-1"{% if consult_form.errors or consult_keep_open %} data-auto-open="true"{% endif %}>
+<div class="consult-modal" id="consultModal" hidden role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="consultTitle" tabindex="-1">
   <div class="consult-modal-inner">
     <button type="button" class="modal-close" data-consult-close aria-label="{% if is_en %}Close{% else %}بستن{% endif %}">×</button>
     <div class="modal-heading"><span class="eyebrow">{{ T.modal_eyebrow }}</span><h2 id="consultTitle">{{ T.modal_title }}</h2><p>{{ T.modal_subtitle }}</p></div>
