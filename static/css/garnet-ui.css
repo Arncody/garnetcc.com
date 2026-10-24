@@ -1,0 +1,169 @@
+/* =====================================================================
+   garnet-ui.css — بازطراحی هدر/فوتر/دکمه‌ها/کارت پروژه/درباره + ریسپانسیو
+   این فایل آخر از همه بارگذاری می‌شود و فقط موارد زیر را بازنویسی می‌کند.
+   ===================================================================== */
+
+/* ---------- آیکون‌ها ---------- */
+.ic{display:block;flex:0 0 auto}
+
+/* ---------- هدر: لوگو چپ، منو راست (در هر دو زبان) ---------- */
+.g-bar{direction:ltr;gap:clamp(10px,2vw,28px);min-height:60px;padding:6px clamp(12px,1.8vw,22px);border-radius:22px}
+.g-brand img{height:var(--logo-desktop,48px);max-width:min(220px,40vw)}
+.g-nav{flex:1 1 auto;justify-content:center;margin-inline:0;gap:clamp(14px,2vw,30px);min-width:0}
+html[dir="rtl"] .g-nav,html[dir="rtl"] .g-cta,html[dir="rtl"] .g-panel{direction:rtl}
+html[dir="ltr"] .g-nav,html[dir="ltr"] .g-cta,html[dir="ltr"] .g-panel{direction:ltr}
+.g-nav a,.g-nav .g-nav-btn{position:relative;padding:6px 2px;font:inherit;font-size:.82rem;font-weight:var(--nav-weight,500);color:rgba(255,255,255,.86);white-space:nowrap;
+  background:none;border:0;cursor:pointer;transition:color .2s ease}
+.g-nav .g-nav-btn::after{content:"";position:absolute;inset-inline:0;bottom:-3px;height:1.5px;border-radius:2px;background:#fff;transform:scaleX(0);transition:transform .25s ease}
+.g-nav a:hover,.g-nav a.is-active,.g-nav .g-nav-btn:hover{color:#fff}
+.g-nav .g-nav-btn:hover::after{transform:scaleX(1)}
+.g-actions{margin-inline-start:0;margin-inline-end:0;gap:8px;flex:0 0 auto}
+.g-cta{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 16px;border-radius:12px;font-size:.76rem}
+.g-cta .ic{width:16px;height:16px}
+.g-toggle{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18)}
+.g-toggle:hover{background:rgba(255,255,255,.16)}
+.g-toggle span{width:20px}
+.g-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
+.g-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
+/* پنل منو زیر دکمه‌ی منو (سمت راست) باز می‌شود */
+.g-panel{inset-inline-end:auto;inset-inline-start:auto;right:0;left:auto;width:min(300px,100%);gap:4px;padding:8px}
+.g-panel a,.g-panel .g-panel-btn{display:flex;align-items:center;gap:10px;min-height:42px;padding:0 14px;border-radius:12px;border:0;width:100%;
+  font:inherit;font-size:.82rem;color:#fff;background:rgba(255,255,255,.06);cursor:pointer;text-align:start;transition:background .2s ease}
+.g-panel a:hover,.g-panel .g-panel-btn:hover{background:rgba(255,255,255,.16)}
+.g-panel a.is-active{background:rgba(255,255,255,.18)}
+.g-panel .g-panel-lang{justify-content:center;font-weight:700;border:1px solid rgba(255,255,255,.22);margin-top:2px}
+@media(max-width:1020px){
+  .g-nav{display:none}
+  .g-bar{justify-content:space-between;min-height:54px;padding:6px 10px;border-radius:18px}
+  .g-brand img{height:var(--logo-mobile,40px);max-width:min(170px,42vw)}
+  .g-cta{min-height:36px;padding:0 12px;font-size:.7rem}
+  .g-toggle{width:36px;height:36px}
+  .g-panel{width:min(320px,100%)}
+}
+@media(max-width:380px){.g-cta{padding:0 9px;gap:6px;font-size:.64rem}.g-cta .ic{width:14px;height:14px}.g-brand img{max-width:36vw}}
+
+/* ---------- Hero: دکمه‌های استاندارد و متناسب با دستگاه ---------- */
+.hero .hero-actions.hero-quick-actions{display:flex!important;flex-wrap:wrap;justify-content:flex-start;gap:10px!important;margin-top:22px!important;width:auto!important}
+.hero .hero-actions.hero-quick-actions .hero-glass-action{
+  width:auto!important;min-width:0!important;flex:0 0 auto!important;height:auto;min-height:42px!important;padding:0 20px!important;
+  border-radius:12px!important;font-size:.8rem!important;font-weight:600!important;line-height:1!important;white-space:nowrap!important}
+@media(max-width:900px){
+  .hero .hero-actions.hero-quick-actions{gap:8px!important;margin-top:18px!important}
+  .hero .hero-actions.hero-quick-actions .hero-glass-action{min-height:38px!important;padding:0 16px!important;font-size:.74rem!important;border-radius:11px!important}
+}
+@media(max-width:520px){
+  .hero .hero-actions.hero-quick-actions{gap:6px!important}
+  .hero .hero-actions.hero-quick-actions .hero-glass-action{min-height:34px!important;padding:0 12px!important;font-size:.68rem!important;border-radius:10px!important}
+}
+.hero-mini-links{display:none!important}
+
+/* ---------- برچسب‌های ریز نارنجی حذف شده‌اند ---------- */
+.eyebrow{display:none!important}
+
+/* ---------- تیتر بخش + دکمه‌ی آیکونی «مشاهده همه پروژه‌ها» ---------- */
+.compact-heading{align-items:center}
+.compact-heading h1,.compact-heading h2{margin:0}
+.all-projects-btn{display:inline-grid;place-items:center;flex:0 0 auto;width:42px;height:42px;border-radius:50%;color:#fff;
+  background:linear-gradient(135deg,#ff8a5c,#ff6e42);box-shadow:0 8px 20px rgba(255,110,66,.38);transition:transform .25s ease,box-shadow .25s ease}
+.all-projects-btn:hover{transform:translateX(-3px);box-shadow:0 12px 26px rgba(255,110,66,.5)}
+html[dir="ltr"] .all-projects-btn:hover{transform:translateX(3px)}
+.all-projects-btn:focus-visible{outline:2px solid #092634;outline-offset:3px}
+@media(max-width:520px){.all-projects-btn{width:38px;height:38px}}
+
+/* ---------- کارت پروژه: وضعیت راست‌چین ---------- */
+.pc-top{justify-content:flex-start;gap:8px}
+html[dir="rtl"] .pc-top{direction:rtl}
+html[dir="ltr"] .pc-top{direction:ltr}
+
+/* ---------- ردیف افقی چرخان پروژه‌ها ---------- */
+.proj-rail{position:relative;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  margin-inline:calc(-1 * clamp(0px,1vw,10px));padding:6px clamp(0px,1vw,10px) 14px;cursor:grab;touch-action:pan-x pan-y;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
+.proj-rail::-webkit-scrollbar{display:none}
+.proj-rail.is-dragging{cursor:grabbing;user-select:none}
+.proj-rail.is-dragging a{pointer-events:none}
+.proj-rail-track{display:flex;gap:clamp(10px,1.4vw,18px);width:max-content}
+.proj-rail .mini-project.project-preview{flex:0 0 clamp(220px,26vw,330px);width:clamp(220px,26vw,330px);aspect-ratio:4/5}
+@media(max-width:900px){.proj-rail .mini-project.project-preview{flex-basis:clamp(200px,46vw,280px);width:clamp(200px,46vw,280px);aspect-ratio:4/5}}
+@media(max-width:520px){.proj-rail .mini-project.project-preview{flex-basis:min(68vw,250px);width:min(68vw,250px);aspect-ratio:4/5}}
+@media(prefers-reduced-motion:reduce){.proj-rail{-webkit-mask-image:none;mask-image:none}}
+
+/* ---------- درباره گارنت: کاملاً شیشه‌ای و هم‌اندازه با متن ---------- */
+.about-lux-section{padding-block:6px 34px}
+.about-glass{position:relative;isolation:isolate;overflow:hidden;width:fit-content;max-width:min(100%,860px);margin-inline:auto;padding:0;border-radius:24px;
+  background:rgba(255,255,255,.34);border:1px solid rgba(255,255,255,.75);
+  backdrop-filter:blur(22px) saturate(150%);-webkit-backdrop-filter:blur(22px) saturate(150%);
+  box-shadow:0 22px 60px rgba(7,29,43,.14),inset 0 1px 0 rgba(255,255,255,.9)}
+.about-glass .about-bg{position:absolute;inset:-18px;z-index:-1;background-size:cover;background-position:center;filter:blur(10px) saturate(1.1);transform:scale(1.05)}
+.about-glass::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(135deg,rgba(255,255,255,.88),rgba(255,255,255,.68))}
+.about-glass:not(:has(.about-bg)){background:linear-gradient(135deg,rgba(255,255,255,.9),rgba(236,243,247,.8))}
+.about-panel{max-width:none;padding:clamp(18px,2.6vw,32px);border-radius:0;color:#0b2a3a;background:transparent;border:0;box-shadow:none;
+  backdrop-filter:none;-webkit-backdrop-filter:none}
+.about-panel h2{margin:0 0 10px;font-size:clamp(1.2rem,2.2vw,1.7rem);line-height:1.5;color:#092634}
+.about-text{max-width:none;font-size:clamp(.82rem,1.1vw,.93rem);line-height:2;color:#27414f}
+.about-text p{margin:0 0 8px}
+.about-actions{gap:8px;margin-top:14px}
+.about-btn{min-height:38px;padding:0 18px;border-radius:11px;font-size:.76rem}
+.about-btn-light{background:rgba(255,255,255,.75);color:#092634;border:1px solid rgba(9,38,52,.14);box-shadow:0 6px 18px rgba(7,29,43,.08)}
+@media(max-width:520px){.about-glass{border-radius:20px}.about-panel{padding:16px 14px}.about-btn{min-height:36px;padding:0 14px;font-size:.72rem}}
+
+/* ---------- آیکون تماس شناور ---------- */
+.floating-call{width:50px;height:50px;font-size:0;color:#fff;border:0;background:linear-gradient(135deg,#ff8a5c,#ff6e42);
+  box-shadow:0 12px 28px rgba(255,110,66,.45)}
+.floating-call .ic{width:22px;height:22px;position:relative;z-index:1}
+.floating-call::before{content:"";position:absolute;inset:0;border-radius:50%;background:rgba(255,110,66,.5);animation:callPulse 2.4s ease-out infinite;z-index:0}
+.floating-call{overflow:visible}
+@keyframes callPulse{0%{transform:scale(1);opacity:.7}70%,100%{transform:scale(1.7);opacity:0}}
+@media(prefers-reduced-motion:reduce){.floating-call::before{animation:none;display:none}}
+@media(max-width:520px){.floating-call{width:46px;height:46px}.floating-call .ic{width:20px;height:20px}}
+
+/* ---------- فوتر: لوگو سمت چپ + آیکون‌ها ---------- */
+.site-footer{padding:40px 0 16px;scroll-margin-top:80px}
+.footer-grid{gap:22px 28px;grid-template-columns:1fr 1.15fr .9fr 1.3fr;align-items:start}
+.footer-grid .footer-brand{order:5}
+html[dir="ltr"] .footer-grid{grid-template-columns:1.3fr 1fr 1.15fr .9fr}
+html[dir="ltr"] .footer-grid .footer-brand{order:-1}
+.footer-brand{display:flex;flex-direction:column;align-items:flex-start;gap:12px}
+html[dir="rtl"] .footer-brand{align-items:flex-end}
+.footer-brand p{margin:0;max-width:320px}
+.footer-link-icon .ic,.footer-contact-icon .ic,.footer-hours-icon .ic{width:15px;height:15px}
+.footer-link-icon,.footer-contact-icon,.footer-hours-icon{font-size:0}
+.footer-top-link{display:inline-flex;align-items:center;gap:6px}
+.footer-bottom{padding-top:14px;margin-top:6px}
+@media(max-width:1020px){
+  .footer-grid,html[dir="ltr"] .footer-grid{grid-template-columns:1fr 1fr}
+  .footer-grid .footer-brand,html[dir="ltr"] .footer-grid .footer-brand{order:5;grid-column:1/-1}
+}
+@media(max-width:560px){
+  .site-footer{padding:30px 0 14px}
+  .footer-grid,html[dir="ltr"] .footer-grid{grid-template-columns:1fr;gap:14px}
+  .footer-brand p{max-width:none}
+}
+
+/* ---------- دکمه‌ی بازگشت ---------- */
+.mobile-back .ic{width:16px;height:16px}
+.mobile-back span{display:inline-flex}
+.section-link{display:inline-flex;align-items:center;gap:6px}
+
+/* ---------- ریسپانسیو: بدون فضای خالی و بزرگی اضافه ---------- */
+.container{width:min(1180px,calc(100% - clamp(20px,4vw,48px)))}
+.section{padding-block:clamp(26px,4.2vw,52px)}
+.home-blog{padding-block:clamp(26px,4vw,48px) clamp(34px,5vw,60px)}
+.hero{min-height:min(100svh,780px)}
+.hero-inner{padding-block:clamp(96px,13vh,130px) clamp(34px,6vh,64px)!important}
+.hero h1{font-size:clamp(1.55rem,4.2vw,3rem)!important;line-height:1.5}
+.hero-copy>p{font-size:clamp(.82rem,1.3vw,1rem)}
+.compact-heading{margin-bottom:clamp(12px,2vw,20px)}
+.compact-heading h2{font-size:clamp(1.2rem,2.4vw,1.75rem)}
+.projects-block{margin-top:clamp(22px,3.5vw,34px)}
+.page-compact{padding-top:clamp(84px,11vw,112px)}
+@media(max-width:900px){
+  .hero{min-height:min(74svh,600px)}
+  .hero-inner{padding-block:92px 34px!important}
+}
+@media(max-width:520px){
+  .hero{min-height:min(72svh,500px)}
+  .hero-inner{padding-block:84px 28px!important}
+  .section{padding-block:26px}
+  .cards-grid{gap:12px}
+}

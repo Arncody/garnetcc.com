@@ -27,7 +27,6 @@
 <section class="section section-light pd-body">
   <div class="container pd-grid">
     <div class="pd-story">
-      <span class="eyebrow">{% if is_en %}ABOUT THE PROJECT{% else %}درباره پروژه{% endif %}</span>
       <h2>{% if is_en %}{{ project.title_en|default:project.title }}{% else %}{{ project.title }}{% endif %}</h2>
       {% if project.status_note or project.status_note_en %}<p class="pd-note">{% if is_en %}{{ project.status_note_en|default:project.status_note }}{% else %}{{ project.status_note }}{% endif %}</p>{% endif %}
       <div class="pd-text">{% if is_en %}{{ project.full_description_en|default:project.full_description|linebreaks }}{% else %}{{ project.full_description|default:project.short_description|linebreaks }}{% endif %}</div>
@@ -41,7 +40,7 @@
 
   {% if gallery %}
   <div class="container pd-gallery-wrap" id="project-gallery">
-    <div class="compact-heading"><div><span class="eyebrow">{% if is_en %}GALLERY{% else %}گالری{% endif %}</span><h2>{% if is_en %}Project gallery{% else %}گالری تصاویر پروژه{% endif %}</h2></div></div>
+    <div class="compact-heading"><div><h2>{% if is_en %}Project gallery{% else %}گالری تصاویر پروژه{% endif %}</h2></div></div>
     <div class="pd-gallery">
       {% for image in gallery %}
       <figure>
@@ -57,7 +56,7 @@
 
   {% if related_projects %}
   <div class="container pd-related">
-    <div class="compact-heading"><div><span class="eyebrow">{% if is_en %}MORE FROM GARNET{% else %}پروژه‌های دیگر{% endif %}</span><h2>{% if is_en %}Explore other projects{% else %}پروژه‌های دیگر گارنت{% endif %}</h2></div></div>
+    <div class="compact-heading"><div><h2>{% if is_en %}Explore other projects{% else %}پروژه‌های دیگر گارنت{% endif %}</h2></div></div>
     <div class="showcase-strip">
       {% for item in related_projects %}
       {% include "website/_project_card.html" with project=item %}

@@ -1,4 +1,4 @@
-{% extends "website/base.html" %}{% load static %}
+{% extends "website/base.html" %}{% load static site_icons %}
 {% block content %}
 
 <section class="hero hero-compact" id="hero">
@@ -13,7 +13,6 @@
   {% endif %}
   <div class="container hero-inner">
     <div class="hero-copy">
-      <span class="eyebrow">{% if is_en %}{{ hero.badge_text_en|default:hero.badge_text }}{% else %}{{ hero.badge_text }}{% endif %}</span>
       <h1>{% if is_en %}{{ hero.title_en|default:hero.title }}{% else %}{{ hero.title }}{% endif %}</h1>
       <p>{% if is_en %}{{ hero.subtitle_en|default:hero.subtitle }}{% else %}{{ hero.subtitle }}{% endif %}</p>
 
@@ -21,11 +20,6 @@
         <a href="{% url 'website:projects_list' %}#ongoing" class="btn btn-glass hero-glass-action">{% if is_en %}Ongoing Projects{% else %}پروژه‌های در حال اجرا{% endif %}</a>
         <a href="{% url 'website:projects_list' %}#completed" class="btn btn-glass hero-glass-action">{% if is_en %}Built Portfolio{% else %}نمونه‌کارهای اجرا شده{% endif %}</a>
         {% if catalog %}<a href="{{ catalog.file.url }}" class="btn btn-glass hero-glass-action" target="_blank" rel="noopener">{% if is_en %}Company Catalog{% else %}کاتالوگ شرکت{% endif %}</a>{% endif %}
-      </div>
-
-      <div class="hero-mini-links">
-        <a href="{% url 'website:blog_list' %}">{% if is_en %}Blog{% else %}بلاگ{% endif %}</a>
-        <button type="button" class="link-button" data-consult-open>{% if is_en %}Request Consultation{% else %}درخواست مشاوره{% endif %}</button>
       </div>
     </div>
 
@@ -35,18 +29,10 @@
 <section class="section section-overview home-projects" id="projects">
   <div class="container">
     <div class="compact-heading">
-      <div><span class="eyebrow">{% if is_en %}SELECTED DEVELOPMENTS{% else %}انتخاب پروژه‌ها{% endif %}</span><h2>{% if is_en %}A clear view of Garnet.{% else %}گارنت، در یک نگاه.{% endif %}</h2></div>
+      <h2>{% if is_en %}A clear view of Garnet.{% else %}گارنت، در یک نگاه.{% endif %}</h2>
+      <a class="all-projects-btn" href="{% url 'website:projects_list' %}" aria-label="{{ T.all_projects_btn }}" title="{{ T.all_projects_btn }}">{% if is_en %}{% icon "arrow-right" 18 %}{% else %}{% icon "arrow-left" 18 %}{% endif %}</a>
     </div>
-    <div class="home-cards">
-      {% for project in home_projects %}{% include "website/_project_card.html" with project=project %}
-      {% empty %}<div class="empty-state">{% if is_en %}Projects will appear here.{% else %}پروژه‌ها در این بخش نمایش داده می‌شوند.{% endif %}</div>{% endfor %}
-    </div>
-    <div class="more-wrap">
-      <a class="more-btn" href="{% url 'website:projects_list' %}">
-        <span class="more-text"><strong>{{ T.all_projects_btn }}</strong></span>
-        <em aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></em>
-      </a>
-    </div>
+    {% if is_en %}{% include "website/_projects_rail.html" with projects=home_projects rail=rail_home grid_class="home-cards" empty_text="Projects will appear here." %}{% else %}{% include "website/_projects_rail.html" with projects=home_projects rail=rail_home grid_class="home-cards" empty_text="پروژه‌ها در این بخش نمایش داده می‌شوند." %}{% endif %}
   </div>
 </section>
 
@@ -56,7 +42,6 @@
     <article class="about-glass">
       {% if about_bg %}<div class="about-bg" style="background-image:url('{{ about_bg.url }}')" aria-hidden="true"></div>{% endif %}
       <div class="about-panel">
-        <span class="eyebrow">{% if is_en %}ABOUT GARNET{% else %}درباره گارنت{% endif %}</span>
         <h2>{% if is_en %}{{ about_section.title_en|default:about_section.title }}{% else %}{{ about_section.title }}{% endif %}</h2>
         <div class="about-text">{% if is_en %}{{ about_section.content_en|default:about_section.content|linebreaks }}{% else %}{{ about_section.content|linebreaks }}{% endif %}</div>
         <div class="about-actions">
@@ -72,19 +57,15 @@
 <section class="section section-light home-blog" id="blog">
   <div class="container">
     <div class="compact-heading">
-      <div><span class="eyebrow">{{ T.journal_eyebrow }}</span><h2>{{ T.journal_title }}</h2></div>
-      <a class="section-link" href="{% url 'website:blog_list' %}">{{ T.all_articles_link }} {% if is_en %}→{% else %}←{% endif %}</a>
+      <h2>{{ T.journal_title }}</h2>
+      <a class="section-link" href="{% url 'website:blog_list' %}">{{ T.all_articles_link }} {% if is_en %}{% icon "arrow-right" 16 %}{% else %}{% icon "arrow-left" 16 %}{% endif %}</a>
     </div>
     <div class="home-cards">
       {% for post in latest_blog %}{% include "website/_post_card.html" with post=post %}
       {% empty %}<p class="muted">{% if is_en %}The Garnet Journal is coming soon.{% else %}بلاگ گارنت به‌زودی فعال می‌شود.{% endif %}</p>{% endfor %}
     </div>
-    <div class="compact-cta home-cta">
-      <div><span class="eyebrow">{{ T.cta_eyebrow }}</span><p>{{ T.cta_text }}</p></div>
-      <button class="btn btn-primary btn-sm" type="button" data-consult-open>{{ T.cta_button }}</button>
-    </div>
   </div>
 </section>
 
-<a class="floating-call" href="tel:{{ site_settings.phone }}" aria-label="{% if is_en %}Call Garnet{% else %}تماس با گارنت{% endif %}">☎</a>
+<a class="floating-call" href="tel:{{ site_settings.phone }}" aria-label="{% if is_en %}Call Garnet{% else %}تماس با گارنت{% endif %}">{% icon "phone" 22 %}</a>
 {% endblock %}

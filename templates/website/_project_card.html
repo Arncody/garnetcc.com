@@ -1,15 +1,15 @@
-{% comment %}کارت پیش‌نمایش پروژه: عکس کامل (بدون کاور) + وضعیت شیشه‌ای بالا + نام/آدرس/دکمه پایین. متغیر: project{% endcomment %}
+{% load site_icons %}{% comment %}کارت پیش‌نمایش پروژه: عکس کامل (بدون کاور) + وضعیت (راست‌چین) بالا + نام/آدرس/دکمه پایین. متغیر: project{% endcomment %}
 {% with cover=project.cover_image %}
 <a class="mini-project project-preview" href="{{ project.get_absolute_url }}">
   {% if cover %}<img class="pp-image" src="{{ cover.url }}" alt="{% if is_en %}{{ project.title_en|default:project.title }}{% else %}{{ project.title }}{% endif %}" loading="lazy" draggable="false">{% else %}<span class="pp-image pp-empty" aria-hidden="true"></span>{% endif %}
   <div class="pc-top">
-    <span class="pc-status pc-{{ project.status }}"><i aria-hidden="true"></i>{% if project.status == "completed" %}{% if is_en %}Completed{% else %}به اتمام رسیده{% endif %}{% else %}{% if is_en %}In progress{% else %}در حال اجرا{% endif %}{% endif %}</span>
     <small class="pc-label">{% if is_en %}STATUS{% else %}وضعیت{% endif %}</small>
+    <span class="pc-status pc-{{ project.status }}"><i aria-hidden="true"></i>{% if project.status == "completed" %}{% if is_en %}Completed{% else %}به اتمام رسیده{% endif %}{% else %}{% if is_en %}In progress{% else %}در حال اجرا{% endif %}{% endif %}</span>
   </div>
   <div class="pc-bottom">
     <h3>{% if is_en %}{{ project.title_en|default:project.title }}{% else %}{{ project.title }}{% endif %}</h3>
-    {% if project.location or project.location_en %}<span class="pc-loc"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 1 1 13 0C18.5 15.4 12 21 12 21z"/><circle cx="12" cy="10" r="2.3"/></svg>{% if is_en %}{{ project.location_en|default:project.location }}{% else %}{{ project.location }}{% endif %}</span>{% endif %}
-    <span class="pc-view"><span>{% if is_en %}View project{% else %}مشاهده پروژه{% endif %}</span><em aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></em></span>
+    {% if project.location or project.location_en %}<span class="pc-loc">{% icon "pin" 15 %}{% if is_en %}{{ project.location_en|default:project.location }}{% else %}{{ project.location }}{% endif %}</span>{% endif %}
+    <span class="pc-view"><span>{% if is_en %}View project{% else %}مشاهده پروژه{% endif %}</span><em aria-hidden="true">{% icon "arrow-up-right" 14 %}</em></span>
   </div>
 </a>
 {% endwith %}

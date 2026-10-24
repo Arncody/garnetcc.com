@@ -1,4 +1,4 @@
-{% load static %}
+{% load static site_icons %}
 <!doctype html>
 <html lang="{% if is_en %}en{% else %}fa{% endif %}" dir="{% if is_en %}ltr{% else %}rtl{% endif %}">
 <head>
@@ -12,7 +12,7 @@
 <link rel="shortcut icon" href="{{ site_settings.favicon.url }}">
 <link rel="apple-touch-icon" href="{{ site_settings.favicon.url }}">{% else %}<link rel="icon" href="{% url 'website:favicon' %}">{% endif %}
 <meta property="og:site_name" content="{{ site_settings.brand_name }}"><meta property="og:type" content="website"><meta property="og:url" content="{{ request.build_absolute_uri }}">{% if site_settings.logo %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ site_settings.logo.url }}">{% endif %}
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"{{ site_settings.brand_name|escapejs }}","legalName":"{{ site_settings.legal_name|escapejs }}","url":"{{ request.scheme }}://{{ request.get_host }}/"{% if site_settings.logo %},"logo":"{{ request.scheme }}://{{ request.get_host }}{{ site_settings.logo.url }}"{% endif %}{% if site_settings.instagram_url %},"sameAs":["{{ site_settings.instagram_url|escapejs }}"]{% endif %}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"{{ site_settings.brand_name|escapejs }}","legalName":"{{ site_settings.legal_name|escapejs }}","url":"{{ request.scheme }}://{{ request.get_host }}/"{% if site_settings.logo %},"logo":"{{ request.scheme }}://{{ request.get_host }}{{ site_settings.logo.url }}"{% endif %}{% if site_settings.instagram_url or site_settings.linkedin_url %},"sameAs":[{% if site_settings.instagram_url %}"{{ site_settings.instagram_url|escapejs }}"{% endif %}{% if site_settings.instagram_url and site_settings.linkedin_url %},{% endif %}{% if site_settings.linkedin_url %}"{{ site_settings.linkedin_url|escapejs }}"{% endif %}]{% endif %}}</script>
 <link rel="stylesheet" href="{% static 'css/fonts.css' %}"><link rel="stylesheet" href="{% static 'css/style.css' %}?v=20261013d">
 <style id="garnet-theme">
 :root{
@@ -35,12 +35,12 @@ small,.small{font-weight:var(--small-weight)}
 {% if site_theme.custom_css %}{{ site_theme.custom_css|safe }}{% endif %}
 </style>
 <link rel="stylesheet" href="{% static 'css/consult-modal.css' %}?v=20261013-redesign1">
+<link rel="stylesheet" href="{% static 'css/garnet-ui.css' %}?v=20261024a">
 
 {% block extra_head %}{% endblock %}
 </head>
 <body class="site-shell">
 <a class="skip-link" href="#main-content">{% if is_en %}Skip to content{% else %}رفتن به محتوای اصلی{% endif %}</a>
-{% with u=request.resolver_match.url_name %}
 <header class="g-header">
   <div class="g-wrap">
     <div class="g-bar">
@@ -48,25 +48,19 @@ small,.small{font-weight:var(--small-weight)}
         {% if site_settings.logo_light %}<img src="{{ site_settings.logo_light.url }}" alt="{{ site_settings.brand_name }}">{% elif site_settings.logo %}<img src="{{ site_settings.logo.url }}" alt="{{ site_settings.brand_name }}">{% else %}<span class="brand-text">{{ site_settings.brand_name }}</span>{% endif %}
       </a>
       <nav class="g-nav" aria-label="{% if is_en %}Main{% else %}منوی اصلی{% endif %}">
-        <a href="{% url 'website:home' %}#hero"{% if u == 'home' %} class="is-active"{% endif %}>{% if is_en %}Home{% else %}خانه{% endif %}</a>
-        <a href="{% url 'website:projects_list' %}"{% if u == 'projects_list' or u == 'project_detail' %} class="is-active"{% endif %}>{% if is_en %}Projects{% else %}پروژه‌ها{% endif %}</a>
-        <a href="{% url 'website:blog_list' %}"{% if u == 'blog_list' or u == 'blog_detail' %} class="is-active"{% endif %}>{% if is_en %}Blog{% else %}بلاگ{% endif %}</a>
+        {% for item in menu_items %}{% if item.consult %}<button type="button" class="g-nav-btn" data-consult-open>{{ item.label }}</button>{% else %}<a href="{{ item.url }}"{% if item.active %} class="is-active" aria-current="page"{% endif %}>{{ item.label }}</a>{% endif %}{% endfor %}
       </nav>
       <div class="g-actions">
-        <button type="button" class="g-cta" data-consult-open>{% if is_en %}Consultation{% else %}درخواست مشاوره{% endif %}</button>
+        <button type="button" class="g-cta" data-consult-open>{% icon "phone" 16 %}<span>{% if is_en %}Consultation{% else %}درخواست مشاوره{% endif %}</span></button>
         <button type="button" class="g-toggle" id="nav-toggle" aria-label="{% if is_en %}Open menu{% else %}باز کردن منو{% endif %}" aria-expanded="false" aria-controls="main-nav"><span></span><span></span><span></span></button>
       </div>
     </div>
     <nav class="g-panel" id="main-nav" aria-label="{% if is_en %}Menu{% else %}منو{% endif %}">
-      <a class="g-panel-lang" href="{% url 'website:set_language' %}?lang={% if is_en %}fa{% else %}en{% endif %}">{% if is_en %}فارسی{% else %}English{% endif %}</a>
-      <a href="{% url 'website:home' %}#hero">{% if is_en %}Home{% else %}خانه{% endif %}</a>
-      <a href="{% url 'website:projects_list' %}">{% if is_en %}Projects{% else %}پروژه‌ها{% endif %}</a>
-      <a href="{% url 'website:blog_list' %}">{% if is_en %}Blog{% else %}بلاگ{% endif %}</a>
-      <a href="{% url 'website:home' %}#about">{% if is_en %}About{% else %}درباره گارنت{% endif %}</a>
+      {% for item in menu_items %}{% if item.consult %}<button type="button" class="g-panel-btn" data-consult-open>{{ item.label }}</button>{% else %}<a href="{{ item.url }}"{% if item.active %} class="is-active" aria-current="page"{% endif %}>{{ item.label }}</a>{% endif %}{% endfor %}
+      <a class="g-panel-lang" href="{% url 'website:set_language' %}?lang={% if is_en %}fa{% else %}en{% endif %}">{% icon "globe" 16 %}<span>{% if is_en %}فارسی{% else %}English{% endif %}</span></a>
     </nav>
   </div>
 </header>
-{% endwith %}
 <main id="main-content">
 {% if messages %}<div class="site-toasts" aria-live="polite">{% for message in messages %}<div class="site-toast site-toast-{{ message.tags }}" role="status">{{ message }}</div>{% endfor %}</div>{% endif %}
 {% block content %}{% endblock %}
@@ -75,7 +69,7 @@ small,.small{font-weight:var(--small-weight)}
 <div class="consult-modal{% if consult_form.errors %} has-form-errors{% endif %}" id="consultModal" hidden role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="consultTitle" tabindex="-1"{% if consult_form.errors or consult_keep_open %} data-auto-open="true"{% endif %}>
   <div class="consult-modal-inner">
     <button type="button" class="modal-close" data-consult-close aria-label="{% if is_en %}Close{% else %}بستن{% endif %}">×</button>
-    <div class="modal-heading"><span class="eyebrow">{{ T.modal_eyebrow }}</span><h2 id="consultTitle">{{ T.modal_title }}</h2><p>{{ T.modal_subtitle }}</p></div>
+    <div class="modal-heading"><h2 id="consultTitle">{{ T.modal_title }}</h2><p>{{ T.modal_subtitle }}</p></div>
     <form method="post" action="{% url 'website:home' %}" class="consult-form" novalidate data-consult-form>
       {% csrf_token %}{{ consult_form.website }}
       <div class="form-grid compact-form">
@@ -90,30 +84,31 @@ small,.small{font-weight:var(--small-weight)}
   </div>
 </div>
 {% endwith %}
-{% if request.path != '/' %}<a class="mobile-back" href="javascript:history.back()" aria-label="{% if is_en %}Back{% else %}بازگشت{% endif %}"><span aria-hidden="true">{% if is_en %}←{% else %}→{% endif %}</span><b>{% if is_en %}Back{% else %}بازگشت{% endif %}</b></a>{% endif %}
-<footer class="site-footer">
+{% if request.path != '/' %}<a class="mobile-back" href="javascript:history.back()" aria-label="{% if is_en %}Back{% else %}بازگشت{% endif %}"><span aria-hidden="true">{% if is_en %}{% icon "arrow-left" 16 %}{% else %}{% icon "arrow-right" 16 %}{% endif %}</span><b>{% if is_en %}Back{% else %}بازگشت{% endif %}</b></a>{% endif %}
+<footer class="site-footer" id="contact">
   <div class="container footer-grid">
     <div class="footer-brand"><a href="{% url 'website:home' %}" class="brand footer-logo-link" aria-label="{{ site_settings.brand_name }}">{% if site_settings.logo %}<img src="{{ site_settings.logo.url }}" alt="{{ site_settings.brand_name }}" class="brand-wordmark footer-wordmark">{% else %}<span class="brand-text">{{ site_settings.brand_name }}</span>{% endif %}</a><p>{% if is_en %}A refined approach to contemporary residential architecture, engineering and development.{% else %}رویکردی دقیق و اصیل به معماری معاصر مسکونی، مهندسی و توسعه ساختمان.{% endif %}</p></div>
     <div class="footer-col footer-links-col"><h4>{% if is_en %}Explore{% else %}دسترسی سریع{% endif %}</h4>
-      <a class="footer-link-item" href="{% url 'website:projects_list' %}#ongoing"><span class="footer-link-icon" aria-hidden="true">↗</span><span>{% if is_en %}Developments{% else %}پروژه‌های در حال اجرا{% endif %}</span></a>
-      <a class="footer-link-item" href="{% url 'website:projects_list' %}#completed"><span class="footer-link-icon" aria-hidden="true">◇</span><span>{% if is_en %}Built Portfolio{% else %}نمونه‌کارهای اجرا شده{% endif %}</span></a>
-      <a class="footer-link-item" href="{% url 'website:blog_list' %}"><span class="footer-link-icon" aria-hidden="true">▤</span><span>{% if is_en %}Blog{% else %}بلاگ{% endif %}</span></a>
-      {% if catalog %}<a class="footer-link-item" href="{{ catalog.file.url }}" target="_blank" rel="noopener"><span class="footer-link-icon" aria-hidden="true">↓</span><span>{% if is_en %}Company Catalog{% else %}کاتالوگ شرکت{% endif %}</span></a>{% endif %}
-      <button class="footer-link-item footer-consult" type="button" data-consult-open><span class="footer-link-icon" aria-hidden="true">＋</span><span>{% if is_en %}Consultation{% else %}درخواست مشاوره{% endif %}</span></button>
+      <a class="footer-link-item" href="{% url 'website:projects_list' %}#ongoing"><span class="footer-link-icon" aria-hidden="true">{% icon "wrench" 15 %}</span><span>{% if is_en %}Developments{% else %}پروژه‌های در حال اجرا{% endif %}</span></a>
+      <a class="footer-link-item" href="{% url 'website:projects_list' %}#completed"><span class="footer-link-icon" aria-hidden="true">{% icon "check-building" 15 %}</span><span>{% if is_en %}Built Portfolio{% else %}نمونه‌کارهای اجرا شده{% endif %}</span></a>
+      <a class="footer-link-item" href="{% url 'website:blog_list' %}"><span class="footer-link-icon" aria-hidden="true">{% icon "book" 15 %}</span><span>{% if is_en %}Blog{% else %}بلاگ{% endif %}</span></a>
+      {% if catalog %}<a class="footer-link-item" href="{{ catalog.file.url }}" target="_blank" rel="noopener"><span class="footer-link-icon" aria-hidden="true">{% icon "download" 15 %}</span><span>{% if is_en %}Company Catalog{% else %}کاتالوگ شرکت{% endif %}</span></a>{% endif %}
+      <button class="footer-link-item footer-consult" type="button" data-consult-open><span class="footer-link-icon" aria-hidden="true">{% icon "message" 15 %}</span><span>{% if is_en %}Consultation{% else %}درخواست مشاوره{% endif %}</span></button>
     </div>
     <div class="footer-col footer-contact-col"><h4>{% if is_en %}Contact{% else %}ارتباط با ما{% endif %}</h4>
-      <a class="footer-contact-item" href="tel:{{ site_settings.phone }}"><span class="footer-contact-icon" aria-hidden="true">☎</span><span>{{ site_settings.phone }}</span></a>
-      <a class="footer-contact-item" href="mailto:{{ site_settings.email }}"><span class="footer-contact-icon" aria-hidden="true">✉</span><span>{{ site_settings.email }}</span></a>
-      <a class="footer-contact-item" href="{{ site_settings.instagram_url }}" target="_blank" rel="noopener" aria-label="Instagram"><span class="footer-contact-icon instagram-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="img"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor"/></svg></span><span>Instagram</span></a>
-      <div class="footer-address"><span class="footer-contact-icon" aria-hidden="true">⌖</span><p>{{ site_settings.address }}</p></div>
+      <a class="footer-contact-item" href="tel:{{ site_settings.phone }}"><span class="footer-contact-icon" aria-hidden="true">{% icon "phone" 15 %}</span><span>{{ site_settings.phone }}</span></a>
+      <a class="footer-contact-item" href="mailto:{{ site_settings.email }}"><span class="footer-contact-icon" aria-hidden="true">{% icon "mail" 15 %}</span><span>{{ site_settings.email }}</span></a>
+      {% if site_settings.instagram_url %}<a class="footer-contact-item" href="{{ site_settings.instagram_url }}" target="_blank" rel="noopener" aria-label="Instagram"><span class="footer-contact-icon instagram-icon" aria-hidden="true">{% icon "instagram" 15 %}</span><span>Instagram</span></a>{% endif %}
+      {% if site_settings.linkedin_url %}<a class="footer-contact-item" href="{{ site_settings.linkedin_url }}" target="_blank" rel="noopener" aria-label="LinkedIn"><span class="footer-contact-icon linkedin-icon" aria-hidden="true">{% icon "linkedin" 15 %}</span><span>LinkedIn</span></a>{% endif %}
+      <div class="footer-address"><span class="footer-contact-icon" aria-hidden="true">{% icon "pin" 15 %}</span><p>{{ site_settings.address }}</p></div>
     </div>
     <div class="footer-col footer-hours-col"><h4>{% if is_en %}Hours{% else %}ساعات کاری{% endif %}</h4>
-      <div class="footer-hours"><span class="footer-hours-icon" aria-hidden="true">◷</span><p>{% if is_en %}Sat–Wed{% else %}شنبه تا چهارشنبه{% endif %}<strong>{{ site_settings.working_hours_weekday }}</strong></p></div>
-      <div class="footer-hours"><span class="footer-hours-icon" aria-hidden="true">◷</span><p>{% if is_en %}Thu{% else %}پنجشنبه{% endif %}<strong>{{ site_settings.working_hours_weekend }}</strong></p></div>
+      <div class="footer-hours"><span class="footer-hours-icon" aria-hidden="true">{% icon "clock" 15 %}</span><p>{% if is_en %}Sat–Wed{% else %}شنبه تا چهارشنبه{% endif %}<strong>{{ site_settings.working_hours_weekday }}</strong></p></div>
+      <div class="footer-hours"><span class="footer-hours-icon" aria-hidden="true">{% icon "clock" 15 %}</span><p>{% if is_en %}Thu{% else %}پنجشنبه{% endif %}<strong>{{ site_settings.working_hours_weekend }}</strong></p></div>
     </div>
   </div>
-  <div class="container footer-bottom"><span>© {% now "Y" %} {{ site_settings.brand_name }}. {% if is_en %}All rights reserved.{% else %}تمامی حقوق محفوظ است.{% endif %}</span><a href="#main-content">{% if is_en %}Back to top ↑{% else %}بازگشت به بالا ↑{% endif %}</a></div>
+  <div class="container footer-bottom"><span>© {% now "Y" %} {{ site_settings.brand_name }}. {% if is_en %}All rights reserved.{% else %}تمامی حقوق محفوظ است.{% endif %}</span><a class="footer-top-link" href="#main-content">{% if is_en %}Back to top{% else %}بازگشت به بالا{% endif %} {% icon "arrow-up" 14 %}</a></div>
 </footer>
-<script src="{% static 'js/main.js' %}?v=20261013-redesign1" defer></script>
+<script src="{% static 'js/main.js' %}?v=20261024a" defer></script>
 {% block extra_scripts %}{% endblock %}
 </body></html>

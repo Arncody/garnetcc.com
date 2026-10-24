@@ -40,8 +40,8 @@ def _is_rate_limited(ip_address):
     return False
 
 
-def _mixed_home_projects(limit=3):
-    """ترکیب پروژه‌های در حال اجرا و اتمام‌شده برای صفحه اصلی (به‌صورت یکی‌درمیان)."""
+def _mixed_home_projects(limit=24):
+    """همه‌ی پروژه‌های فعال برای ردیف چرخان صفحه اصلی (به‌صورت یکی‌درمیان در حال اجرا / اتمام‌شده)."""
     base = Project.objects.filter(is_active=True).prefetch_related("images")
     pools = [
         list(base.filter(status=Project.STATUS_ONGOING)[:limit]),
@@ -63,7 +63,7 @@ def _common_context():
         .prefetch_related("images")
     )
     hero = HeroSection.load()
-    home_projects = _mixed_home_projects(3)
+    home_projects = _mixed_home_projects()
     about_section = SiteSection.objects.filter(key=SiteSection.KEY_ABOUT, is_active=True).first()
     # پس‌زمینه‌ی «درباره گارنت»: عکس همان بخش، وگرنه عکس هیرو، وگرنه عکس نخستین پروژه
     about_bg = None

@@ -1,0 +1,16 @@
+{% comment %}
+ردیف پروژه‌ها: اگر rail=True باشد به‌صورت ردیف افقی چرخان (قابل کشیدن)، وگرنه شبکه‌ی ثابت.
+متغیرها: projects, rail, grid_class, empty_text
+{% endcomment %}
+{% if rail and projects|length > 1 %}
+<div class="proj-rail" data-rail data-speed="{{ site_settings.projects_carousel_speed }}" role="region" aria-label="{% if is_en %}Projects{% else %}پروژه‌ها{% endif %}">
+  <div class="proj-rail-track" data-rail-track>
+    {% for project in projects %}{% include "website/_project_card.html" with project=project %}{% endfor %}
+  </div>
+</div>
+{% else %}
+<div class="{{ grid_class }}">
+  {% for project in projects %}{% include "website/_project_card.html" with project=project %}
+  {% empty %}<p class="empty-state">{{ empty_text }}</p>{% endfor %}
+</div>
+{% endif %}

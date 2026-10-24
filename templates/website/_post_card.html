@@ -1,10 +1,10 @@
-{% load site_dates %}{% comment %}کارت پیش‌نمایش مقاله (هم‌شکل کارت پروژه). متغیر: post{% endcomment %}
+{% load site_dates site_icons %}{% comment %}کارت پیش‌نمایش مقاله (هم‌شکل کارت پروژه). متغیر: post{% endcomment %}
 <a class="mini-project project-preview post-preview" href="{{ post.get_absolute_url }}">
   {% if post.cover %}<img class="pp-image" src="{{ post.cover.url }}" alt="{% if is_en %}{{ post.title_en|default:post.title }}{% else %}{{ post.title }}{% endif %}" loading="lazy" draggable="false">{% else %}<span class="pp-image pp-empty" aria-hidden="true"></span>{% endif %}
   {% if post.category or post.category_en %}<div class="pc-top"><span class="pc-status pc-post">{% if is_en %}{{ post.category_en|default:post.category }}{% else %}{{ post.category }}{% endif %}</span></div>{% endif %}
   <div class="pc-bottom">
     <h3>{% if is_en %}{{ post.title_en|default:post.title }}{% else %}{{ post.title }}{% endif %}</h3>
-    <span class="pc-loc"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><time datetime="{{ post.display_date|date:'c' }}">{{ post.display_date|site_datetime:lang }}</time></span>
-    <span class="pc-view"><span>{% if is_en %}Read article{% else %}مطالعه مقاله{% endif %}</span><em aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></em></span>
+    <span class="pc-loc">{% icon "calendar" 15 %}<time datetime="{{ post.display_date|date:'c' }}">{{ post.display_date|site_datetime:lang }}</time></span>
+    <span class="pc-view"><span>{% if is_en %}Read article{% else %}مطالعه مقاله{% endif %}</span><em aria-hidden="true">{% icon "arrow-up-right" 14 %}</em></span>
   </div>
 </a>

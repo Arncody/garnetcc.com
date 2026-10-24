@@ -3,7 +3,7 @@
 {% block content %}
 <section class="section section-light page-compact">
 <div class="container">
-<div class="compact-heading"><div><span class="eyebrow">{{ T.blog_page_eyebrow }}</span><h1>{{ T.blog_page_title }}</h1></div></div>
+<div class="compact-heading"><div><h1>{{ T.blog_page_title }}</h1></div></div>
 <div class="cards-grid">
 {% for post in posts %}{% include "website/_post_card.html" with post=post %}
 {% empty %}<p class="empty-state">{% if is_en %}No articles published yet.{% else %}هنوز مقاله‌ای منتشر نشده است.{% endif %}</p>{% endfor %}

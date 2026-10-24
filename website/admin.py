@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from .models import (
     SiteSettings, HeroSection, HeroStat, Project, ProjectImage,
-    PhilosophyFeature, SiteSection, ConsultationRequest, CompanyCatalog, BlogPost, SiteTheme, SiteTexts
+    PhilosophyFeature, SiteSection, ConsultationRequest, CompanyCatalog, BlogPost, SiteTheme, SiteTexts, MenuItem
 )
 
 admin.site.site_header = "پنل مدیریت گارنت | Garnet CMS"
@@ -55,7 +55,8 @@ class SiteThemeAdmin(admin.ModelAdmin):
 class SiteSettingsAdmin(admin.ModelAdmin):
     fieldsets=(
         ("برند / Brand",{"fields":("brand_name","legal_name","logo","logo_light","favicon",("tagline","tagline_en"))}),
-        ("تماس / Contact",{"fields":("phone","email","address","instagram_url")}),
+        ("تماس / Contact",{"fields":("phone","email","address","instagram_url","linkedin_url")}),
+        ("چرخش پروژه‌ها / Projects carousel",{"fields":("projects_carousel_enabled","projects_carousel_speed","projects_carousel_on_list")}),
         ("رزرو / Booking",{"fields":("booking_url","working_hours_weekday","working_hours_weekend")}),
         ("SEO",{"fields":("meta_title","meta_description")}),
     )
@@ -68,8 +69,8 @@ class HeroStatInline(admin.TabularInline):
 @admin.register(HeroSection)
 class HeroSectionAdmin(admin.ModelAdmin):
     fieldsets=(
-        ("فارسی",{"fields":("badge_text","title","subtitle")}),
-        ("English",{"fields":("badge_text_en","title_en","subtitle_en")}),
+        ("فارسی",{"fields":("title","subtitle")}),
+        ("English",{"fields":("title_en","subtitle_en")}),
         ("تصویر / ویدیو / Media",{"fields":("background_image","background_video")}),
         ("CTA فارسی",{"fields":(("primary_button_text","primary_button_url"),("secondary_button_text","secondary_button_url"),("tertiary_button_text","tertiary_button_url"))}),
         ("CTA English",{"fields":(("primary_button_text_en",),("secondary_button_text_en",),("tertiary_button_text_en",))}),
@@ -131,11 +132,10 @@ class BlogPostAdmin(admin.ModelAdmin):
 class SiteTextsAdmin(admin.ModelAdmin):
     """ویرایش عنوان‌های صفحه اصلی، کادر مشاوره و تمام متن‌های فرم درخواست (فارسی + انگلیسی)."""
     fieldsets = (
-        ("🔘 دکمه «مشاهده همه پروژه‌ها» (صفحه اصلی)", {"fields": (("all_projects_btn","all_projects_btn_en"),)}),
-        ("📰 بخش بلاگ (صفحه اصلی)", {"fields": (("journal_eyebrow","journal_eyebrow_en"),("journal_title","journal_title_en"),("all_articles_link","all_articles_link_en"),)}),
-        ("📚 صفحه «همه مقالات»", {"fields": (("blog_page_eyebrow","blog_page_eyebrow_en"),("blog_page_title","blog_page_title_en"),)}),
-        ("💬 کادر «مشاوره خصوصی» (صفحه اصلی)", {"fields": (("cta_eyebrow","cta_eyebrow_en"),("cta_text","cta_text_en"),("cta_button","cta_button_en"),)}),
-        ("📝 پاپ‌آپ فرم درخواست مشاوره", {"fields": (("modal_eyebrow","modal_eyebrow_en"),("modal_title","modal_title_en"),("modal_subtitle","modal_subtitle_en"),("submit_text","submit_text_en"),)}),
+        ("🔘 دکمه‌ی آیکونی «مشاهده همه پروژه‌ها» (صفحه اصلی)", {"fields": (("all_projects_btn","all_projects_btn_en"),), "description": "دکمه فقط آیکون دارد؛ این متن برای راهنمای شناور (tooltip) و دسترس‌پذیری استفاده می‌شود."}),
+        ("📰 بخش بلاگ (صفحه اصلی)", {"fields": (("journal_title","journal_title_en"),("all_articles_link","all_articles_link_en"),)}),
+        ("📚 صفحه «همه مقالات»", {"fields": (("blog_page_title","blog_page_title_en"),)}),
+        ("📝 پاپ‌آپ فرم درخواست مشاوره", {"fields": (("modal_title","modal_title_en"),("modal_subtitle","modal_subtitle_en"),("submit_text","submit_text_en"),)}),
         ("🏷️ عنوان فیلدهای فرم", {"fields": (("label_name","label_name_en"),("label_gender","label_gender_en"),("label_phone","label_phone_en"),("label_subject","label_subject_en"),("label_message","label_message_en"),)}),
         ("✍️ متن راهنمای داخل فیلدها (Placeholder)", {"fields": (("ph_name","ph_name_en"),("ph_phone","ph_phone_en"),("ph_subject","ph_subject_en"),("ph_message","ph_message_en"),)}),
         ("👤 گزینه‌های فیلد «عنوان»", {"fields": (("opt_male","opt_male_en"),("opt_female","opt_female_en"),("opt_other","opt_other_en"),)}),
@@ -146,3 +146,16 @@ class SiteTextsAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
+
+@admin.register(MenuItem)
+class MenuItemAdmin(admin.ModelAdmin):
+    """منوی اصلی سایت (هدر دسکتاپ + منوی موبایل): افزودن، حذف، تغییر عنوان/لینک و ترتیب."""
+    list_display = ("title", "title_en", "url", "open_consult", "order", "is_active")
+    list_editable = ("order", "is_active")
+    list_filter = ("is_active", "open_consult")
+    search_fields = ("title", "title_en", "url")
+    ordering = ("order", "id")
+    fieldsets = (
+        ("آیتم منو", {"fields": (("title", "title_en"), "url", "open_consult", ("order", "is_active"))}),
+    )

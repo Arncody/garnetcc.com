@@ -5,7 +5,7 @@ website/models.py
 یا JSON Builder) خودداری شده است. تمام محتوای قابل مشاهده در فرانت از همین
 مدل‌ها می‌آید تا مدیر سایت بتواند همه‌چیز را از پنل ادمین ویرایش کند.
 """
-from django.core.validators import RegexValidator, FileExtensionValidator
+from django.core.validators import RegexValidator, FileExtensionValidator, MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
 from PIL import Image, UnidentifiedImageError
 from django.db import models
@@ -125,6 +125,22 @@ class SiteSettings(SingletonModel):
         default="البرز، کرج، گوهردشت، بلوار اصلی، مجتمع تجاری اداری نیکامال",
     )
     instagram_url = models.URLField("لینک اینستاگرام", default="https://instagram.com/garnet_cc", blank=True)
+    linkedin_url = models.URLField(
+        "لینک لینکدین", blank=True, default="",
+        help_text="در فوتر سایت کنار اینستاگرام نمایش داده می‌شود؛ اگر خالی بماند، نمایش داده نمی‌شود.",
+    )
+    projects_carousel_enabled = models.BooleanField(
+        "چرخش افقی خودکار پروژه‌ها", default=True,
+        help_text="اگر خاموش شود، پروژه‌ها به‌صورت ردیف/شبکه‌ی ثابت نمایش داده می‌شوند.",
+    )
+    projects_carousel_speed = models.PositiveIntegerField(
+        "سرعت چرخش پروژه‌ها (پیکسل بر ثانیه)", default=40,
+        validators=[MinValueValidator(10), MaxValueValidator(200)],
+        help_text="عدد بین ۱۰ تا ۲۰۰؛ مقدار استاندارد ۴۰ است (بزرگ‌تر = سریع‌تر).",
+    )
+    projects_carousel_on_list = models.BooleanField(
+        "چرخش پروژه‌ها در صفحه «پروژه‌ها» هم اعمال شود", default=True,
+    )
 
     booking_url = models.CharField(
         "لینک دکمه «هماهنگی جلسه»", max_length=200, blank=True, default="#contact",
@@ -146,6 +162,30 @@ class SiteSettings(SingletonModel):
 
     def __str__(self):
         return "تنظیمات سایت گارنت"
+
+
+class MenuItem(models.Model):
+    """آیتم‌های منوی اصلی سایت (هدر دسکتاپ و منوی موبایل)؛ از پنل ادمین قابل ویرایش، حذف و مرتب‌سازی است."""
+
+    title = models.CharField("عنوان", max_length=60)
+    title_en = models.CharField("عنوان (EN)", max_length=60, blank=True)
+    url = models.CharField(
+        "لینک", max_length=200, blank=True, default="",
+        help_text="مثال: /projects/ یا /#about یا #contact (رفتن به فوتر). برای باز شدن فرم مشاوره، گزینه‌ی پایین را تیک بزنید.",
+    )
+    open_consult = models.BooleanField(
+        "باز کردن فرم مشاوره به‌جای رفتن به لینک", default=False,
+    )
+    order = models.PositiveIntegerField("ترتیب نمایش", default=0)
+    is_active = models.BooleanField("نمایش در منو", default=True)
+
+    class Meta:
+        verbose_name = "آیتم منو"
+        verbose_name_plural = "آیتم‌های منوی اصلی"
+        ordering = ["order", "id"]
+
+    def __str__(self):
+        return self.title
 
 
 class SiteTheme(SingletonModel):
