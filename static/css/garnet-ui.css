@@ -82,7 +82,8 @@ html[dir="ltr"] .pc-top{direction:ltr}
 .proj-rail::-webkit-scrollbar{display:none}
 .proj-rail.is-dragging{cursor:grabbing;user-select:none}
 .proj-rail.is-dragging a{pointer-events:none}
-.proj-rail-track{display:flex;gap:clamp(10px,1.4vw,18px);width:max-content}
+.proj-rail-track{display:flex;flex-wrap:nowrap;gap:clamp(10px,1.4vw,18px);width:max-content;min-width:max-content}
+.proj-rail .mini-project.project-preview{flex-shrink:0;max-width:none}
 .proj-rail .mini-project.project-preview{flex:0 0 clamp(220px,26vw,330px);width:clamp(220px,26vw,330px);aspect-ratio:4/5}
 @media(max-width:900px){.proj-rail .mini-project.project-preview{flex-basis:clamp(200px,46vw,280px);width:clamp(200px,46vw,280px);aspect-ratio:4/5}}
 @media(max-width:520px){.proj-rail .mini-project.project-preview{flex-basis:min(68vw,250px);width:min(68vw,250px);aspect-ratio:4/5}}

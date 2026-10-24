@@ -65,14 +65,9 @@ def _common_context():
     hero = HeroSection.load()
     home_projects = _mixed_home_projects()
     about_section = SiteSection.objects.filter(key=SiteSection.KEY_ABOUT, is_active=True).first()
-    # پس‌زمینه‌ی «درباره گارنت»: عکس همان بخش، وگرنه عکس هیرو، وگرنه عکس نخستین پروژه
-    about_bg = None
-    if about_section and about_section.image:
-        about_bg = about_section.image
-    elif hero.background_image:
-        about_bg = hero.background_image
-    elif home_projects:
-        about_bg = home_projects[0].cover_image
+    # پس‌زمینه‌ی «درباره گارنت» فقط وقتی نمایش داده شود که برای همین بخش
+    # عکس مستقلاً در پنل مدیریت انتخاب شده باشد؛ از عکس هیرو/پروژه‌ها fallback نکن.
+    about_bg = about_section.image if about_section and about_section.image else None
 
     return {
         "hero": hero,

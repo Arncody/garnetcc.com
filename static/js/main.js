@@ -220,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
 (function () {
   var rails = document.querySelectorAll('[data-rail]');
   if (!rails.length) return;
-  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   rails.forEach(function (rail) {
     var track = rail.querySelector('[data-rail-track]');
@@ -312,7 +312,16 @@ document.addEventListener('DOMContentLoaded', () => {
       resizeTimer = window.setTimeout(function () { build(); pos = dirSign * rail.scrollLeft; wrap(); }, 200);
     });
 
-    function init() { dirSign = getComputedStyle(rail).direction === 'rtl' ? -1 : 1; build(); pos = 0; rail.scrollLeft = 0; window.requestAnimationFrame(tick); }
+    function init() {
+      // Keep the scroll container LTR so scrollLeft behaves consistently in iOS Safari/RTL pages.
+      rail.style.direction = 'ltr';
+      track.style.direction = getComputedStyle(document.documentElement).direction === 'rtl' ? 'rtl' : 'ltr';
+      dirSign = 1;
+      build();
+      pos = 0;
+      rail.scrollLeft = 0;
+      window.requestAnimationFrame(tick);
+    }
     if (document.readyState === 'complete') init(); else window.addEventListener('load', init);
   });
 })();
