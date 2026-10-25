@@ -204,3 +204,24 @@ html[dir="rtl"] .footer-brand{align-items:flex-end}
 .site-footer{position:relative;isolation:isolate;background-color:#35094b!important;background-image:radial-gradient(ellipse 38% 28px at 8% 0%,rgba(157,104,179,.42) 0 98%,transparent 100%),radial-gradient(ellipse 30% 24px at 39% 0%,rgba(157,104,179,.28) 0 98%,transparent 100%),radial-gradient(ellipse 42% 30px at 82% 0%,rgba(157,104,179,.34) 0 98%,transparent 100%)!important;border-top:0!important;}
 
 .footer-logo-inline{margin:0 0 18px!important;}
+
+
+/* ---------- Fix: project rail on phones (iPhone/Android) ----------
+   1) style.css (max-width:640px) forces .mini-project{width:100%!important}; inside a max-content track
+      that collapses the cards to a few pixels on iOS. Re-assert the intended card width with higher specificity.
+   2) The rail/track are direction:ltr (needed for the transform math); the cards themselves must follow the page direction
+      so status / title / location are right-aligned in Persian. */
+.proj-rail .proj-rail-track>.mini-project.project-preview{
+  flex:0 0 clamp(220px,26vw,330px)!important;width:clamp(220px,26vw,330px)!important;min-width:clamp(220px,26vw,330px)!important;max-width:none!important;
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+@media(max-width:900px){.proj-rail .proj-rail-track>.mini-project.project-preview{flex-basis:clamp(200px,46vw,280px)!important;width:clamp(200px,46vw,280px)!important;min-width:clamp(200px,46vw,280px)!important}}
+@media(max-width:520px){.proj-rail .proj-rail-track>.mini-project.project-preview{flex-basis:min(68vw,250px)!important;width:min(68vw,250px)!important;min-width:min(68vw,250px)!important}}
+.proj-rail .proj-rail-track>.mini-project.project-preview{aspect-ratio:4/5!important}
+.proj-rail .pp-image{pointer-events:none;-webkit-user-drag:none}
+html[dir="rtl"] .proj-rail .mini-project.project-preview{direction:rtl;text-align:right}
+html[dir="ltr"] .proj-rail .mini-project.project-preview{direction:ltr;text-align:left}
+html[dir="rtl"] .pc-top,html[dir="rtl"] .pc-bottom{direction:rtl;text-align:right}
+html[dir="rtl"] .pc-bottom{align-items:flex-start}
+html[dir="ltr"] .pc-top,html[dir="ltr"] .pc-bottom{direction:ltr;text-align:left}
+.proj-rail{touch-action:pan-y;-webkit-tap-highlight-color:transparent}
+.proj-rail:active{cursor:grabbing}

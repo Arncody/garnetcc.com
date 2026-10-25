@@ -285,21 +285,39 @@ document.addEventListener('DOMContentLoaded', () => {
       rail.addEventListener('mouseleave', function () { if (!dragging) resume(350); });
       rail.addEventListener('focusin', pause);
       rail.addEventListener('focusout', function () { resume(700); });
+      function wrap(v) {
+        if (!setWidth) return 0;
+        v = v % setWidth;
+        return v < 0 ? v + setWidth : v;
+      }
+      function beginDrag(x) { pause(); dragging = true; startX = x; startPos = pos; moved = false; }
+      function moveDrag(x) {
+        if (!dragging) return;
+        var dx = x - startX;
+        if (Math.abs(dx) > 5) moved = true;
+        if (moved) { pos = wrap(startPos - dx); render(); } /* finger right => content right */
+      }
+      function endDrag(delay) { if (!dragging) return; dragging = false; resume(delay); }
+      /* Touch (iOS + Android). touchcancel is essential: Android fires it when the browser takes over a vertical scroll. */
       rail.addEventListener('touchstart', function (e) {
-        pause();
-        if (e.touches && e.touches.length) { dragging = true; startX = e.touches[0].clientX; startPos = pos; moved = false; }
+        if (e.touches && e.touches.length) beginDrag(e.touches[0].clientX);
       }, { passive: true });
       rail.addEventListener('touchmove', function (e) {
-        if (!dragging || !e.touches || !e.touches.length) return;
-        var dx = e.touches[0].clientX - startX;
-        if (Math.abs(dx) > 5) moved = true;
-        if (moved && Math.abs(dx) > 1) {
-          pos = (startPos + dx) % setWidth;
-          if (pos < 0) pos += setWidth;
-          render();
-        }
+        if (e.touches && e.touches.length) moveDrag(e.touches[0].clientX);
       }, { passive: true });
-      rail.addEventListener('touchend', function () { dragging = false; resume(1800); }, { passive: true });
+      rail.addEventListener('touchend', function () { endDrag(1800); }, { passive: true });
+      rail.addEventListener('touchcancel', function () { endDrag(1200); }, { passive: true });
+      /* Mouse drag (desktop) */
+      rail.addEventListener('mousedown', function (e) {
+        if (e.button !== 0) return;
+        beginDrag(e.clientX);
+        rail.classList.add('is-dragging');
+      });
+      window.addEventListener('mousemove', function (e) { moveDrag(e.clientX); });
+      window.addEventListener('mouseup', function () {
+        rail.classList.remove('is-dragging');
+        endDrag(900);
+      });
       rail.addEventListener('wheel', function () { pause(); resume(1400); }, { passive: true });
       rail.addEventListener('click', function (e) {
         if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; }
