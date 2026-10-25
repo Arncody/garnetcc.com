@@ -213,45 +213,52 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 })();
 
-/* ---------- Seamless project marquee (transform-based for iOS Safari + RTL) ----------
-   Avoids scrollLeft because its RTL semantics differ across Safari/iOS versions. */
+/* ---------- Garnet project marquee: robust transform animation ----------
+   Uses measured card widths (not RTL-dependent left/right arithmetic).
+   Rebuilds clones after images/fonts/layout settle and animates continuously. */
 (function () {
-  function initRails() {
-    var rails = document.querySelectorAll('[data-rail]');
-    if (!rails.length) return;
-    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    rails.forEach(function (rail) {
+  'use strict';
+  function initProjectRails() {
+    document.querySelectorAll('[data-rail]').forEach(function (rail) {
       var track = rail.querySelector('[data-rail-track]');
       if (!track || rail.dataset.railReady === '1') return;
-      var originals = Array.prototype.slice.call(track.children);
+      var originals = Array.prototype.slice.call(track.children).filter(function (el) {
+        return el.getAttribute('data-clone') !== '1';
+      });
       if (originals.length < 2) return;
-      rail.dataset.railReady = '1';
-      var speed = Math.max(10, Math.min(200, parseInt(rail.getAttribute('data-speed'), 10) || 32));
-      var setWidth = 0, pos = 0, last = 0, paused = false, dragging = false;
-      var visible = true, resumeTimer = null, startX = 0, startPos = 0, moved = false;
 
-      function removeClones() {
-        Array.prototype.slice.call(track.querySelectorAll('[data-clone="1"]')).forEach(function (node) { node.remove(); });
+      rail.dataset.railReady = 'initializing';
+      var speed = Math.max(12, Math.min(100, Number(rail.getAttribute('data-speed')) || 28));
+      var pos = 0, setWidth = 0, lastTime = 0, rafId = 0;
+      var paused = false, dragging = false, visible = true, startX = 0, startPos = 0;
+      var resumeTimer = 0, resizeTimer = 0, moved = false;
+      var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function clearClones() {
+        track.querySelectorAll('[data-clone="1"]').forEach(function (node) { node.remove(); });
       }
-      function measureSet() {
-        if (!originals.length) return 0;
-        var first = originals[0].getBoundingClientRect();
-        var lastCard = originals[originals.length - 1].getBoundingClientRect();
-        var gap = parseFloat(getComputedStyle(track).columnGap || getComputedStyle(track).gap) || 0;
-        // In RTL the first DOM card is visually on the right; measuring
-        // lastCard.right - first.left can be negative and disables the loop.
-        var rtl = getComputedStyle(rail).direction === 'rtl';
-        var span = rtl ? (first.right - lastCard.left) : (lastCard.right - first.left);
-        return Math.max(0, span + gap);
+      function measureOriginalSet() {
+        var style = window.getComputedStyle(track);
+        var gap = parseFloat(style.columnGap || style.gap) || 0;
+        var total = 0;
+        originals.forEach(function (card) { total += card.getBoundingClientRect().width; });
+        total += gap * Math.max(0, originals.length - 1);
+        return total;
       }
       function build() {
-        removeClones();
-        setWidth = measureSet();
-        if (!setWidth) return;
-        // Ensure the duplicated content always covers the visible viewport at every loop point.
+        clearClones();
+        track.style.willChange = 'transform';
+        track.style.flexWrap = 'nowrap';
+        track.style.width = 'max-content';
+        setWidth = measureOriginalSet();
+        if (!setWidth || !rail.clientWidth) {
+          rail.dataset.railReady = '0';
+          return false;
+        }
+        // Add whole sets until the track can cover the viewport during the loop.
+        var currentWidth = track.scrollWidth;
         var safety = 0;
-        while (track.scrollWidth < rail.clientWidth + setWidth && safety < 8) {
+        while (currentWidth < rail.clientWidth + setWidth && safety < 20) {
           originals.forEach(function (card) {
             var clone = card.cloneNode(true);
             clone.setAttribute('data-clone', '1');
@@ -261,66 +268,79 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             track.appendChild(clone);
           });
+          currentWidth = track.scrollWidth;
           safety++;
         }
-        pos = pos % setWidth;
+        pos = ((pos % setWidth) + setWidth) % setWidth;
         render();
+        rail.dataset.railReady = '1';
+        return true;
       }
       function render() {
         track.style.transform = 'translate3d(' + (-pos) + 'px,0,0)';
       }
       function tick(now) {
-        if (!last) last = now;
-        var dt = Math.min(50, now - last);
-        last = now;
+        if (!lastTime) lastTime = now;
+        var dt = Math.min(50, Math.max(0, now - lastTime));
+        lastTime = now;
         if (!reduceMotion && !paused && !dragging && visible && !document.hidden && setWidth > 0) {
           pos += speed * dt / 1000;
-          if (pos >= setWidth) pos = pos % setWidth;
+          if (pos >= setWidth) pos -= setWidth * Math.floor(pos / setWidth);
           render();
         }
-        window.requestAnimationFrame(tick);
+        rafId = window.requestAnimationFrame(tick);
       }
       function pause() { paused = true; window.clearTimeout(resumeTimer); }
       function resume(delay) {
         window.clearTimeout(resumeTimer);
-        resumeTimer = window.setTimeout(function () { paused = false; last = 0; }, delay || 0);
+        resumeTimer = window.setTimeout(function () { paused = false; lastTime = 0; }, delay || 0);
       }
       rail.addEventListener('mouseenter', pause);
       rail.addEventListener('mouseleave', function () { if (!dragging) resume(350); });
       rail.addEventListener('focusin', pause);
       rail.addEventListener('focusout', function () { resume(700); });
       rail.addEventListener('touchstart', function (e) {
-        pause();
-        if (e.touches && e.touches.length) { dragging = true; startX = e.touches[0].clientX; startPos = pos; moved = false; }
+        if (!e.touches || !e.touches.length) return;
+        pause(); dragging = true; startX = e.touches[0].clientX; startPos = pos; moved = false;
       }, { passive: true });
       rail.addEventListener('touchmove', function (e) {
-        if (!dragging || !e.touches || !e.touches.length) return;
+        if (!dragging || !e.touches || !e.touches.length || !setWidth) return;
         var dx = e.touches[0].clientX - startX;
         if (Math.abs(dx) > 5) moved = true;
-        if (moved && Math.abs(dx) > 1) {
-          pos = (startPos + dx) % setWidth;
-          if (pos < 0) pos += setWidth;
-          render();
-        }
+        if (moved) { pos = ((startPos - dx) % setWidth + setWidth) % setWidth; render(); }
       }, { passive: true });
-      rail.addEventListener('touchend', function () { dragging = false; resume(1800); }, { passive: true });
-      rail.addEventListener('wheel', function () { pause(); resume(1400); }, { passive: true });
+      rail.addEventListener('touchend', function () { dragging = false; resume(1200); }, { passive: true });
+      rail.addEventListener('touchcancel', function () { dragging = false; resume(800); }, { passive: true });
+      rail.addEventListener('wheel', function () { pause(); resume(1200); }, { passive: true });
       rail.addEventListener('click', function (e) {
         if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; }
       }, true);
       if ('IntersectionObserver' in window) {
         new IntersectionObserver(function (entries) { visible = !!entries[0].isIntersecting; }).observe(rail);
       }
-      var resizeTimer = null;
-      window.addEventListener('resize', function () {
+      function scheduleBuild() {
         window.clearTimeout(resizeTimer);
-        resizeTimer = window.setTimeout(function () { build(); last = 0; }, 180);
+        resizeTimer = window.setTimeout(function () { build(); lastTime = 0; }, 180);
+      }
+      window.addEventListener('resize', scheduleBuild);
+      if ('ResizeObserver' in window) new ResizeObserver(scheduleBuild).observe(rail);
+      // Wait for images to load because image/layout dimensions can change after DOM ready.
+      var images = originals.reduce(function (all, card) {
+        return all.concat(Array.prototype.slice.call(card.querySelectorAll('img')));
+      }, []);
+      Promise.all(images.map(function (img) {
+        if (img.complete) return Promise.resolve();
+        return new Promise(function (resolve) {
+          img.addEventListener('load', resolve, { once: true });
+          img.addEventListener('error', resolve, { once: true });
+        });
+      })).then(function () {
+        build();
+        window.requestAnimationFrame(function () { build(); lastTime = 0; });
       });
-      if ('ResizeObserver' in window) new ResizeObserver(function () { build(); }).observe(rail);
-      build();
-      window.requestAnimationFrame(tick);
+      if (!rafId) rafId = window.requestAnimationFrame(tick);
     });
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initRails);
-  else initRails();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initProjectRails, { once: true });
+  else initProjectRails();
 })();
