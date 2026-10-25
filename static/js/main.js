@@ -296,7 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
         v = v % setWidth;
         return v < 0 ? v + setWidth : v;
       }
-      function beginDrag(x) { pause(); dragging = true; startX = x; startPos = pos; moved = false; }
+      function beginDrag(x) { animId++; pause(); dragging = true; startX = x; startPos = pos; moved = false; }
       function moveDrag(x) {
         if (!dragging) return;
         var dx = x - startX;
@@ -324,7 +324,53 @@ document.addEventListener('DOMContentLoaded', () => {
         rail.classList.remove('is-dragging');
         endDrag(900);
       });
-      rail.addEventListener('wheel', function () { pause(); resume(1400); }, { passive: true });
+      /* Horizontal wheel / trackpad swipe scrolls the rail; vertical wheel still scrolls the page. */
+      rail.addEventListener('wheel', function (e) {
+        var dx = e.deltaX, dy = e.deltaY;
+        if (e.shiftKey && !dx) { dx = dy; dy = 0; }
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 0) {
+          e.preventDefault();
+          pause();
+          pos = wrap(pos + dx);
+          render();
+        } else {
+          pause();
+        }
+        resume(1800);
+      }, { passive: false });
+      /* Prev / next buttons + arrow keys: smooth step of exactly one card. */
+      var animId = 0;
+      function stepSize() { return originals.length ? setWidth / originals.length : 0; }
+      function glide(direction) {
+        var step = stepSize();
+        if (!step) return;
+        pause();
+        var from = pos, delta = direction * step, t0 = 0, id = ++animId;
+        function frame(now) {
+          if (id !== animId) return;
+          if (!t0) t0 = now;
+          var k = Math.min(1, (now - t0) / 420);
+          var e = 1 - Math.pow(1 - k, 3);
+          pos = wrap(from + delta * e);
+          render();
+          if (k < 1) window.requestAnimationFrame(frame);
+          else resume(2500);
+        }
+        window.requestAnimationFrame(frame);
+      }
+      var wrapper = rail.parentElement;
+      if (wrapper) {
+        Array.prototype.forEach.call(wrapper.querySelectorAll('[data-rail-nav]'), function (btn) {
+          btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            glide(parseInt(btn.getAttribute('data-rail-nav'), 10) || 1);
+          });
+        });
+      }
+      rail.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowRight') { e.preventDefault(); glide(1); }
+        else if (e.key === 'ArrowLeft') { e.preventDefault(); glide(-1); }
+      });
       rail.addEventListener('click', function (e) {
         if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; }
       }, true);

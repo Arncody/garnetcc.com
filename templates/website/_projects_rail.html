@@ -3,10 +3,14 @@
 متغیرها: projects, rail, grid_class, empty_text
 {% endcomment %}
 {% if rail and projects|length > 1 %}
-<div class="proj-rail" data-rail data-speed="{{ site_settings.projects_carousel_speed }}" role="region" aria-label="{% if is_en %}Projects{% else %}پروژه‌ها{% endif %}">
+<div class="proj-rail-wrap">
+<button type="button" class="rail-nav rail-nav-left" data-rail-nav="-1" aria-label="{% if is_en %}Scroll left{% else %}حرکت به چپ{% endif %}"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+<button type="button" class="rail-nav rail-nav-right" data-rail-nav="1" aria-label="{% if is_en %}Scroll right{% else %}حرکت به راست{% endif %}"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
+<div class="proj-rail" data-rail tabindex="0" data-speed="{{ site_settings.projects_carousel_speed }}" role="region" aria-label="{% if is_en %}Projects{% else %}پروژه‌ها{% endif %}">
   <div class="proj-rail-track" data-rail-track>
     {% for project in projects %}{% include "website/_project_card.html" with project=project %}{% endfor %}
   </div>
+</div>
 </div>
 {% else %}
 <div class="{{ grid_class }}">

@@ -225,3 +225,17 @@ html[dir="rtl"] .pc-bottom{align-items:flex-start}
 html[dir="ltr"] .pc-top,html[dir="ltr"] .pc-bottom{direction:ltr;text-align:left}
 .proj-rail{touch-action:pan-y;-webkit-tap-highlight-color:transparent}
 .proj-rail:active{cursor:grabbing}
+
+
+/* ---------- Project rail: prev/next buttons (manual horizontal scroll) ---------- */
+.proj-rail-wrap{position:relative}
+.rail-nav{position:absolute;top:50%;z-index:6;display:grid;place-items:center;width:42px;height:42px;margin-top:-21px;border:0;border-radius:50%;
+  background:rgba(255,255,255,.94);color:#071d2b;box-shadow:0 6px 20px rgba(7,29,43,.22);cursor:pointer;
+  transition:transform .2s ease,background .2s ease,opacity .2s ease;-webkit-tap-highlight-color:transparent}
+.rail-nav:hover{background:#fff;transform:scale(1.07)}
+.rail-nav:active{transform:scale(.95)}
+.rail-nav:focus-visible{outline:2px solid #092634;outline-offset:3px}
+.rail-nav-left{left:8px}
+.rail-nav-right{right:8px}
+.proj-rail:focus-visible{outline:2px solid rgba(9,38,52,.45);outline-offset:2px}
+@media(max-width:520px){.rail-nav{width:34px;height:34px;margin-top:-17px}.rail-nav-left{left:4px}.rail-nav-right{right:4px}}
