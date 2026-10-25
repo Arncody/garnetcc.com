@@ -75,14 +75,18 @@ html[dir="ltr"] .all-projects-btn:hover{transform:translateX(3px)}
 html[dir="rtl"] .pc-top{direction:rtl}
 html[dir="ltr"] .pc-top{direction:ltr}
 
-/* ---------- Project rail: full-width viewport + larger responsive cards ---------- */
-.proj-rail{position:relative;display:block!important;width:100%!important;max-width:100%!important;min-width:0!important;flex:0 0 100%!important;box-sizing:border-box;overflow:hidden;overflow:clip;overscroll-behavior-x:contain;margin-inline:0;padding:8px 0 16px;cursor:grab;touch-action:pan-y;isolation:isolate}
+/* ---------- ردیف افقی چرخان پروژه‌ها ---------- */
+.proj-rail{position:relative;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  margin-inline:calc(-1 * clamp(0px,1vw,10px));padding:6px clamp(0px,1vw,10px) 14px;cursor:grab;touch-action:pan-x pan-y;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
 .proj-rail::-webkit-scrollbar{display:none}
-.proj-rail-track{display:flex!important;flex-flow:row nowrap!important;align-items:stretch;gap:clamp(12px,1.6vw,20px);width:max-content;min-width:max-content;max-width:none;will-change:transform;transform:translate3d(0,0,0);backface-visibility:hidden}
-.proj-rail .mini-project.project-preview{display:block;position:relative;flex:0 0 clamp(280px,28vw,370px)!important;width:clamp(280px,28vw,370px)!important;min-width:clamp(280px,28vw,370px)!important;max-width:none!important;box-sizing:border-box;aspect-ratio:4/5;overflow:hidden}
-@media(max-width:900px){.proj-rail .mini-project.project-preview{flex-basis:clamp(280px,48vw,360px)!important;width:clamp(280px,48vw,360px)!important;min-width:clamp(280px,48vw,360px)!important;aspect-ratio:4/5}}
-@media(max-width:520px){.proj-rail .mini-project.project-preview{flex-basis:82vw!important;width:82vw!important;min-width:82vw!important;max-width:360px!important;aspect-ratio:4/5}}
-@media(prefers-reduced-motion:reduce){.proj-rail-track{will-change:auto}}
+.proj-rail.is-dragging{cursor:grabbing;user-select:none}
+.proj-rail.is-dragging a{pointer-events:none}
+.proj-rail-track{display:flex;gap:clamp(10px,1.4vw,18px);width:max-content}
+.proj-rail .mini-project.project-preview{flex:0 0 clamp(220px,26vw,330px);width:clamp(220px,26vw,330px);aspect-ratio:4/5}
+@media(max-width:900px){.proj-rail .mini-project.project-preview{flex-basis:clamp(200px,46vw,280px);width:clamp(200px,46vw,280px);aspect-ratio:4/5}}
+@media(max-width:520px){.proj-rail .mini-project.project-preview{flex-basis:min(68vw,250px);width:min(68vw,250px);aspect-ratio:4/5}}
+@media(prefers-reduced-motion:reduce){.proj-rail{-webkit-mask-image:none;mask-image:none}}
 
 /* ---------- درباره گارنت: کاملاً شیشه‌ای و هم‌اندازه با متن ---------- */
 .about-lux-section{padding-block:6px 34px}
@@ -165,20 +169,43 @@ html[dir="rtl"] .footer-brand{align-items:flex-end}
 }
 
 
-/* Manual project-rail interaction (mouse, touch, pen) */
+/* Project rail interaction: transform-driven track; touch vertically scrolls the page */
 .proj-rail {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden !important;
   touch-action: pan-y;
   cursor: grab;
   -webkit-user-select: none;
   user-select: none;
 }
-.proj-rail.is-dragging {
-  cursor: grabbing;
-}
-.proj-rail.is-dragging .proj-rail-track {
+.proj-rail-track {
+  display: flex;
+  flex-wrap: nowrap;
+  width: max-content;
+  max-width: none;
+  will-change: transform;
+  direction: ltr;
   transition: none !important;
 }
-.proj-rail .proj-rail-track img {
-  -webkit-user-drag: none;
-  user-select: none;
+.proj-rail.is-dragging { cursor: grabbing; }
+.proj-rail.is-dragging .proj-rail-track { transition: none !important; }
+.proj-rail .mini-project.project-preview {
+  flex: 0 0 clamp(240px, 28vw, 340px);
+  width: clamp(240px, 28vw, 340px);
 }
+@media (max-width: 900px) {
+  .proj-rail .mini-project.project-preview {
+    flex-basis: clamp(230px, 62vw, 310px);
+    width: clamp(230px, 62vw, 310px);
+  }
+}
+@media (max-width: 520px) {
+  .proj-rail .mini-project.project-preview {
+    flex-basis: min(78vw, 300px);
+    width: min(78vw, 300px);
+  }
+}
+.proj-rail .mini-project img { -webkit-user-drag: none; }

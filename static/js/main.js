@@ -213,98 +213,160 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 })();
 
-/* ---------- Garnet project rail: manual drag support ----------
-   Manual interaction is intentionally implemented first. The rail remains
-   stationary unless the user drags it; autoplay can be added after this is verified. */
+/* ---------- Garnet project rail: initialize after DOM is ready ---------- */
 (function () {
   'use strict';
 
   function initProjectRails() {
-    document.querySelectorAll('[data-rail]').forEach(function (rail) {
+    var rails = document.querySelectorAll('[data-rail]');
+    if (!rails.length) return;
+
+    rails.forEach(function (rail) {
       var track = rail.querySelector('[data-rail-track]');
-      if (!track || rail.dataset.railDragReady === '1') return;
-      rail.dataset.railDragReady = '1';
+      if (!track || rail.dataset.railInitialized === '1') return;
 
-      var pointerDown = false;
-      var startX = 0;
-      var startTranslate = 0;
-      var currentTranslate = 0;
-      var maxTranslate = 0;
-      var moved = false;
-      var pointerId = null;
+      var originals = Array.prototype.slice.call(track.children).filter(function (el) {
+        return !el.hasAttribute('data-clone');
+      });
+      if (originals.length < 2) return;
 
-      function measure() {
-        var railWidth = rail.getBoundingClientRect().width;
-        var trackWidth = track.scrollWidth;
-        maxTranslate = Math.max(0, trackWidth - railWidth);
-        currentTranslate = Math.max(0, Math.min(currentTranslate, maxTranslate));
+      rail.dataset.railInitialized = '1';
+      var speed = Math.max(10, Math.min(120, parseInt(rail.getAttribute('data-speed'), 10) || 32));
+      var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var setWidth = 0, offset = 0, lastTime = 0, raf = 0;
+      var paused = false, dragging = false, moved = false;
+      var startX = 0, startOffset = 0, pointerId = null, resumeTimer = 0;
+
+      function measureAndClone() {
+        Array.prototype.slice.call(track.querySelectorAll('[data-clone]')).forEach(function (el) { el.remove(); });
+        track.style.transform = 'translate3d(0,0,0)';
+        track.style.willChange = 'transform';
+
+        var firstRect = originals[0].getBoundingClientRect();
+        var lastRect = originals[originals.length - 1].getBoundingClientRect();
+        setWidth = Math.max(0, lastRect.right - firstRect.left);
+        if (!setWidth) {
+          setWidth = originals.reduce(function (sum, el) {
+            return sum + el.getBoundingClientRect().width;
+          }, 0);
+          var style = getComputedStyle(track);
+          setWidth += (parseFloat(style.columnGap || style.gap) || 0) * (originals.length - 1);
+        }
+        if (!setWidth) return;
+
+        var safety = 0;
+        while (track.scrollWidth < rail.clientWidth + setWidth && safety < 12) {
+          originals.forEach(function (original) {
+            var clone = original.cloneNode(true);
+            clone.setAttribute('data-clone', '1');
+            clone.setAttribute('aria-hidden', 'true');
+            clone.querySelectorAll('[id]').forEach(function (node) { node.removeAttribute('id'); });
+            clone.querySelectorAll('a,button,input,select,textarea,[tabindex]').forEach(function (node) {
+              node.setAttribute('tabindex', '-1');
+            });
+            track.appendChild(clone);
+          });
+          safety++;
+        }
+        offset = offset % setWidth;
         render();
       }
 
       function render() {
-        track.style.transform = 'translate3d(' + (-currentTranslate) + 'px,0,0)';
+        track.style.transform = 'translate3d(' + (-offset) + 'px,0,0)';
       }
 
-      function onDown(e) {
+      function scheduleResume(delay) {
+        window.clearTimeout(resumeTimer);
+        resumeTimer = window.setTimeout(function () {
+          if (!dragging && !reduced) paused = false;
+        }, delay);
+      }
+
+      function tick(now) {
+        if (!lastTime) lastTime = now;
+        var delta = Math.min(50, now - lastTime);
+        lastTime = now;
+        if (!paused && !dragging && !reduced && !document.hidden && rail.getBoundingClientRect().width > 0) {
+          offset += speed * delta / 1000;
+          if (setWidth > 0 && offset >= setWidth) offset = offset % setWidth;
+          render();
+        }
+        raf = window.requestAnimationFrame(tick);
+      }
+
+      function onPointerDown(e) {
         if (e.pointerType === 'mouse' && e.button !== 0) return;
         if (e.target.closest('a,button,input,select,textarea')) return;
-        measure();
-        if (maxTranslate <= 0) return;
-        pointerDown = true;
+        dragging = true;
         moved = false;
+        paused = true;
         pointerId = e.pointerId;
         startX = e.clientX;
-        startTranslate = currentTranslate;
+        startOffset = offset;
         rail.classList.add('is-dragging');
         try { rail.setPointerCapture(pointerId); } catch (_) {}
       }
 
-      function onMove(e) {
-        if (!pointerDown || (pointerId !== null && e.pointerId !== pointerId)) return;
+      function onPointerMove(e) {
+        if (!dragging || (pointerId !== null && e.pointerId !== pointerId)) return;
         var dx = e.clientX - startX;
         if (Math.abs(dx) > 4) moved = true;
-        if (moved) {
-          currentTranslate = Math.max(0, Math.min(maxTranslate, startTranslate - dx));
-          render();
-          if (e.cancelable) e.preventDefault();
+        if (!moved) return;
+        offset = startOffset - dx;
+        if (setWidth > 0) {
+          offset = ((offset % setWidth) + setWidth) % setWidth;
         }
+        render();
+        if (e.cancelable) e.preventDefault();
       }
 
-      function onUp(e) {
-        if (!pointerDown) return;
-        pointerDown = false;
+      function onPointerUp() {
+        if (!dragging) return;
+        dragging = false;
         pointerId = null;
         rail.classList.remove('is-dragging');
         if (moved) {
-          rail.dataset.dragged = '1';
-          window.setTimeout(function () { delete rail.dataset.dragged; }, 80);
+          rail.dataset.railDragged = '1';
+          window.setTimeout(function () { delete rail.dataset.railDragged; }, 100);
         }
+        scheduleResume(1800);
       }
 
-      rail.addEventListener('pointerdown', onDown);
-      rail.addEventListener('pointermove', onMove, { passive: false });
-      rail.addEventListener('pointerup', onUp);
-      rail.addEventListener('pointercancel', onUp);
-      rail.addEventListener('lostpointercapture', onUp);
+      rail.addEventListener('pointerdown', onPointerDown);
+      rail.addEventListener('pointermove', onPointerMove, { passive: false });
+      rail.addEventListener('pointerup', onPointerUp);
+      rail.addEventListener('pointercancel', onPointerUp);
+      rail.addEventListener('lostpointercapture', onPointerUp);
       rail.addEventListener('click', function (e) {
-        if (rail.dataset.dragged === '1') {
+        if (rail.dataset.railDragged === '1') {
           e.preventDefault();
           e.stopPropagation();
         }
       }, true);
+      rail.addEventListener('mouseenter', function () { paused = true; });
+      rail.addEventListener('mouseleave', function () { scheduleResume(350); });
+      rail.addEventListener('focusin', function () { paused = true; });
+      rail.addEventListener('focusout', function () { scheduleResume(600); });
+      rail.addEventListener('touchstart', function () { paused = true; }, { passive: true });
+      rail.addEventListener('touchend', function () { scheduleResume(1800); }, { passive: true });
 
-      window.addEventListener('resize', measure);
       if ('ResizeObserver' in window) {
-        new ResizeObserver(measure).observe(rail);
-        new ResizeObserver(measure).observe(track);
+        var observer = new ResizeObserver(function () { measureAndClone(); });
+        observer.observe(rail);
+        observer.observe(track);
+      } else {
+        window.addEventListener('resize', measureAndClone);
       }
-      Array.prototype.forEach.call(track.querySelectorAll('img'), function (img) {
-        if (!img.complete) {
-          img.addEventListener('load', measure, { once: true });
-          img.addEventListener('error', measure, { once: true });
-        }
+      originals.forEach(function (imgCard) {
+        imgCard.querySelectorAll('img').forEach(function (img) {
+          if (!img.complete) img.addEventListener('load', measureAndClone, { once: true });
+        });
       });
-      window.requestAnimationFrame(measure);
+
+      measureAndClone();
+      rail.dataset.railReady = '1';
+      if (!reduced) raf = window.requestAnimationFrame(tick);
     });
   }
 

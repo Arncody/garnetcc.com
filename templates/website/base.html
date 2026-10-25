@@ -35,7 +35,7 @@ small,.small{font-weight:var(--small-weight)}
 {% if site_theme.custom_css %}{{ site_theme.custom_css|safe }}{% endif %}
 </style>
 <link rel="stylesheet" href="{% static 'css/consult-modal.css' %}?v=20261013-redesign1">
-<link rel="stylesheet" href="{% static 'css/garnet-ui.css' %}?v=20261025d">
+<link rel="stylesheet" href="{% static 'css/garnet-ui.css' %}?v=20261025railfix1">
 
 {% block extra_head %}{% endblock %}
 </head>
@@ -109,6 +109,6 @@ small,.small{font-weight:var(--small-weight)}
   </div>
   <div class="container footer-bottom"><span>© {% now "Y" %} {{ site_settings.brand_name }}. {% if is_en %}All rights reserved.{% else %}تمامی حقوق محفوظ است.{% endif %}</span><a class="footer-top-link" href="#main-content">{% if is_en %}Back to top{% else %}بازگشت به بالا{% endif %} {% icon "arrow-up" 14 %}</a></div>
 </footer>
-<script src="{% static 'js/main.js' %}?v=20261025d" defer></script>
+<script src="{% static 'js/main.js' %}?v=20261025railfix1" defer></script>
 {% block extra_scripts %}{% endblock %}
 </body></html>
