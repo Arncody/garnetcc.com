@@ -82,10 +82,12 @@ html[dir="ltr"] .pc-top{direction:ltr}
 .proj-rail::-webkit-scrollbar{display:none}
 .proj-rail.is-dragging{cursor:grabbing;user-select:none}
 .proj-rail.is-dragging a{pointer-events:none}
-.proj-rail-track{display:flex;gap:clamp(10px,1.4vw,18px);width:max-content}
-.proj-rail .mini-project.project-preview{flex:0 0 clamp(220px,26vw,330px);width:clamp(220px,26vw,330px);aspect-ratio:4/5}
-@media(max-width:900px){.proj-rail .mini-project.project-preview{flex-basis:clamp(200px,46vw,280px);width:clamp(200px,46vw,280px);aspect-ratio:4/5}}
-@media(max-width:520px){.proj-rail .mini-project.project-preview{flex-basis:min(68vw,250px);width:min(68vw,250px);aspect-ratio:4/5}}
+.proj-rail-track{display:flex;flex-flow:row nowrap;gap:clamp(10px,1.4vw,18px);width:max-content;min-width:max-content;will-change:transform}
+/* Explicit flex-basis/width overrides legacy mobile rules that were shrinking rail cards. */
+.proj-rail .mini-project.project-preview,
+.projects-page .proj-rail .mini-project.project-preview{flex:0 0 clamp(280px,28vw,360px)!important;width:clamp(280px,28vw,360px)!important;min-width:0!important;max-width:none!important;aspect-ratio:4/5}
+@media(max-width:900px){.proj-rail .mini-project.project-preview,.projects-page .proj-rail .mini-project.project-preview{flex:0 0 clamp(260px,48vw,340px)!important;width:clamp(260px,48vw,340px)!important;aspect-ratio:4/5}}
+@media(max-width:520px){.proj-rail .mini-project.project-preview,.projects-page .proj-rail .mini-project.project-preview{flex:0 0 min(82vw,320px)!important;width:min(82vw,320px)!important;max-width:none!important;aspect-ratio:4/5}}
 @media(prefers-reduced-motion:reduce){.proj-rail{-webkit-mask-image:none;mask-image:none}}
 
 /* ---------- درباره گارنت: کاملاً شیشه‌ای و هم‌اندازه با متن ---------- */

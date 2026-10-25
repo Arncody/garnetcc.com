@@ -239,7 +239,11 @@ document.addEventListener('DOMContentLoaded', () => {
         var first = originals[0].getBoundingClientRect();
         var lastCard = originals[originals.length - 1].getBoundingClientRect();
         var gap = parseFloat(getComputedStyle(track).columnGap || getComputedStyle(track).gap) || 0;
-        return Math.max(0, lastCard.right - first.left + gap);
+        // In RTL the first DOM card is visually on the right; measuring
+        // lastCard.right - first.left can be negative and disables the loop.
+        var rtl = getComputedStyle(rail).direction === 'rtl';
+        var span = rtl ? (first.right - lastCard.left) : (lastCard.right - first.left);
+        return Math.max(0, span + gap);
       }
       function build() {
         removeClones();
