@@ -46,7 +46,7 @@
         <div class="about-text">{% if is_en %}{{ about_section.content_en|default:about_section.content|linebreaks }}{% else %}{{ about_section.content|linebreaks }}{% endif %}</div>
         <div class="about-actions">
           <a class="about-btn about-btn-copper" href="{% url 'website:projects_list' %}">{% if is_en %}View projects{% else %}مشاهده پروژه‌ها{% endif %}</a>
-          <button type="button" class="about-btn about-btn-light" data-consult-open>{% if is_en %}Contact us{% else %}تماس با ما{% endif %}</button>
+          <button type="button" class="about-btn about-btn-light" data-consult-open>{{ T.consultation_button_text }}</button>
         </div>
       </div>
     </article>
@@ -67,5 +67,4 @@
   </div>
 </section>
 
-<a class="floating-call" href="tel:{{ site_settings.phone }}" aria-label="{% if is_en %}Call Garnet{% else %}تماس با گارنت{% endif %}">{% icon "phone" 22 %}</a>
 {% endblock %}

@@ -81,3 +81,28 @@ class ConsultationForm(forms.ModelForm):
         if not PHONE_RE.match(phone):
             raise forms.ValidationError("شماره تماس معتبر وارد کنید (مثال: 09123456789).")
         return phone
+
+
+class NewsletterSubscriptionForm(forms.Form):
+    email = forms.EmailField(
+        label="ایمیل",
+        max_length=254,
+        widget=forms.EmailInput(attrs={
+            "class": "newsletter-email",
+            "placeholder": "ایمیل شما" ,
+            "autocomplete": "email",
+            "inputmode": "email",
+            "required": True,
+            "maxlength": 254,
+        }),
+    )
+    website = forms.CharField(required=False, widget=forms.HiddenInput(attrs={"tabindex": "-1", "autocomplete": "off"}))
+
+    def clean_email(self):
+        return (self.cleaned_data.get("email") or "").strip().lower()
+
+    def clean_website(self):
+        value = self.cleaned_data.get("website")
+        if value:
+            raise forms.ValidationError("درخواست نامعتبر است.")
+        return value

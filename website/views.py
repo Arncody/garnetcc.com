@@ -11,8 +11,8 @@ from django.http import HttpResponseRedirect
 from django.utils.translation import gettext_lazy as _
 from django.utils.http import url_has_allowed_host_and_scheme
 
-from .models import HeroSection, Project, SiteSection, PhilosophyFeature, CompanyCatalog, BlogPost, SiteTexts
-from .forms import ConsultationForm
+from .models import HeroSection, Project, SiteSection, PhilosophyFeature, CompanyCatalog, BlogPost, SiteTexts, NewsletterSubscriber
+from .forms import ConsultationForm, NewsletterSubscriptionForm
 
 # محدودیت درخواست فرم مشاوره برای هر IP (ضد اسپم ساده، بدون نیاز به Redis)
 RATE_LIMIT_MAX_REQUESTS = 3
@@ -65,8 +65,7 @@ def _common_context():
     hero = HeroSection.load()
     home_projects = _mixed_home_projects()
     about_section = SiteSection.objects.filter(key=SiteSection.KEY_ABOUT, is_active=True).first()
-    # پس‌زمینه‌ی «درباره گارنت» فقط وقتی نمایش داده شود که برای همین بخش
-    # عکس مستقلاً در پنل مدیریت انتخاب شده باشد؛ از عکس هیرو/پروژه‌ها fallback نکن.
+    # پس‌زمینه درباره فقط از تصویر اختصاصی همان بخش می‌آید؛ تصویر پروژه‌ها fallback نیست.
     about_bg = about_section.image if about_section and about_section.image else None
 
     return {
@@ -123,6 +122,38 @@ def home(request):
 
     return render(request, "website/home.html", context)
 
+
+
+@require_http_methods(["POST"])
+def subscribe_newsletter(request):
+    """Validate and store newsletter emails; duplicate submissions are idempotent."""
+    ip_address = _get_client_ip(request)
+    if ip_address:
+        key = f"newsletter_rl_{ip_address}"
+        count = cache.get(key, 0)
+        if count >= 5:
+            messages.error(request, "تعداد تلاش‌ها زیاد است؛ لطفاً کمی بعد دوباره امتحان کنید." if request.session.get("site_lang", "fa") != "en" else "Too many attempts. Please try again later.")
+            return redirect("website:home")
+        cache.set(key, count + 1, 60 * 60)
+    form = NewsletterSubscriptionForm(request.POST)
+    if form.is_valid():
+        email = form.cleaned_data["email"]
+        subscriber, created = NewsletterSubscriber.objects.get_or_create(
+            email=email, defaults={"is_active": True}
+        )
+        if not subscriber.is_active:
+            subscriber.is_active = True
+            subscriber.save(update_fields=["is_active", "updated_at"])
+        if created:
+            messages.success(request, "ایمیل شما با موفقیت در خبرنامه ثبت شد." if request.session.get("site_lang", "fa") != "en" else "Your email has been subscribed successfully.")
+        else:
+            messages.info(request, "این ایمیل قبلاً در خبرنامه ثبت شده است." if request.session.get("site_lang", "fa") != "en" else "This email is already subscribed.")
+    else:
+        messages.error(request, "لطفاً یک آدرس ایمیل معتبر وارد کنید." if request.session.get("site_lang", "fa") != "en" else "Please enter a valid email address.")
+    referer = request.META.get("HTTP_REFERER", "")
+    if referer and url_has_allowed_host_and_scheme(referer, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
+        return HttpResponseRedirect(referer + ("#newsletter" if "#" not in referer else ""))
+    return redirect("website:home")
 
 def set_language(request):
     lang = request.GET.get("lang", "fa")

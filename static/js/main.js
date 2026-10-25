@@ -213,115 +213,110 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 })();
 
-/* ---------- ردیف افقی چرخان پروژه‌ها (Vanilla JS) ----------
-   - سرعت از پنل ادمین (data-speed، پیکسل بر ثانیه)
-   - با لمس/کشیدن/هاور متوقف می‌شود و بعد از چند ثانیه ادامه می‌دهد
-   - با prefers-reduced-motion فقط قابل اسکرول دستی است */
+/* ---------- Seamless project marquee (transform-based for iOS Safari + RTL) ----------
+   Avoids scrollLeft because its RTL semantics differ across Safari/iOS versions. */
 (function () {
-  var rails = document.querySelectorAll('[data-rail]');
-  if (!rails.length) return;
-  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function initRails() {
+    var rails = document.querySelectorAll('[data-rail]');
+    if (!rails.length) return;
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  rails.forEach(function (rail) {
-    var track = rail.querySelector('[data-rail-track]');
-    if (!track) return;
-    var originals = Array.prototype.slice.call(track.children);
-    if (originals.length < 2) return;
-    var speed = Math.max(10, Math.min(200, parseInt(rail.getAttribute('data-speed'), 10) || 40));
-    var dirSign = 1, setWidth = 0, pos = 0, last = 0, paused = false, resumeTimer = null, dragging = false;
-    var startX = 0, startPos = 0, moved = false, visible = true;
+    rails.forEach(function (rail) {
+      var track = rail.querySelector('[data-rail-track]');
+      if (!track || rail.dataset.railReady === '1') return;
+      var originals = Array.prototype.slice.call(track.children);
+      if (originals.length < 2) return;
+      rail.dataset.railReady = '1';
+      var speed = Math.max(10, Math.min(200, parseInt(rail.getAttribute('data-speed'), 10) || 32));
+      var setWidth = 0, pos = 0, last = 0, paused = false, dragging = false;
+      var visible = true, resumeTimer = null, startX = 0, startPos = 0, moved = false;
 
-    function build() {
-      Array.prototype.slice.call(track.querySelectorAll('[data-clone]')).forEach(function (n) { n.remove(); });
-      var gap = parseFloat(getComputedStyle(track).columnGap || getComputedStyle(track).gap) || 0;
-      var r0 = originals[0].getBoundingClientRect(), rN = originals[originals.length - 1].getBoundingClientRect();
-      setWidth = Math.abs(dirSign < 0 ? r0.right - rN.left : rN.right - r0.left) + gap;
-      var need = Math.ceil((rail.clientWidth * 2) / Math.max(setWidth, 1)) + 1;
-      for (var i = 0; i < need; i++) {
-        originals.forEach(function (card) {
-          var c = card.cloneNode(true);
-          c.setAttribute('data-clone', '1');
-          c.setAttribute('aria-hidden', 'true');
-          c.setAttribute('tabindex', '-1');
-          track.appendChild(c);
-        });
+      function removeClones() {
+        Array.prototype.slice.call(track.querySelectorAll('[data-clone="1"]')).forEach(function (node) { node.remove(); });
       }
-    }
-
-    function wrap() {
-      if (!setWidth) return;
-      if (pos >= setWidth) { pos -= setWidth; rail.scrollLeft = dirSign * pos; }
-      else if (pos < 0) { pos += setWidth; rail.scrollLeft = dirSign * pos; }
-    }
-
-    function tick(now) {
-      if (!last) last = now;
-      var dt = Math.min(64, now - last);
-      last = now;
-      if (!paused && !dragging && visible && !reduce && !document.hidden) {
-        pos += speed * dt / 1000;
-        wrap();
-        rail.scrollLeft = dirSign * pos;
+      function measureSet() {
+        if (!originals.length) return 0;
+        var first = originals[0].getBoundingClientRect();
+        var lastCard = originals[originals.length - 1].getBoundingClientRect();
+        var gap = parseFloat(getComputedStyle(track).columnGap || getComputedStyle(track).gap) || 0;
+        return Math.max(0, lastCard.right - first.left + gap);
       }
-      window.requestAnimationFrame(tick);
-    }
-
-    function pause() { paused = true; window.clearTimeout(resumeTimer); }
-    function resume(delay) {
-      window.clearTimeout(resumeTimer);
-      resumeTimer = window.setTimeout(function () { pos = dirSign * rail.scrollLeft; paused = false; }, delay || 0);
-    }
-
-    // اسکرول دستی (لمس یا چرخ ماوس): موقعیت را همگام کن و کمی بعد ادامه بده
-    rail.addEventListener('scroll', function () {
-      if (paused || dragging) { pos = dirSign * rail.scrollLeft; wrap(); }
-    }, { passive: true });
-    rail.addEventListener('mouseenter', pause);
-    rail.addEventListener('mouseleave', function () { if (!dragging) resume(300); });
-    rail.addEventListener('focusin', pause);
-    rail.addEventListener('focusout', function () { resume(600); });
-    rail.addEventListener('touchstart', pause, { passive: true });
-    rail.addEventListener('touchend', function () { resume(2500); }, { passive: true });
-    rail.addEventListener('wheel', function () { pause(); resume(1800); }, { passive: true });
-
-    // کشیدن با ماوس
-    rail.addEventListener('pointerdown', function (e) {
-      if (e.pointerType !== 'mouse' || e.button !== 0) return;
-      dragging = true; moved = false; startX = e.clientX; startPos = dirSign * rail.scrollLeft; pos = startPos;
-    });
-    window.addEventListener('pointermove', function (e) {
-      if (!dragging) return;
-      var dx = e.clientX - startX;
-      if (Math.abs(dx) > 4) { moved = true; rail.classList.add('is-dragging'); }
-      if (moved) { pos = startPos - dirSign * dx; wrap(); rail.scrollLeft = dirSign * pos; }
-    });
-    window.addEventListener('pointerup', function () {
-      if (!dragging) return;
-      dragging = false; rail.classList.remove('is-dragging');
-      pos = dirSign * rail.scrollLeft;
-    });
-    rail.addEventListener('click', function (e) { if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; } }, true);
-
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (entries) { visible = entries[0].isIntersecting; }).observe(rail);
-    }
-
-    var resizeTimer = null;
-    window.addEventListener('resize', function () {
-      window.clearTimeout(resizeTimer);
-      resizeTimer = window.setTimeout(function () { build(); pos = dirSign * rail.scrollLeft; wrap(); }, 200);
-    });
-
-    function init() {
-      // Keep the scroll container LTR so scrollLeft behaves consistently in iOS Safari/RTL pages.
-      rail.style.direction = 'ltr';
-      track.style.direction = getComputedStyle(document.documentElement).direction === 'rtl' ? 'rtl' : 'ltr';
-      dirSign = 1;
+      function build() {
+        removeClones();
+        setWidth = measureSet();
+        if (!setWidth) return;
+        // Ensure the duplicated content always covers the visible viewport at every loop point.
+        var safety = 0;
+        while (track.scrollWidth < rail.clientWidth + setWidth && safety < 8) {
+          originals.forEach(function (card) {
+            var clone = card.cloneNode(true);
+            clone.setAttribute('data-clone', '1');
+            clone.setAttribute('aria-hidden', 'true');
+            clone.querySelectorAll('a,button,input,select,textarea,[tabindex]').forEach(function (el) {
+              el.setAttribute('tabindex', '-1');
+            });
+            track.appendChild(clone);
+          });
+          safety++;
+        }
+        pos = pos % setWidth;
+        render();
+      }
+      function render() {
+        track.style.transform = 'translate3d(' + (-pos) + 'px,0,0)';
+      }
+      function tick(now) {
+        if (!last) last = now;
+        var dt = Math.min(50, now - last);
+        last = now;
+        if (!reduceMotion && !paused && !dragging && visible && !document.hidden && setWidth > 0) {
+          pos += speed * dt / 1000;
+          if (pos >= setWidth) pos = pos % setWidth;
+          render();
+        }
+        window.requestAnimationFrame(tick);
+      }
+      function pause() { paused = true; window.clearTimeout(resumeTimer); }
+      function resume(delay) {
+        window.clearTimeout(resumeTimer);
+        resumeTimer = window.setTimeout(function () { paused = false; last = 0; }, delay || 0);
+      }
+      rail.addEventListener('mouseenter', pause);
+      rail.addEventListener('mouseleave', function () { if (!dragging) resume(350); });
+      rail.addEventListener('focusin', pause);
+      rail.addEventListener('focusout', function () { resume(700); });
+      rail.addEventListener('touchstart', function (e) {
+        pause();
+        if (e.touches && e.touches.length) { dragging = true; startX = e.touches[0].clientX; startPos = pos; moved = false; }
+      }, { passive: true });
+      rail.addEventListener('touchmove', function (e) {
+        if (!dragging || !e.touches || !e.touches.length) return;
+        var dx = e.touches[0].clientX - startX;
+        if (Math.abs(dx) > 5) moved = true;
+        if (moved && Math.abs(dx) > 1) {
+          pos = (startPos + dx) % setWidth;
+          if (pos < 0) pos += setWidth;
+          render();
+        }
+      }, { passive: true });
+      rail.addEventListener('touchend', function () { dragging = false; resume(1800); }, { passive: true });
+      rail.addEventListener('wheel', function () { pause(); resume(1400); }, { passive: true });
+      rail.addEventListener('click', function (e) {
+        if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; }
+      }, true);
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (entries) { visible = !!entries[0].isIntersecting; }).observe(rail);
+      }
+      var resizeTimer = null;
+      window.addEventListener('resize', function () {
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(function () { build(); last = 0; }, 180);
+      });
+      if ('ResizeObserver' in window) new ResizeObserver(function () { build(); }).observe(rail);
       build();
-      pos = 0;
-      rail.scrollLeft = 0;
       window.requestAnimationFrame(tick);
-    }
-    if (document.readyState === 'complete') init(); else window.addEventListener('load', init);
-  });
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initRails);
+  else initRails();
 })();

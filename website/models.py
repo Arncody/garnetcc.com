@@ -609,6 +609,7 @@ SITE_TEXT_DEFAULTS = {
     "cta_eyebrow": ("مشاوره خصوصی", "PRIVATE CONSULTATION"),
     "cta_text": ("برای آدرس بعدی شما، یک گفت‌وگوی دقیق و خصوصی.", "A focused conversation for your next address."),
     "cta_button": ("درخواست مشاوره", "Request consultation"),
+    "consultation_button_text": ("درخواست مشاوره", "Request consultation"),
     "modal_eyebrow": ("مشاوره خصوصی", "PRIVATE CONSULTATION"),
     "modal_title": ("آدرس بعدی را با هم بسازیم.", "Let's shape the next address."),
     "modal_subtitle": ("برای شروع، چند اطلاعات کوتاه و خصوصی کافی است.", "A short, private brief is enough to start."),
@@ -626,6 +627,22 @@ SITE_TEXT_DEFAULTS = {
     "opt_female": ("خانم", "Ms."),
     "opt_other": ("سایر / ترجیح می‌دهم نگویم", "Prefer not to say"),
 }
+
+
+class NewsletterSubscriber(models.Model):
+    """Email subscriptions collected from the footer newsletter form."""
+    email = models.EmailField("ایمیل", unique=True, max_length=254)
+    is_active = models.BooleanField("عضویت فعال", default=True)
+    created_at = models.DateTimeField("تاریخ عضویت", auto_now_add=True)
+    updated_at = models.DateTimeField("آخرین به‌روزرسانی", auto_now=True)
+
+    class Meta:
+        verbose_name = "عضو خبرنامه"
+        verbose_name_plural = "اعضای خبرنامه"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.email
 
 
 class SiteTexts(SingletonModel):
@@ -649,6 +666,8 @@ class SiteTexts(SingletonModel):
     cta_text = models.CharField("متن کادر مشاوره", max_length=250, blank=True, default="برای آدرس بعدی شما، یک گفت‌وگوی دقیق و خصوصی.")
     cta_text_en = models.CharField("متن کادر مشاوره (EN)", max_length=250, blank=True, default="A focused conversation for your next address.")
     cta_button = models.CharField("متن دکمه کادر مشاوره", max_length=250, blank=True, default="درخواست مشاوره")
+    consultation_button_text = models.CharField("متن دکمه درخواست مشاوره در سراسر سایت", max_length=120, blank=True, default="درخواست مشاوره")
+    consultation_button_text_en = models.CharField("متن دکمه درخواست مشاوره در سراسر سایت (EN)", max_length=120, blank=True, default="Request consultation")
     cta_button_en = models.CharField("متن دکمه کادر مشاوره (EN)", max_length=250, blank=True, default="Request consultation")
     modal_eyebrow = models.CharField("برچسب کوچک بالای فرم", max_length=250, blank=True, default="مشاوره خصوصی")
     modal_eyebrow_en = models.CharField("برچسب کوچک بالای فرم (EN)", max_length=250, blank=True, default="PRIVATE CONSULTATION")

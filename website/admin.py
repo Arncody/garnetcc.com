@@ -1,8 +1,10 @@
 from django.contrib import admin
 from django.utils.html import format_html
+import csv
+from django.http import HttpResponse
 from .models import (
     SiteSettings, HeroSection, HeroStat, Project, ProjectImage,
-    PhilosophyFeature, SiteSection, ConsultationRequest, CompanyCatalog, BlogPost, SiteTheme, SiteTexts, MenuItem
+    PhilosophyFeature, SiteSection, ConsultationRequest, CompanyCatalog, BlogPost, SiteTheme, SiteTexts, MenuItem, NewsletterSubscriber
 )
 
 admin.site.site_header = "پنل مدیریت گارنت | Garnet CMS"
@@ -135,6 +137,7 @@ class SiteTextsAdmin(admin.ModelAdmin):
         ("🔘 دکمه‌ی آیکونی «مشاهده همه پروژه‌ها» (صفحه اصلی)", {"fields": (("all_projects_btn","all_projects_btn_en"),), "description": "دکمه فقط آیکون دارد؛ این متن برای راهنمای شناور (tooltip) و دسترس‌پذیری استفاده می‌شود."}),
         ("📰 بخش بلاگ (صفحه اصلی)", {"fields": (("journal_title","journal_title_en"),("all_articles_link","all_articles_link_en"),)}),
         ("📚 صفحه «همه مقالات»", {"fields": (("blog_page_title","blog_page_title_en"),)}),
+        ("📞 عنوان دکمه‌های درخواست مشاوره", {"fields": (("consultation_button_text", "consultation_button_text_en"), ("cta_button", "cta_button_en"))}),
         ("📝 پاپ‌آپ فرم درخواست مشاوره", {"fields": (("modal_title","modal_title_en"),("modal_subtitle","modal_subtitle_en"),("submit_text","submit_text_en"),)}),
         ("🏷️ عنوان فیلدهای فرم", {"fields": (("label_name","label_name_en"),("label_gender","label_gender_en"),("label_phone","label_phone_en"),("label_subject","label_subject_en"),("label_message","label_message_en"),)}),
         ("✍️ متن راهنمای داخل فیلدها (Placeholder)", {"fields": (("ph_name","ph_name_en"),("ph_phone","ph_phone_en"),("ph_subject","ph_subject_en"),("ph_message","ph_message_en"),)}),
@@ -159,3 +162,26 @@ class MenuItemAdmin(admin.ModelAdmin):
     fieldsets = (
         ("آیتم منو", {"fields": (("title", "title_en"), "url", "open_consult", ("order", "is_active"))}),
     )
+
+
+def export_active_newsletter_emails(modeladmin, request, queryset):
+    response = HttpResponse(content_type="text/csv; charset=utf-8")
+    response["Content-Disposition"] = 'attachment; filename="garnet-newsletter-subscribers.csv"'
+    response.write("\ufeff")
+    writer = csv.writer(response)
+    writer.writerow(["email", "subscribed_at", "active"])
+    for subscriber in queryset.order_by("-created_at"):
+        writer.writerow([subscriber.email, subscriber.created_at.isoformat(), subscriber.is_active])
+    return response
+export_active_newsletter_emails.short_description = "خروجی CSV ایمیل‌های انتخاب‌شده"
+
+
+@admin.register(NewsletterSubscriber)
+class NewsletterSubscriberAdmin(admin.ModelAdmin):
+    list_display = ("email", "is_active", "created_at", "updated_at")
+    list_filter = ("is_active", "created_at")
+    search_fields = ("email",)
+    list_editable = ("is_active",)
+    readonly_fields = ("created_at", "updated_at")
+    fields = ("email", "is_active", "created_at", "updated_at")
+    actions = (export_active_newsletter_emails,)
