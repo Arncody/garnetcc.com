@@ -208,4 +208,5 @@ html[dir="rtl"] .footer-brand{align-items:flex-end}
     width: min(78vw, 300px);
   }
 }
-.proj-rail .mini-project img { -webkit-user-drag: none; }
+.proj-rail .mini-project img,
+.proj-rail a.mini-project { -webkit-user-drag: none; user-drag: none; -webkit-touch-callout: none; }

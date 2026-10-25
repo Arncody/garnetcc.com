@@ -213,13 +213,19 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 })();
 
-/* ---------- Garnet project rail: initialize after DOM is ready ---------- */
+/* ---------- Garnet project rail (ردیف افقی چرخان پروژه‌ها) ----------
+   - حرکت با transform؛ سرعت از پنل ادمین (data-speed، پیکسل بر ثانیه)
+   - کشیدن با ماوس/لمس روی خود کارت‌ها هم کار می‌کند (کارت‌ها لینک هستند)
+   - با هاور ماوس، لمس یا فوکوس کیبورد متوقف و کمی بعد ادامه می‌دهد
+   - اگر می‌خواهید حرکت خودکار با تنظیم «کاهش حرکت» سیستم‌عامل متوقف شود، مقدار زیر را true کنید */
 (function () {
   'use strict';
+  var HONOR_REDUCED_MOTION = false;
 
   function initProjectRails() {
     var rails = document.querySelectorAll('[data-rail]');
     if (!rails.length) return;
+    var reduced = HONOR_REDUCED_MOTION && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     rails.forEach(function (rail) {
       var track = rail.querySelector('[data-rail-track]');
@@ -231,36 +237,41 @@ document.addEventListener('DOMContentLoaded', () => {
       if (originals.length < 2) return;
 
       rail.dataset.railInitialized = '1';
-      var speed = Math.max(10, Math.min(120, parseInt(rail.getAttribute('data-speed'), 10) || 32));
-      var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var setWidth = 0, offset = 0, lastTime = 0, raf = 0;
-      var paused = false, dragging = false, moved = false;
-      var startX = 0, startOffset = 0, pointerId = null, resumeTimer = 0;
+      var speed = Math.max(10, Math.min(200, parseInt(rail.getAttribute('data-speed'), 10) || 40));
+      var setWidth = 0, offset = 0, lastTime = 0;
+      var paused = false, dragging = false, moved = false, pressed = false;
+      var startX = 0, startY = 0, startOffset = 0, pointerId = null, resumeTimer = 0;
+
+      function render() {
+        track.style.transform = 'translate3d(' + (-offset) + 'px,0,0)';
+      }
+
+      function normalize() {
+        if (setWidth > 0) offset = ((offset % setWidth) + setWidth) % setWidth;
+      }
 
       function measureAndClone() {
         Array.prototype.slice.call(track.querySelectorAll('[data-clone]')).forEach(function (el) { el.remove(); });
         track.style.transform = 'translate3d(0,0,0)';
-        track.style.willChange = 'transform';
 
-        var firstRect = originals[0].getBoundingClientRect();
-        var lastRect = originals[originals.length - 1].getBoundingClientRect();
-        setWidth = Math.max(0, lastRect.right - firstRect.left);
-        if (!setWidth) {
-          setWidth = originals.reduce(function (sum, el) {
-            return sum + el.getBoundingClientRect().width;
-          }, 0);
-          var style = getComputedStyle(track);
-          setWidth += (parseFloat(style.columnGap || style.gap) || 0) * (originals.length - 1);
-        }
-        if (!setWidth) return;
+        var lefts = [], rights = [];
+        originals.forEach(function (el) {
+          var r = el.getBoundingClientRect();
+          lefts.push(r.left); rights.push(r.right);
+        });
+        var style = getComputedStyle(track);
+        var gap = parseFloat(style.columnGap || style.gap) || 0;
+        setWidth = Math.max.apply(null, rights) - Math.min.apply(null, lefts) + gap;
+        if (!(setWidth > 0)) return;
 
         var safety = 0;
-        while (track.scrollWidth < rail.clientWidth + setWidth && safety < 12) {
+        while (track.scrollWidth < rail.clientWidth + setWidth * 2 && safety < 12) {
           originals.forEach(function (original) {
             var clone = original.cloneNode(true);
             clone.setAttribute('data-clone', '1');
             clone.setAttribute('aria-hidden', 'true');
             clone.querySelectorAll('[id]').forEach(function (node) { node.removeAttribute('id'); });
+            clone.setAttribute('tabindex', '-1');
             clone.querySelectorAll('a,button,input,select,textarea,[tabindex]').forEach(function (node) {
               node.setAttribute('tabindex', '-1');
             });
@@ -268,18 +279,14 @@ document.addEventListener('DOMContentLoaded', () => {
           });
           safety++;
         }
-        offset = offset % setWidth;
+        normalize();
         render();
-      }
-
-      function render() {
-        track.style.transform = 'translate3d(' + (-offset) + 'px,0,0)';
       }
 
       function scheduleResume(delay) {
         window.clearTimeout(resumeTimer);
         resumeTimer = window.setTimeout(function () {
-          if (!dragging && !reduced) paused = false;
+          if (!dragging && !pressed) paused = false;
         }, delay);
       }
 
@@ -287,86 +294,115 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!lastTime) lastTime = now;
         var delta = Math.min(50, now - lastTime);
         lastTime = now;
-        if (!paused && !dragging && !reduced && !document.hidden && rail.getBoundingClientRect().width > 0) {
+        if (!paused && !dragging && !reduced && !document.hidden && rail.clientWidth > 0 && setWidth > 0) {
           offset += speed * delta / 1000;
-          if (setWidth > 0 && offset >= setWidth) offset = offset % setWidth;
+          normalize();
           render();
         }
-        raf = window.requestAnimationFrame(tick);
+        window.requestAnimationFrame(tick);
       }
 
+      /* ----- کشیدن (ماوس / لمس / قلم) — روی کارت‌ها (لینک) هم شروع می‌شود ----- */
       function onPointerDown(e) {
         if (e.pointerType === 'mouse' && e.button !== 0) return;
-        if (e.target.closest('a,button,input,select,textarea')) return;
-        dragging = true;
+        pressed = true;
+        dragging = false;
         moved = false;
         paused = true;
+        window.clearTimeout(resumeTimer);
         pointerId = e.pointerId;
         startX = e.clientX;
+        startY = e.clientY;
         startOffset = offset;
-        rail.classList.add('is-dragging');
-        try { rail.setPointerCapture(pointerId); } catch (_) {}
       }
 
       function onPointerMove(e) {
-        if (!dragging || (pointerId !== null && e.pointerId !== pointerId)) return;
+        if (!pressed || e.pointerId !== pointerId) return;
         var dx = e.clientX - startX;
-        if (Math.abs(dx) > 4) moved = true;
-        if (!moved) return;
-        offset = startOffset - dx;
-        if (setWidth > 0) {
-          offset = ((offset % setWidth) + setWidth) % setWidth;
+        var dy = e.clientY - startY;
+        if (!dragging) {
+          if (Math.abs(dx) < 6) return;
+          if (Math.abs(dy) > Math.abs(dx)) return;      // حرکت عمودی = اسکرول صفحه
+          dragging = true;
+          moved = true;
+          rail.classList.add('is-dragging');
+          try { rail.setPointerCapture(pointerId); } catch (_) {}
         }
+        offset = startOffset - dx;
+        normalize();
         render();
         if (e.cancelable) e.preventDefault();
       }
 
-      function onPointerUp() {
-        if (!dragging) return;
+      function onPointerUp(e) {
+        if (!pressed || (e && e.pointerId !== undefined && pointerId !== null && e.pointerId !== pointerId)) return;
+        pressed = false;
+        var wasDragging = dragging;
         dragging = false;
+        if (wasDragging) {
+          try { rail.releasePointerCapture(pointerId); } catch (_) {}
+        }
         pointerId = null;
         rail.classList.remove('is-dragging');
         if (moved) {
           rail.dataset.railDragged = '1';
-          window.setTimeout(function () { delete rail.dataset.railDragged; }, 100);
+          window.setTimeout(function () { delete rail.dataset.railDragged; }, 120);
         }
-        scheduleResume(1800);
+        scheduleResume(1500);
       }
 
       rail.addEventListener('pointerdown', onPointerDown);
       rail.addEventListener('pointermove', onPointerMove, { passive: false });
       rail.addEventListener('pointerup', onPointerUp);
       rail.addEventListener('pointercancel', onPointerUp);
-      rail.addEventListener('lostpointercapture', onPointerUp);
+      // فقط وقتی خود ردیف capture را از دست داد (نه کارت زیر انگشت که این رویداد از آن bubble می‌شود)
+      rail.addEventListener('lostpointercapture', function (e) { if (e.target === rail) onPointerUp(e); });
+
+      // جلوگیری از drag بومی مرورگر روی لینک/عکس؛ در غیر این‌صورت کشیدن با ماوس لغو می‌شود
+      rail.addEventListener('dragstart', function (e) { e.preventDefault(); });
+      // بعد از کشیدن، کلیک روی کارت نباید صفحه را باز کند
       rail.addEventListener('click', function (e) {
         if (rail.dataset.railDragged === '1') {
           e.preventDefault();
           e.stopPropagation();
         }
       }, true);
-      rail.addEventListener('mouseenter', function () { paused = true; });
-      rail.addEventListener('mouseleave', function () { scheduleResume(350); });
-      rail.addEventListener('focusin', function () { paused = true; });
+
+      // توقف با هاور (فقط ماوس واقعی) و فوکوس کیبورد
+      rail.addEventListener('pointerenter', function (e) {
+        if (e.pointerType === 'mouse') { paused = true; window.clearTimeout(resumeTimer); }
+      });
+      rail.addEventListener('pointerleave', function (e) {
+        if (e.pointerType === 'mouse' && !pressed) scheduleResume(350);
+      });
+      rail.addEventListener('focusin', function (e) {
+        var kb = true;
+        try { kb = e.target.matches(':focus-visible'); } catch (_) {}
+        if (kb) { paused = true; window.clearTimeout(resumeTimer); }
+      });
       rail.addEventListener('focusout', function () { scheduleResume(600); });
-      rail.addEventListener('touchstart', function () { paused = true; }, { passive: true });
-      rail.addEventListener('touchend', function () { scheduleResume(1800); }, { passive: true });
+      // اگر مرورگر هنگام فوکوس کیبورد خودش اسکرول کرد، با transform دوبار جابه‌جا نشود
+      rail.addEventListener('scroll', function () { if (rail.scrollLeft) rail.scrollLeft = 0; }, { passive: true });
 
       if ('ResizeObserver' in window) {
-        var observer = new ResizeObserver(function () { measureAndClone(); });
-        observer.observe(rail);
-        observer.observe(track);
+        var lastW = 0, ro = new ResizeObserver(function () {
+          if (rail.clientWidth === lastW) return;
+          lastW = rail.clientWidth;
+          measureAndClone();
+        });
+        ro.observe(rail);
       } else {
         window.addEventListener('resize', measureAndClone);
       }
-      originals.forEach(function (imgCard) {
-        imgCard.querySelectorAll('img').forEach(function (img) {
+      originals.forEach(function (card) {
+        card.querySelectorAll('img').forEach(function (img) {
           if (!img.complete) img.addEventListener('load', measureAndClone, { once: true });
         });
       });
 
       measureAndClone();
       rail.dataset.railReady = '1';
-      if (!reduced) raf = window.requestAnimationFrame(tick);
+      window.requestAnimationFrame(tick);
     });
   }
 
