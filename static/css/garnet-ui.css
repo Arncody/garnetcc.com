@@ -169,44 +169,38 @@ html[dir="rtl"] .footer-brand{align-items:flex-end}
 }
 
 
-/* Project rail interaction: transform-driven track; touch vertically scrolls the page */
-.proj-rail {
-  position: relative;
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  overflow: hidden !important;
-  touch-action: pan-y;
-  cursor: grab;
-  -webkit-user-select: none;
-  user-select: none;
-}
-.proj-rail-track {
-  display: flex;
-  flex-wrap: nowrap;
-  width: max-content;
-  max-width: none;
-  will-change: transform;
-  direction: ltr;
-  transition: none !important;
-}
-.proj-rail.is-dragging { cursor: grabbing; }
-.proj-rail.is-dragging .proj-rail-track { transition: none !important; }
-.proj-rail .mini-project.project-preview {
-  flex: 0 0 clamp(240px, 28vw, 340px);
-  width: clamp(240px, 28vw, 340px);
-}
-@media (max-width: 900px) {
-  .proj-rail .mini-project.project-preview {
-    flex-basis: clamp(230px, 62vw, 310px);
-    width: clamp(230px, 62vw, 310px);
-  }
-}
-@media (max-width: 520px) {
-  .proj-rail .mini-project.project-preview {
-    flex-basis: min(78vw, 300px);
-    width: min(78vw, 300px);
-  }
-}
-.proj-rail .mini-project img,
-.proj-rail a.mini-project { -webkit-user-drag: none; user-drag: none; -webkit-touch-callout: none; }
+/* ---------- Garnet footer redesign + resilient mobile project rail ---------- */
+.proj-rail{overflow:hidden;direction:ltr;scroll-behavior:auto;touch-action:pan-y;contain:layout paint;}
+.proj-rail-track{will-change:transform;transform:translate3d(0,0,0);direction:ltr;}
+.proj-rail .mini-project.project-preview{min-width:0;max-width:none;box-sizing:border-box;}
+.proj-rail [data-clone]{pointer-events:auto;}
+.footer-grid-reference{grid-template-columns:1fr 1fr 1.2fr 1.15fr;gap:clamp(18px,3vw,44px);align-items:start;}
+.footer-grid-reference .footer-brand{order:initial;grid-column:auto;}
+.footer-grid-reference .footer-col h4{font-size:.72rem;letter-spacing:.04em;margin-bottom:18px;color:#fff;}
+.footer-grid-reference .footer-col>a,.footer-grid-reference .footer-col>p,.footer-text-button{display:block;margin:0 0 8px;font-size:.72rem;line-height:1.8;color:rgba(255,255,255,.66);text-align:start;}
+.footer-text-button{border:0;padding:0;background:none;cursor:pointer;font:inherit;}
+.footer-grid-reference .footer-col>a:hover,.footer-text-button:hover{color:#fff;}
+.footer-logo-link{display:inline-flex;align-items:center;border:0!important;outline:0;box-shadow:none!important;background:transparent!important;padding:0!important;border-radius:0!important;}
+.footer-wordmark{display:block;max-width:180px;width:var(--logo-desktop,180px);height:auto;object-fit:contain;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;}
+.footer-logo-area{align-items:flex-start!important;}
+.footer-social-links{display:flex;align-items:center;gap:12px;margin-top:14px;}
+.footer-social-links a{display:inline-flex;align-items:center;justify-content:center;width:auto;height:auto;padding:0;border:0!important;border-radius:0!important;background:transparent!important;color:#fff;line-height:1;}
+.footer-social-links a .ic{width:24px;height:24px;}
+.footer-contact-item{display:flex!important;align-items:center;gap:10px;}
+.footer-contact-icon{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;flex:0 0 18px;color:#39bd80;}
+.footer-contact-icon .ic{width:17px;height:17px;}
+.newsletter-form{display:flex;align-items:center;gap:0;width:min(100%,290px);min-height:40px;padding:4px;border-radius:999px;background:#fff;overflow:hidden;}
+.newsletter-form input[type=email]{min-width:0;flex:1;width:100%;border:0;outline:0;background:transparent;color:#192a35;padding:8px 12px;font:inherit;font-size:.72rem;direction:ltr;text-align:left;}
+.newsletter-form input[type=email]::placeholder{color:#6b7379;opacity:1;}
+.newsletter-form button{display:inline-flex;align-items:center;justify-content:center;flex:0 0 32px;width:32px;height:32px;border:0;border-radius:50%;background:#35c878;color:#fff;cursor:pointer;}
+.newsletter-form button .ic{width:18px;height:18px;}
+.newsletter-honeypot{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;opacity:0!important;}
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;}
+.floating-call{position:fixed;z-index:1000;inset-inline-end:max(22px,env(safe-area-inset-right));bottom:max(22px,env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:center;border-radius:50%;}
+@media(max-width:900px){.footer-grid-reference{grid-template-columns:1fr 1fr;}.footer-logo-area{grid-column:1/-1;}}
+@media(max-width:560px){.footer-grid-reference{grid-template-columns:1fr 1fr;gap:22px 18px;}.footer-grid-reference .footer-newsletter-col{grid-column:1/-1;}.footer-grid-reference .footer-logo-area{grid-column:1/-1;}.newsletter-form{width:100%;}.footer-wordmark{width:var(--logo-mobile,145px);max-width:145px;}.floating-call{width:48px;height:48px;inset-inline-end:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));}}
+@media(prefers-reduced-motion:reduce){.proj-rail-track{transform:none!important;}}
+
+.site-footer{position:relative;isolation:isolate;background-color:#35094b!important;background-image:radial-gradient(ellipse 38% 28px at 8% 0%,rgba(157,104,179,.42) 0 98%,transparent 100%),radial-gradient(ellipse 30% 24px at 39% 0%,rgba(157,104,179,.28) 0 98%,transparent 100%),radial-gradient(ellipse 42% 30px at 82% 0%,rgba(157,104,179,.34) 0 98%,transparent 100%)!important;border-top:0!important;}
+
+.footer-logo-inline{margin:0 0 18px!important;}

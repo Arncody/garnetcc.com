@@ -213,202 +213,110 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 })();
 
-/* ---------- Garnet project rail (ردیف افقی چرخان پروژه‌ها) ----------
-   - حرکت با transform؛ سرعت از پنل ادمین (data-speed، پیکسل بر ثانیه)
-   - کشیدن با ماوس/لمس روی خود کارت‌ها هم کار می‌کند (کارت‌ها لینک هستند)
-   - با هاور ماوس، لمس یا فوکوس کیبورد متوقف و کمی بعد ادامه می‌دهد
-   - اگر می‌خواهید حرکت خودکار با تنظیم «کاهش حرکت» سیستم‌عامل متوقف شود، مقدار زیر را true کنید */
+/* ---------- Seamless project marquee (transform-based for iOS Safari + RTL) ----------
+   Avoids scrollLeft because its RTL semantics differ across Safari/iOS versions. */
 (function () {
-  'use strict';
-  var HONOR_REDUCED_MOTION = false;
-
-  function initProjectRails() {
+  function initRails() {
     var rails = document.querySelectorAll('[data-rail]');
     if (!rails.length) return;
-    var reduced = HONOR_REDUCED_MOTION && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     rails.forEach(function (rail) {
       var track = rail.querySelector('[data-rail-track]');
-      if (!track || rail.dataset.railInitialized === '1') return;
-
-      var originals = Array.prototype.slice.call(track.children).filter(function (el) {
-        return !el.hasAttribute('data-clone');
-      });
+      if (!track || rail.dataset.railReady === '1') return;
+      var originals = Array.prototype.slice.call(track.children);
       if (originals.length < 2) return;
+      rail.dataset.railReady = '1';
+      var speed = Math.max(10, Math.min(200, parseInt(rail.getAttribute('data-speed'), 10) || 32));
+      var setWidth = 0, pos = 0, last = 0, paused = false, dragging = false;
+      var visible = true, resumeTimer = null, startX = 0, startPos = 0, moved = false;
 
-      rail.dataset.railInitialized = '1';
-      var speed = Math.max(10, Math.min(200, parseInt(rail.getAttribute('data-speed'), 10) || 40));
-      var setWidth = 0, offset = 0, lastTime = 0;
-      var paused = false, dragging = false, moved = false, pressed = false;
-      var startX = 0, startY = 0, startOffset = 0, pointerId = null, resumeTimer = 0;
-
-      function render() {
-        track.style.transform = 'translate3d(' + (-offset) + 'px,0,0)';
+      function removeClones() {
+        Array.prototype.slice.call(track.querySelectorAll('[data-clone="1"]')).forEach(function (node) { node.remove(); });
       }
-
-      function normalize() {
-        if (setWidth > 0) offset = ((offset % setWidth) + setWidth) % setWidth;
+      function measureSet() {
+        if (!originals.length) return 0;
+        var first = originals[0].getBoundingClientRect();
+        var lastCard = originals[originals.length - 1].getBoundingClientRect();
+        var gap = parseFloat(getComputedStyle(track).columnGap || getComputedStyle(track).gap) || 0;
+        return Math.max(0, lastCard.right - first.left + gap);
       }
-
-      function measureAndClone() {
-        Array.prototype.slice.call(track.querySelectorAll('[data-clone]')).forEach(function (el) { el.remove(); });
-        track.style.transform = 'translate3d(0,0,0)';
-
-        var lefts = [], rights = [];
-        originals.forEach(function (el) {
-          var r = el.getBoundingClientRect();
-          lefts.push(r.left); rights.push(r.right);
-        });
-        var style = getComputedStyle(track);
-        var gap = parseFloat(style.columnGap || style.gap) || 0;
-        setWidth = Math.max.apply(null, rights) - Math.min.apply(null, lefts) + gap;
-        if (!(setWidth > 0)) return;
-
+      function build() {
+        removeClones();
+        setWidth = measureSet();
+        if (!setWidth) return;
+        // Ensure the duplicated content always covers the visible viewport at every loop point.
         var safety = 0;
-        while (track.scrollWidth < rail.clientWidth + setWidth * 2 && safety < 12) {
-          originals.forEach(function (original) {
-            var clone = original.cloneNode(true);
+        while (track.scrollWidth < rail.clientWidth + setWidth && safety < 8) {
+          originals.forEach(function (card) {
+            var clone = card.cloneNode(true);
             clone.setAttribute('data-clone', '1');
             clone.setAttribute('aria-hidden', 'true');
-            clone.querySelectorAll('[id]').forEach(function (node) { node.removeAttribute('id'); });
-            clone.setAttribute('tabindex', '-1');
-            clone.querySelectorAll('a,button,input,select,textarea,[tabindex]').forEach(function (node) {
-              node.setAttribute('tabindex', '-1');
+            clone.querySelectorAll('a,button,input,select,textarea,[tabindex]').forEach(function (el) {
+              el.setAttribute('tabindex', '-1');
             });
             track.appendChild(clone);
           });
           safety++;
         }
-        normalize();
+        pos = pos % setWidth;
         render();
       }
-
-      function scheduleResume(delay) {
-        window.clearTimeout(resumeTimer);
-        resumeTimer = window.setTimeout(function () {
-          if (!dragging && !pressed) paused = false;
-        }, delay);
+      function render() {
+        track.style.transform = 'translate3d(' + (-pos) + 'px,0,0)';
       }
-
       function tick(now) {
-        if (!lastTime) lastTime = now;
-        var delta = Math.min(50, now - lastTime);
-        lastTime = now;
-        if (!paused && !dragging && !reduced && !document.hidden && rail.clientWidth > 0 && setWidth > 0) {
-          offset += speed * delta / 1000;
-          normalize();
+        if (!last) last = now;
+        var dt = Math.min(50, now - last);
+        last = now;
+        if (!reduceMotion && !paused && !dragging && visible && !document.hidden && setWidth > 0) {
+          pos += speed * dt / 1000;
+          if (pos >= setWidth) pos = pos % setWidth;
           render();
         }
         window.requestAnimationFrame(tick);
       }
-
-      /* ----- کشیدن (ماوس / لمس / قلم) — روی کارت‌ها (لینک) هم شروع می‌شود ----- */
-      function onPointerDown(e) {
-        if (e.pointerType === 'mouse' && e.button !== 0) return;
-        pressed = true;
-        dragging = false;
-        moved = false;
-        paused = true;
+      function pause() { paused = true; window.clearTimeout(resumeTimer); }
+      function resume(delay) {
         window.clearTimeout(resumeTimer);
-        pointerId = e.pointerId;
-        startX = e.clientX;
-        startY = e.clientY;
-        startOffset = offset;
+        resumeTimer = window.setTimeout(function () { paused = false; last = 0; }, delay || 0);
       }
-
-      function onPointerMove(e) {
-        if (!pressed || e.pointerId !== pointerId) return;
-        var dx = e.clientX - startX;
-        var dy = e.clientY - startY;
-        if (!dragging) {
-          if (Math.abs(dx) < 6) return;
-          if (Math.abs(dy) > Math.abs(dx)) return;      // حرکت عمودی = اسکرول صفحه
-          dragging = true;
-          moved = true;
-          rail.classList.add('is-dragging');
-          try { rail.setPointerCapture(pointerId); } catch (_) {}
+      rail.addEventListener('mouseenter', pause);
+      rail.addEventListener('mouseleave', function () { if (!dragging) resume(350); });
+      rail.addEventListener('focusin', pause);
+      rail.addEventListener('focusout', function () { resume(700); });
+      rail.addEventListener('touchstart', function (e) {
+        pause();
+        if (e.touches && e.touches.length) { dragging = true; startX = e.touches[0].clientX; startPos = pos; moved = false; }
+      }, { passive: true });
+      rail.addEventListener('touchmove', function (e) {
+        if (!dragging || !e.touches || !e.touches.length) return;
+        var dx = e.touches[0].clientX - startX;
+        if (Math.abs(dx) > 5) moved = true;
+        if (moved && Math.abs(dx) > 1) {
+          pos = (startPos + dx) % setWidth;
+          if (pos < 0) pos += setWidth;
+          render();
         }
-        offset = startOffset - dx;
-        normalize();
-        render();
-        if (e.cancelable) e.preventDefault();
-      }
-
-      function onPointerUp(e) {
-        if (!pressed || (e && e.pointerId !== undefined && pointerId !== null && e.pointerId !== pointerId)) return;
-        pressed = false;
-        var wasDragging = dragging;
-        dragging = false;
-        if (wasDragging) {
-          try { rail.releasePointerCapture(pointerId); } catch (_) {}
-        }
-        pointerId = null;
-        rail.classList.remove('is-dragging');
-        if (moved) {
-          rail.dataset.railDragged = '1';
-          window.setTimeout(function () { delete rail.dataset.railDragged; }, 120);
-        }
-        scheduleResume(1500);
-      }
-
-      rail.addEventListener('pointerdown', onPointerDown);
-      rail.addEventListener('pointermove', onPointerMove, { passive: false });
-      rail.addEventListener('pointerup', onPointerUp);
-      rail.addEventListener('pointercancel', onPointerUp);
-      // فقط وقتی خود ردیف capture را از دست داد (نه کارت زیر انگشت که این رویداد از آن bubble می‌شود)
-      rail.addEventListener('lostpointercapture', function (e) { if (e.target === rail) onPointerUp(e); });
-
-      // جلوگیری از drag بومی مرورگر روی لینک/عکس؛ در غیر این‌صورت کشیدن با ماوس لغو می‌شود
-      rail.addEventListener('dragstart', function (e) { e.preventDefault(); });
-      // بعد از کشیدن، کلیک روی کارت نباید صفحه را باز کند
+      }, { passive: true });
+      rail.addEventListener('touchend', function () { dragging = false; resume(1800); }, { passive: true });
+      rail.addEventListener('wheel', function () { pause(); resume(1400); }, { passive: true });
       rail.addEventListener('click', function (e) {
-        if (rail.dataset.railDragged === '1') {
-          e.preventDefault();
-          e.stopPropagation();
-        }
+        if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; }
       }, true);
-
-      // توقف با هاور (فقط ماوس واقعی) و فوکوس کیبورد
-      rail.addEventListener('pointerenter', function (e) {
-        if (e.pointerType === 'mouse') { paused = true; window.clearTimeout(resumeTimer); }
-      });
-      rail.addEventListener('pointerleave', function (e) {
-        if (e.pointerType === 'mouse' && !pressed) scheduleResume(350);
-      });
-      rail.addEventListener('focusin', function (e) {
-        var kb = true;
-        try { kb = e.target.matches(':focus-visible'); } catch (_) {}
-        if (kb) { paused = true; window.clearTimeout(resumeTimer); }
-      });
-      rail.addEventListener('focusout', function () { scheduleResume(600); });
-      // اگر مرورگر هنگام فوکوس کیبورد خودش اسکرول کرد، با transform دوبار جابه‌جا نشود
-      rail.addEventListener('scroll', function () { if (rail.scrollLeft) rail.scrollLeft = 0; }, { passive: true });
-
-      if ('ResizeObserver' in window) {
-        var lastW = 0, ro = new ResizeObserver(function () {
-          if (rail.clientWidth === lastW) return;
-          lastW = rail.clientWidth;
-          measureAndClone();
-        });
-        ro.observe(rail);
-      } else {
-        window.addEventListener('resize', measureAndClone);
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (entries) { visible = !!entries[0].isIntersecting; }).observe(rail);
       }
-      originals.forEach(function (card) {
-        card.querySelectorAll('img').forEach(function (img) {
-          if (!img.complete) img.addEventListener('load', measureAndClone, { once: true });
-        });
+      var resizeTimer = null;
+      window.addEventListener('resize', function () {
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(function () { build(); last = 0; }, 180);
       });
-
-      measureAndClone();
-      rail.dataset.railReady = '1';
+      if ('ResizeObserver' in window) new ResizeObserver(function () { build(); }).observe(rail);
+      build();
       window.requestAnimationFrame(tick);
     });
   }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initProjectRails, { once: true });
-  } else {
-    initProjectRails();
-  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initRails);
+  else initRails();
 })();

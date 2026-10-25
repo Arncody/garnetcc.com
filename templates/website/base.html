@@ -35,7 +35,7 @@ small,.small{font-weight:var(--small-weight)}
 {% if site_theme.custom_css %}{{ site_theme.custom_css|safe }}{% endif %}
 </style>
 <link rel="stylesheet" href="{% static 'css/consult-modal.css' %}?v=20261013-redesign1">
-<link rel="stylesheet" href="{% static 'css/garnet-ui.css' %}?v=20261025railfix2">
+<link rel="stylesheet" href="{% static 'css/garnet-ui.css' %}?v=20261024b">
 
 {% block extra_head %}{% endblock %}
 </head>
@@ -51,7 +51,7 @@ small,.small{font-weight:var(--small-weight)}
         {% for item in menu_items %}{% if item.consult %}<button type="button" class="g-nav-btn" data-consult-open>{{ item.label }}</button>{% else %}<a href="{{ item.url }}"{% if item.active %} class="is-active" aria-current="page"{% endif %}>{{ item.label }}</a>{% endif %}{% endfor %}
       </nav>
       <div class="g-actions">
-        <button type="button" class="g-cta" data-consult-open>{% icon "phone" 16 %}<span>{% if is_en %}Consultation{% else %}درخواست مشاوره{% endif %}</span></button>
+        <button type="button" class="g-cta" data-consult-open>{% icon "phone" 16 %}<span>{{ T.consultation_button_text }}</span></button>
         <button type="button" class="g-toggle" id="nav-toggle" aria-label="{% if is_en %}Open menu{% else %}باز کردن منو{% endif %}" aria-expanded="false" aria-controls="main-nav"><span></span><span></span><span></span></button>
       </div>
     </div>
@@ -86,29 +86,45 @@ small,.small{font-weight:var(--small-weight)}
 {% endwith %}
 {% if request.path != '/' %}<a class="mobile-back" href="javascript:history.back()" aria-label="{% if is_en %}Back{% else %}بازگشت{% endif %}"><span aria-hidden="true">{% if is_en %}{% icon "arrow-left" 16 %}{% else %}{% icon "arrow-right" 16 %}{% endif %}</span><b>{% if is_en %}Back{% else %}بازگشت{% endif %}</b></a>{% endif %}
 <footer class="site-footer" id="contact">
-  <div class="container footer-grid">
-    <div class="footer-brand"><a href="{% url 'website:home' %}" class="brand footer-logo-link" aria-label="{{ site_settings.brand_name }}">{% if site_settings.logo %}<img src="{{ site_settings.logo.url }}" alt="{{ site_settings.brand_name }}" class="brand-wordmark footer-wordmark">{% else %}<span class="brand-text">{{ site_settings.brand_name }}</span>{% endif %}</a><p>{% if is_en %}A refined approach to contemporary residential architecture, engineering and development.{% else %}رویکردی دقیق و اصیل به معماری معاصر مسکونی، مهندسی و توسعه ساختمان.{% endif %}</p></div>
-    <div class="footer-col footer-links-col"><h4>{% if is_en %}Explore{% else %}دسترسی سریع{% endif %}</h4>
-      <a class="footer-link-item" href="{% url 'website:projects_list' %}#ongoing"><span class="footer-link-icon" aria-hidden="true">{% icon "wrench" 15 %}</span><span>{% if is_en %}Developments{% else %}پروژه‌های در حال اجرا{% endif %}</span></a>
-      <a class="footer-link-item" href="{% url 'website:projects_list' %}#completed"><span class="footer-link-icon" aria-hidden="true">{% icon "check-building" 15 %}</span><span>{% if is_en %}Built Portfolio{% else %}نمونه‌کارهای اجرا شده{% endif %}</span></a>
-      <a class="footer-link-item" href="{% url 'website:blog_list' %}"><span class="footer-link-icon" aria-hidden="true">{% icon "book" 15 %}</span><span>{% if is_en %}Blog{% else %}بلاگ{% endif %}</span></a>
-      {% if catalog %}<a class="footer-link-item" href="{{ catalog.file.url }}" target="_blank" rel="noopener"><span class="footer-link-icon" aria-hidden="true">{% icon "download" 15 %}</span><span>{% if is_en %}Company Catalog{% else %}کاتالوگ شرکت{% endif %}</span></a>{% endif %}
-      <button class="footer-link-item footer-consult" type="button" data-consult-open><span class="footer-link-icon" aria-hidden="true">{% icon "message" 15 %}</span><span>{% if is_en %}Consultation{% else %}درخواست مشاوره{% endif %}</span></button>
+  <div class="container footer-grid footer-grid-reference">
+    <div class="footer-col footer-info-col">
+      <a href="{% url 'website:home' %}" class="footer-logo-link footer-logo-inline" aria-label="{{ site_settings.brand_name }}">{% if site_settings.logo %}<img src="{{ site_settings.logo.url }}" alt="{{ site_settings.brand_name }}" class="footer-wordmark">{% else %}<span class="brand-text">{{ site_settings.brand_name }}</span>{% endif %}</a>
+      <h4>{% if is_en %}INFORMATION{% else %}اطلاعات{% endif %}</h4>
+      <a href="{% url 'website:projects_list' %}">{% if is_en %}Projects{% else %}پروژه‌ها{% endif %}</a>
+      <a href="{% url 'website:blog_list' %}">{% if is_en %}Journal{% else %}بلاگ گارنت{% endif %}</a>
+      <button class="footer-text-button" type="button" data-consult-open>{{ T.consultation_button_text }}</button>
+      {% if catalog %}<a href="{{ catalog.file.url }}" target="_blank" rel="noopener">{% if is_en %}Company catalog{% else %}کاتالوگ شرکت{% endif %}</a>{% endif %}
     </div>
-    <div class="footer-col footer-contact-col"><h4>{% if is_en %}Contact{% else %}ارتباط با ما{% endif %}</h4>
-      <a class="footer-contact-item" href="tel:{{ site_settings.phone }}"><span class="footer-contact-icon" aria-hidden="true">{% icon "phone" 15 %}</span><span>{{ site_settings.phone }}</span></a>
-      <a class="footer-contact-item" href="mailto:{{ site_settings.email }}"><span class="footer-contact-icon" aria-hidden="true">{% icon "mail" 15 %}</span><span>{{ site_settings.email }}</span></a>
-      {% if site_settings.instagram_url %}<a class="footer-contact-item" href="{{ site_settings.instagram_url }}" target="_blank" rel="noopener" aria-label="Instagram"><span class="footer-contact-icon instagram-icon" aria-hidden="true">{% icon "instagram" 15 %}</span><span>Instagram</span></a>{% endif %}
-      {% if site_settings.linkedin_url %}<a class="footer-contact-item" href="{{ site_settings.linkedin_url }}" target="_blank" rel="noopener" aria-label="LinkedIn"><span class="footer-contact-icon linkedin-icon" aria-hidden="true">{% icon "linkedin" 15 %}</span><span>LinkedIn</span></a>{% endif %}
-      <div class="footer-address"><span class="footer-contact-icon" aria-hidden="true">{% icon "pin" 15 %}</span><p>{{ site_settings.address }}</p></div>
+    <div class="footer-col footer-terms-col">
+      <h4>{% if is_en %}TERMS &amp; CONDITIONS{% else %}شرایط و قوانین{% endif %}</h4>
+      <p>{% if is_en %}Free consultation{% else %}مشاوره اولیه{% endif %}</p>
+      <p>{% if is_en %}Project information is subject to change{% else %}اطلاعات پروژه‌ها ممکن است به‌روزرسانی شود{% endif %}</p>
+      <p>{% if is_en %}All rights reserved{% else %}تمامی حقوق محفوظ است{% endif %}</p>
     </div>
-    <div class="footer-col footer-hours-col"><h4>{% if is_en %}Hours{% else %}ساعات کاری{% endif %}</h4>
-      <div class="footer-hours"><span class="footer-hours-icon" aria-hidden="true">{% icon "clock" 15 %}</span><p>{% if is_en %}Sat–Wed{% else %}شنبه تا چهارشنبه{% endif %}<strong>{{ site_settings.working_hours_weekday }}</strong></p></div>
-      <div class="footer-hours"><span class="footer-hours-icon" aria-hidden="true">{% icon "clock" 15 %}</span><p>{% if is_en %}Thu{% else %}پنجشنبه{% endif %}<strong>{{ site_settings.working_hours_weekend }}</strong></p></div>
+    <div class="footer-col footer-newsletter-col" id="newsletter">
+      <h4>{% if is_en %}GARNET’S NEWSLETTER{% else %}خبرنامه گارنت{% endif %}</h4>
+      <p>{% if is_en %}Subscribe to receive our updates{% else %}برای دریافت خبرها و تازه‌های گارنت ایمیل خود را ثبت کنید{% endif %}</p>
+      <form class="newsletter-form" action="{% url 'website:newsletter_subscribe' %}" method="post">
+        {% csrf_token %}
+        <label class="sr-only" for="newsletter-email">{% if is_en %}Email address{% else %}آدرس ایمیل{% endif %}</label>
+        <input id="newsletter-email" type="email" name="email" placeholder="{% if is_en %}Email address{% else %}آدرس ایمیل{% endif %}" autocomplete="email" inputmode="email" maxlength="254" required>
+        <input type="text" name="website" class="newsletter-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <button type="submit" aria-label="{% if is_en %}Subscribe{% else %}ثبت ایمیل{% endif %}">{% icon "arrow-right" 18 %}</button>
+      </form>
+    </div>
+    <div class="footer-col footer-contact-col">
+      <h4>{% if is_en %}CALL, TEXT OR EMAIL{% else %}تماس، پیام یا ایمیل{% endif %}</h4>
+      <a class="footer-contact-item" href="tel:{{ site_settings.phone }}"><span class="footer-contact-icon" aria-hidden="true">{% icon "phone" 18 %}</span><span>{{ site_settings.phone }}</span></a>
+      <a class="footer-contact-item" href="mailto:{{ site_settings.email }}"><span class="footer-contact-icon" aria-hidden="true">{% icon "mail" 18 %}</span><span>{{ site_settings.email }}</span></a>
+      <div class="footer-social-links">
+        {% if site_settings.instagram_url %}<a href="{{ site_settings.instagram_url }}" target="_blank" rel="noopener" aria-label="Instagram">{% icon "instagram" 22 %}</a>{% endif %}
+        {% if site_settings.linkedin_url %}<a href="{{ site_settings.linkedin_url }}" target="_blank" rel="noopener" aria-label="LinkedIn">{% icon "linkedin" 22 %}</a>{% endif %}
+      </div>
     </div>
   </div>
   <div class="container footer-bottom"><span>© {% now "Y" %} {{ site_settings.brand_name }}. {% if is_en %}All rights reserved.{% else %}تمامی حقوق محفوظ است.{% endif %}</span><a class="footer-top-link" href="#main-content">{% if is_en %}Back to top{% else %}بازگشت به بالا{% endif %} {% icon "arrow-up" 14 %}</a></div>
 </footer>
-<script src="{% static 'js/main.js' %}?v=20261025railfix2" defer></script>
+<a class="floating-call" href="tel:{{ site_settings.phone }}" aria-label="{% if is_en %}Call Garnet{% else %}تماس با گارنت{% endif %}">{% icon "phone" 22 %}</a>
+<script src="{% static 'js/main.js' %}?v=20261024b" defer></script>
 {% block extra_scripts %}{% endblock %}
 </body></html>
