@@ -163,3 +163,22 @@ html[dir="rtl"] .footer-brand{align-items:flex-end}
   .section{padding-block:26px}
   .cards-grid{gap:12px}
 }
+
+
+/* Manual project-rail interaction (mouse, touch, pen) */
+.proj-rail {
+  touch-action: pan-y;
+  cursor: grab;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.proj-rail.is-dragging {
+  cursor: grabbing;
+}
+.proj-rail.is-dragging .proj-rail-track {
+  transition: none !important;
+}
+.proj-rail .proj-rail-track img {
+  -webkit-user-drag: none;
+  user-select: none;
+}

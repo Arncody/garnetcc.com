@@ -213,134 +213,104 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 })();
 
-/* ---------- Garnet project marquee: robust transform animation ----------
-   Uses measured card widths (not RTL-dependent left/right arithmetic).
-   Rebuilds clones after images/fonts/layout settle and animates continuously. */
+/* ---------- Garnet project rail: manual drag support ----------
+   Manual interaction is intentionally implemented first. The rail remains
+   stationary unless the user drags it; autoplay can be added after this is verified. */
 (function () {
   'use strict';
+
   function initProjectRails() {
     document.querySelectorAll('[data-rail]').forEach(function (rail) {
       var track = rail.querySelector('[data-rail-track]');
-      if (!track || rail.dataset.railReady === '1') return;
-      var originals = Array.prototype.slice.call(track.children).filter(function (el) {
-        return el.getAttribute('data-clone') !== '1';
-      });
-      if (originals.length < 2) return;
+      if (!track || rail.dataset.railDragReady === '1') return;
+      rail.dataset.railDragReady = '1';
 
-      rail.dataset.railReady = 'initializing';
-      var speed = Math.max(12, Math.min(100, Number(rail.getAttribute('data-speed')) || 28));
-      var pos = 0, setWidth = 0, lastTime = 0, rafId = 0;
-      var paused = false, dragging = false, visible = true, startX = 0, startPos = 0;
-      var resumeTimer = 0, resizeTimer = 0, moved = false;
-      var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var pointerDown = false;
+      var startX = 0;
+      var startTranslate = 0;
+      var currentTranslate = 0;
+      var maxTranslate = 0;
+      var moved = false;
+      var pointerId = null;
 
-      function clearClones() {
-        track.querySelectorAll('[data-clone="1"]').forEach(function (node) { node.remove(); });
-      }
-      function measureOriginalSet() {
-        var style = window.getComputedStyle(track);
-        var gap = parseFloat(style.columnGap || style.gap) || 0;
-        var total = 0;
-        originals.forEach(function (card) { total += card.getBoundingClientRect().width; });
-        total += gap * Math.max(0, originals.length - 1);
-        return total;
-      }
-      function build() {
-        clearClones();
-        track.style.willChange = 'transform';
-        track.style.flexWrap = 'nowrap';
-        track.style.width = 'max-content';
-        setWidth = measureOriginalSet();
-        if (!setWidth || !rail.clientWidth) {
-          rail.dataset.railReady = '0';
-          return false;
-        }
-        // Add whole sets until the track can cover the viewport during the loop.
-        var currentWidth = track.scrollWidth;
-        var safety = 0;
-        while (currentWidth < rail.clientWidth + setWidth && safety < 20) {
-          originals.forEach(function (card) {
-            var clone = card.cloneNode(true);
-            clone.setAttribute('data-clone', '1');
-            clone.setAttribute('aria-hidden', 'true');
-            clone.querySelectorAll('a,button,input,select,textarea,[tabindex]').forEach(function (el) {
-              el.setAttribute('tabindex', '-1');
-            });
-            track.appendChild(clone);
-          });
-          currentWidth = track.scrollWidth;
-          safety++;
-        }
-        pos = ((pos % setWidth) + setWidth) % setWidth;
+      function measure() {
+        var railWidth = rail.getBoundingClientRect().width;
+        var trackWidth = track.scrollWidth;
+        maxTranslate = Math.max(0, trackWidth - railWidth);
+        currentTranslate = Math.max(0, Math.min(currentTranslate, maxTranslate));
         render();
-        rail.dataset.railReady = '1';
-        return true;
       }
+
       function render() {
-        track.style.transform = 'translate3d(' + (-pos) + 'px,0,0)';
+        track.style.transform = 'translate3d(' + (-currentTranslate) + 'px,0,0)';
       }
-      function tick(now) {
-        if (!lastTime) lastTime = now;
-        var dt = Math.min(50, Math.max(0, now - lastTime));
-        lastTime = now;
-        if (!reduceMotion && !paused && !dragging && visible && !document.hidden && setWidth > 0) {
-          pos += speed * dt / 1000;
-          if (pos >= setWidth) pos -= setWidth * Math.floor(pos / setWidth);
+
+      function onDown(e) {
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        if (e.target.closest('a,button,input,select,textarea')) return;
+        measure();
+        if (maxTranslate <= 0) return;
+        pointerDown = true;
+        moved = false;
+        pointerId = e.pointerId;
+        startX = e.clientX;
+        startTranslate = currentTranslate;
+        rail.classList.add('is-dragging');
+        try { rail.setPointerCapture(pointerId); } catch (_) {}
+      }
+
+      function onMove(e) {
+        if (!pointerDown || (pointerId !== null && e.pointerId !== pointerId)) return;
+        var dx = e.clientX - startX;
+        if (Math.abs(dx) > 4) moved = true;
+        if (moved) {
+          currentTranslate = Math.max(0, Math.min(maxTranslate, startTranslate - dx));
           render();
+          if (e.cancelable) e.preventDefault();
         }
-        rafId = window.requestAnimationFrame(tick);
       }
-      function pause() { paused = true; window.clearTimeout(resumeTimer); }
-      function resume(delay) {
-        window.clearTimeout(resumeTimer);
-        resumeTimer = window.setTimeout(function () { paused = false; lastTime = 0; }, delay || 0);
+
+      function onUp(e) {
+        if (!pointerDown) return;
+        pointerDown = false;
+        pointerId = null;
+        rail.classList.remove('is-dragging');
+        if (moved) {
+          rail.dataset.dragged = '1';
+          window.setTimeout(function () { delete rail.dataset.dragged; }, 80);
+        }
       }
-      rail.addEventListener('mouseenter', pause);
-      rail.addEventListener('mouseleave', function () { if (!dragging) resume(350); });
-      rail.addEventListener('focusin', pause);
-      rail.addEventListener('focusout', function () { resume(700); });
-      rail.addEventListener('touchstart', function (e) {
-        if (!e.touches || !e.touches.length) return;
-        pause(); dragging = true; startX = e.touches[0].clientX; startPos = pos; moved = false;
-      }, { passive: true });
-      rail.addEventListener('touchmove', function (e) {
-        if (!dragging || !e.touches || !e.touches.length || !setWidth) return;
-        var dx = e.touches[0].clientX - startX;
-        if (Math.abs(dx) > 5) moved = true;
-        if (moved) { pos = ((startPos - dx) % setWidth + setWidth) % setWidth; render(); }
-      }, { passive: true });
-      rail.addEventListener('touchend', function () { dragging = false; resume(1200); }, { passive: true });
-      rail.addEventListener('touchcancel', function () { dragging = false; resume(800); }, { passive: true });
-      rail.addEventListener('wheel', function () { pause(); resume(1200); }, { passive: true });
+
+      rail.addEventListener('pointerdown', onDown);
+      rail.addEventListener('pointermove', onMove, { passive: false });
+      rail.addEventListener('pointerup', onUp);
+      rail.addEventListener('pointercancel', onUp);
+      rail.addEventListener('lostpointercapture', onUp);
       rail.addEventListener('click', function (e) {
-        if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; }
+        if (rail.dataset.dragged === '1') {
+          e.preventDefault();
+          e.stopPropagation();
+        }
       }, true);
-      if ('IntersectionObserver' in window) {
-        new IntersectionObserver(function (entries) { visible = !!entries[0].isIntersecting; }).observe(rail);
+
+      window.addEventListener('resize', measure);
+      if ('ResizeObserver' in window) {
+        new ResizeObserver(measure).observe(rail);
+        new ResizeObserver(measure).observe(track);
       }
-      function scheduleBuild() {
-        window.clearTimeout(resizeTimer);
-        resizeTimer = window.setTimeout(function () { build(); lastTime = 0; }, 180);
-      }
-      window.addEventListener('resize', scheduleBuild);
-      if ('ResizeObserver' in window) new ResizeObserver(scheduleBuild).observe(rail);
-      // Wait for images to load because image/layout dimensions can change after DOM ready.
-      var images = originals.reduce(function (all, card) {
-        return all.concat(Array.prototype.slice.call(card.querySelectorAll('img')));
-      }, []);
-      Promise.all(images.map(function (img) {
-        if (img.complete) return Promise.resolve();
-        return new Promise(function (resolve) {
-          img.addEventListener('load', resolve, { once: true });
-          img.addEventListener('error', resolve, { once: true });
-        });
-      })).then(function () {
-        build();
-        window.requestAnimationFrame(function () { build(); lastTime = 0; });
+      Array.prototype.forEach.call(track.querySelectorAll('img'), function (img) {
+        if (!img.complete) {
+          img.addEventListener('load', measure, { once: true });
+          img.addEventListener('error', measure, { once: true });
+        }
       });
-      if (!rafId) rafId = window.requestAnimationFrame(tick);
+      window.requestAnimationFrame(measure);
     });
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initProjectRails, { once: true });
-  else initProjectRails();
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initProjectRails, { once: true });
+  } else {
+    initProjectRails();
+  }
 })();
