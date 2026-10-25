@@ -199,7 +199,7 @@ html[dir="rtl"] .footer-brand{align-items:flex-end}
 .floating-call{position:fixed;z-index:1000;inset-inline-end:max(22px,env(safe-area-inset-right));bottom:max(22px,env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:center;border-radius:50%;}
 @media(max-width:900px){.footer-grid-reference{grid-template-columns:1fr 1fr;}.footer-logo-area{grid-column:1/-1;}}
 @media(max-width:560px){.footer-grid-reference{grid-template-columns:1fr 1fr;gap:22px 18px;}.footer-grid-reference .footer-newsletter-col{grid-column:1/-1;}.footer-grid-reference .footer-logo-area{grid-column:1/-1;}.newsletter-form{width:100%;}.footer-wordmark{width:var(--logo-mobile,145px);max-width:145px;}.floating-call{width:48px;height:48px;inset-inline-end:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));}}
-@media(prefers-reduced-motion:reduce){.proj-rail-track{transform:none!important;}}
+/* (removed) a reduced-motion rule here forced transform:none on the track, which froze auto-scroll AND manual dragging */
 
 .site-footer{position:relative;isolation:isolate;background-color:#35094b!important;background-image:radial-gradient(ellipse 38% 28px at 8% 0%,rgba(157,104,179,.42) 0 98%,transparent 100%),radial-gradient(ellipse 30% 24px at 39% 0%,rgba(157,104,179,.28) 0 98%,transparent 100%),radial-gradient(ellipse 42% 30px at 82% 0%,rgba(157,104,179,.34) 0 98%,transparent 100%)!important;border-top:0!important;}
 

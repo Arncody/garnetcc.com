@@ -219,7 +219,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function initRails() {
     var rails = document.querySelectorAll('[data-rail]');
     if (!rails.length) return;
-    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    /* Set RESPECT_REDUCED_MOTION=true to stop auto-scroll for visitors whose OS has "Reduce Motion" on (manual drag still works). */
+    var RESPECT_REDUCED_MOTION = false;
+    var reduceMotion = RESPECT_REDUCED_MOTION && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    /* Hover-pause only for real mouse devices: touch browsers emulate mouseenter on tap and would leave the rail paused forever. */
+    var canHover = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
     rails.forEach(function (rail) {
       var track = rail.querySelector('[data-rail-track]');
@@ -281,9 +285,11 @@ document.addEventListener('DOMContentLoaded', () => {
         window.clearTimeout(resumeTimer);
         resumeTimer = window.setTimeout(function () { paused = false; last = 0; }, delay || 0);
       }
-      rail.addEventListener('mouseenter', pause);
-      rail.addEventListener('mouseleave', function () { if (!dragging) resume(350); });
-      rail.addEventListener('focusin', pause);
+      if (canHover) {
+        rail.addEventListener('mouseenter', pause);
+        rail.addEventListener('mouseleave', function () { if (!dragging) resume(350); });
+      }
+      rail.addEventListener('focusin', function () { if (canHover) pause(); });
       rail.addEventListener('focusout', function () { resume(700); });
       function wrap(v) {
         if (!setWidth) return 0;
