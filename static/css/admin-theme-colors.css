@@ -1,0 +1,12 @@
+/* ظاهر فیلدهای «رنگ اجزای سایت» در پنل ادمین */
+.garnet-color{display:flex;align-items:center;gap:8px;flex-wrap:wrap;direction:ltr;max-width:520px}
+.garnet-color-swatch{flex:0 0 auto;width:36px;height:36px;border-radius:10px;overflow:hidden;border:1px solid #c9d6db;
+  background:repeating-conic-gradient(#d9e1e4 0 25%,#fff 0 50%) 0 0/12px 12px}
+.garnet-color-swatch i{display:block;width:100%;height:100%}
+.garnet-color .garnet-color-text{flex:1 1 190px;min-width:150px;max-width:260px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;padding:7px 10px;border-radius:9px}
+.garnet-color .garnet-color-text::placeholder{color:#8aa0a9;opacity:1}
+.garnet-color .garnet-color-text.garnet-color-invalid{border-color:#b43c32!important;background:#fdeceb!important}
+.garnet-color-picker{flex:0 0 auto;width:42px;height:36px;padding:2px;border:1px solid #c9d6db;border-radius:9px;background:#fff;cursor:pointer}
+.garnet-color-reset{flex:0 0 auto;border:1px solid #c9d6db;background:#f4f6f7;color:#17303b;border-radius:9px;padding:7px 11px;cursor:pointer;font-size:12px}
+.garnet-color-reset:hover{background:#e6eef1}
+.garnet-color.is-default .garnet-color-reset{opacity:.45}

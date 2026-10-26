@@ -15,7 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const open = nav.classList.toggle('open');
       navToggle.setAttribute('aria-expanded', String(open));
     });
-    nav.querySelectorAll('a').forEach((a) => a.addEventListener('click', closeNav));
+    // لینک‌های والدِ زیرمنو فقط زیرمنو را باز/بسته می‌کنند و پنل را نمی‌بندند.
+    nav.querySelectorAll('a:not([data-panel-parent])').forEach((a) => a.addEventListener('click', closeNav));
     document.addEventListener('click', (event) => {
       if (nav.classList.contains('open') && !nav.contains(event.target) && !navToggle.contains(event.target)) closeNav();
     });
@@ -34,6 +35,82 @@ document.addEventListener('DOMContentLoaded', () => {
       target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
       closeNav();
     });
+  });
+
+  /* ---------- زیرمنوی «پروژه‌ها» (دسکتاپ + موبایل) و بالا آمدن صفحه ---------- */
+  const samePath = (basePath) => {
+    const here = (window.location.pathname || '/').replace(/\/+$/, '') || '/';
+    const there = (basePath || '').replace(/\/+$/, '') || '/';
+    return here === there;
+  };
+  const scrollTopSmooth = () => window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+
+  // دسکتاپ: کلیک روی «پروژه‌ها» دو گزینه را باز می‌کند (با ماوس هم با Hover باز می‌شود).
+  const navGroups = Array.prototype.slice.call(document.querySelectorAll('[data-nav-group]'));
+  const closeGroups = (except) => navGroups.forEach((group) => {
+    if (group === except) return;
+    group.classList.remove('is-open');
+    group.querySelector('[data-nav-parent]')?.setAttribute('aria-expanded', 'false');
+  });
+  navGroups.forEach((group) => {
+    const parent = group.querySelector('[data-nav-parent]');
+    if (!parent) return;
+    parent.addEventListener('click', (event) => {
+      event.preventDefault();
+      const open = !group.classList.contains('is-open');
+      closeGroups(group);
+      group.classList.toggle('is-open', open);
+      parent.setAttribute('aria-expanded', String(open));
+      if (open && samePath(parent.getAttribute('data-nav-path')) && window.scrollY > 4) scrollTopSmooth();
+    });
+    group.querySelectorAll('.g-sub a').forEach((link) => link.addEventListener('click', () => closeGroups(null)));
+    group.addEventListener('focusout', (event) => {
+      if (!group.contains(event.relatedTarget)) closeGroups(null);
+    });
+  });
+  document.addEventListener('click', (event) => {
+    if (!event.target.closest || !event.target.closest('[data-nav-group]')) closeGroups(null);
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeGroups(null);
+  });
+
+  // موبایل: داخل پنل منو، «پروژه‌ها» مثل آکاردئون باز می‌شود.
+  document.querySelectorAll('[data-panel-group]').forEach((group) => {
+    const parent = group.querySelector('[data-panel-parent]');
+    const sub = group.querySelector('.g-panel-sub');
+    if (!parent || !sub) return;
+    parent.addEventListener('click', (event) => {
+      event.preventDefault();
+      const open = sub.hidden;
+      sub.hidden = !open;
+      group.classList.toggle('is-open', open);
+      parent.setAttribute('aria-expanded', String(open));
+    });
+  });
+
+  // اگر کاربر همین‌الان در همان صفحه است و روی لینک همان صفحه (بدون #) بزند، مرورگر صفحه را Reload می‌کند و
+  // جای اسکرول را نگه می‌دارد؛ اینجا به‌جای آن، نرم به بالای صفحه می‌رویم.
+  document.querySelectorAll('.g-brand, .g-nav > a, .g-panel > a').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.button) return;
+      let url;
+      try { url = new URL(link.getAttribute('href'), window.location.href); } catch (_) { return; }
+      if (url.origin !== window.location.origin || url.hash || url.search) return;
+      if (!samePath(url.pathname)) return;
+      event.preventDefault();
+      scrollTopSmooth();
+    });
+  });
+
+  // رسیدن به «در حال اجرا / تمام‌شده» از صفحه‌ی دیگر: بعد از بارگذاری کامل (تصاویر/فونت) دوباره دقیق می‌نشیند.
+  window.addEventListener('load', () => {
+    const id = decodeURIComponent((window.location.hash || '').slice(1));
+    if (!id) return;
+    const target = document.getElementById(id);
+    if (target && target.classList.contains('projects-block')) {
+      window.setTimeout(() => target.scrollIntoView({ block: 'start' }), 80);
+    }
   });
 
   window.addEventListener('scroll', () => {

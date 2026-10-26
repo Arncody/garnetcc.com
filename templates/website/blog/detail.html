@@ -2,7 +2,7 @@
 {% block title %}{% if is_en %}{{ post.seo_title_en|default:post.title_en|default:post.title }}{% else %}{{ post.seo_title|default:post.title }}{% endif %}{% endblock %}
 {% block meta_description %}{% if is_en %}{{ post.seo_description_en|default:post.excerpt_en|default:post.excerpt }}{% else %}{{ post.seo_description|default:post.excerpt }}{% endif %}{% endblock %}
 {% block content %}
-<section class="section section-light page-compact">
+<section class="section section-light page-compact blog-detail-page">
 <div class="container article-shell">
 {% if post.cover %}<img class="article-cover" src="{{ post.cover.url }}" alt="{{ post.title }}">{% endif %}
 <h1>{% if is_en %}{{ post.title_en|default:post.title }}{% else %}{{ post.title }}{% endif %}</h1>

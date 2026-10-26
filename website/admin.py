@@ -4,7 +4,7 @@ import csv
 from django.http import HttpResponse
 from .models import (
     SiteSettings, HeroSection, HeroStat, Project, ProjectImage,
-    PhilosophyFeature, SiteSection, ConsultationRequest, CompanyCatalog, BlogPost, SiteTheme, SiteTexts, MenuItem, NewsletterSubscriber
+    PhilosophyFeature, SiteSection, ConsultationRequest, CompanyCatalog, BlogPost, SiteTheme, SiteTexts, MenuItem, MenuSubItem, NewsletterSubscriber
 )
 
 admin.site.site_header = "پنل مدیریت گارنت | Garnet CMS"
@@ -13,52 +13,165 @@ admin.site.index_title = "مرکز فرمان محتوای سایت گارنت"
 admin.site.enable_nav_sidebar = True
 
 from django import forms
+from django.utils.html import format_html
+from django.utils.safestring import mark_safe
+
+from .theme_tokens import GROUPS, ALL_TOKENS, normalize_color, clean_overrides
+
 
 class ColorTextInput(forms.TextInput):
     input_type = "color"
 
-class SiteThemeForm(forms.ModelForm):
+
+def _picker_hex(value):
+    """رنگ معتبر را به #rrggbb تبدیل می‌کند (برای انتخابگر رنگ مرورگر)؛ در صورت امکان‌نبودن، مشکی."""
+    value = normalize_color(value) or ""
+    if value.startswith("#"):
+        digits = value[1:]
+        if len(digits) == 3:
+            digits = "".join(ch * 2 for ch in digits)
+        if len(digits) in (6, 8):
+            return "#" + digits[:6]
+    if value.startswith("rgb"):
+        try:
+            parts = [int(p) for p in value[value.index("(") + 1:value.index(")")].split(",")[:3]]
+            return "#%02x%02x%02x" % tuple(parts)
+        except (ValueError, TypeError):
+            pass
+    return "#000000"
+
+
+class ColorOverrideWidget(forms.Widget):
+    """فیلد رنگ: متن (HEX / rgba) + انتخابگر رنگ + نمونه‌ی زنده + دکمه‌ی بازگشت به پیش‌فرض."""
+
+    def __init__(self, default="", attrs=None):
+        super().__init__(attrs)
+        self.default = default
+
+    def render(self, name, value, attrs=None, renderer=None):
+        attrs = attrs or {}
+        field_id = attrs.get("id") or "id_" + name
+        value = (value or "").strip() if isinstance(value, str) else ""
+        shown = normalize_color(value) or self.default
+        return format_html(
+            '<div class="garnet-color" data-default="{default}">'
+            '<span class="garnet-color-swatch" aria-hidden="true"><i style="background:{shown}"></i></span>'
+            '<input type="text" name="{name}" id="{id}" value="{value}" class="garnet-color-text vTextField" dir="ltr" '
+            'maxlength="40" autocomplete="off" spellcheck="false" placeholder="پیش‌فرض: {default}">'
+            '<input type="color" class="garnet-color-picker" value="{picker}" aria-label="انتخاب رنگ" tabindex="-1">'
+            '<button type="button" class="garnet-color-reset" title="پاک کردن و بازگشت به رنگ پیش‌فرض">↺ پیش‌فرض</button>'
+            '</div>',
+            default=self.default, shown=shown, name=name, id=field_id, value=value,
+            picker=_picker_hex(value or self.default),
+        )
+
+    def value_from_datadict(self, data, files, name):
+        return data.get(name, "")
+
+
+BASE_PALETTE_FIELDS = (
+    "background", "surface", "primary", "secondary", "accent", "accent_hover",
+    "text", "muted", "white", "dark", "border",
+)
+
+
+class SiteThemeFormBase(forms.ModelForm):
     class Meta:
         model = SiteTheme
         fields = "__all__"
-        widgets = {name: ColorTextInput() for name in (
-            "background", "surface", "primary", "secondary", "accent", "accent_hover",
-            "text", "muted", "white", "dark", "border"
-        )}
+        widgets = {name: ColorTextInput() for name in BASE_PALETTE_FIELDS}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        saved = clean_overrides(getattr(self.instance, "color_overrides", None))
+        for token in ALL_TOKENS:
+            self.initial[token.field_name] = saved.get(token.key, "")
 
     def clean(self):
         data = super().clean()
-        for field in ("background", "surface", "primary", "secondary", "accent", "accent_hover", "text", "muted", "white", "dark", "border"):
+        for field in BASE_PALETTE_FIELDS:
+            if field not in self.fields:
+                continue
             value = (data.get(field) or "").strip()
             if not (value.startswith("#") and len(value) in (4, 7)):
                 self.add_error(field, "کد HEX معتبر مثل #004E72 وارد کنید.")
+        overrides = {}
+        for token in ALL_TOKENS:
+            raw = (data.get(token.field_name) or "").strip()
+            if not raw:
+                continue
+            normalized = normalize_color(raw)
+            if not normalized:
+                self.add_error(token.field_name, "رنگ معتبر وارد کنید؛ مثل #FF6E42 یا rgba(0,0,0,.5) (برای حذف تغییر، فیلد را خالی بگذارید).")
+                continue
+            overrides[token.key] = normalized
+        self.instance.color_overrides = overrides
         return data
 
+
+# فیلدهای رنگ جزء‌به‌جزء از روی فهرست مرکزی theme_tokens.py ساخته می‌شوند (افزودن رنگ جدید فقط در همان فایل).
+SiteThemeForm = type(SiteThemeFormBase)(
+    "SiteThemeForm",
+    (SiteThemeFormBase,),
+    {
+        "__module__": __name__,
+        **{token.field_name: forms.CharField(
+            label=token.label, required=False, max_length=40,
+            widget=ColorOverrideWidget(default=token.default),
+        )
+        for token in ALL_TOKENS},
+    },
+)
 
 
 @admin.register(SiteTheme)
 class SiteThemeAdmin(admin.ModelAdmin):
     form = SiteThemeForm
-    fieldsets = (
-        ("🎨 رنگ‌های اصلی سایت", {"fields": (("background", "surface"), ("primary", "secondary"), ("accent", "accent_hover"), ("text", "muted"), ("white", "dark"), ("border",))}),
-        ("🪟 شیشه، شفافیت و عمق", {"fields": ("glass", "glass_dark", "overlay", "shadow", ("radius", "glass_blur"), ("modal_background", "modal_border"))}),
-        ("▣ هدر و منوی موبایل", {"fields": (("header_background", "header_opacity"), ("header_blur", "header_border"), ("header_text", "header_muted"), ("header_cta_background", "header_cta_text"), ("header_cta_border", "menu_line_color"), ("logo_width_desktop", "logo_width_mobile"))}),
-        ("● دکمه‌ها و CTA", {"fields": (("primary_button_background", "primary_button_text"), ("primary_button_hover",), ("glass_button_background", "glass_button_border"))}),
-        ("▤ Hero و فوتر", {"fields": (("hero_overlay",), ("footer_background", "footer_text"))}),
-        ("Aa تایپوگرافی و وزن فونت", {"fields": (("body_weight", "heading_weight"), ("hero_weight", "section_weight"), ("card_weight", "nav_weight"), ("button_weight", "label_weight"), ("small_weight",)), "description": "وزن‌های قابل استفاده فونت IranSans: 300، 400، 500، 600 و 700."}),
-        ("⚙️ سفارشی‌سازی پیشرفته", {"fields": ("custom_css",)}),
+    base_fieldsets = (
+        ("🎨 رنگ‌های پایه سایت (پالت اصلی)", {"classes": ("collapse",), "fields": (("background", "surface"), ("primary", "secondary"), ("accent", "accent_hover"), ("text", "muted"), ("white", "dark"), ("border",))}),
+        ("🪟 شیشه، شفافیت و عمق", {"classes": ("collapse",), "fields": ("glass", "glass_dark", "overlay", "shadow", ("radius", "glass_blur"))}),
+        ("● دکمه‌های اصلی (نارنجی) و شیشه‌ای", {"classes": ("collapse",), "fields": (("primary_button_background", "primary_button_text"), ("primary_button_hover",), ("glass_button_background", "glass_button_border"))}),
+        ("▤ پوشش روی تصویر Hero", {"classes": ("collapse",), "fields": (("hero_overlay",),)}),
+        ("🖼️ اندازه لوگو", {"classes": ("collapse",), "fields": (("logo_width_desktop", "logo_width_mobile"),)}),
+        ("Aa تایپوگرافی و وزن فونت", {"classes": ("collapse",), "fields": (("body_weight", "heading_weight"), ("hero_weight", "section_weight"), ("card_weight", "nav_weight"), ("button_weight", "label_weight"), ("small_weight",)), "description": "وزن‌های قابل استفاده فونت IranSans: 300، 400، 500، 600 و 700."}),
+        ("⚙️ سفارشی‌سازی پیشرفته", {"classes": ("collapse",), "fields": ("custom_css",)}),
     )
+
+    def get_fieldsets(self, request, obj=None):
+        component_sets = []
+        for index, group in enumerate(GROUPS):
+            description = group.description
+            if index == 0:
+                description = (
+                    "راهنما: برای هر بخش سایت می‌توانید رنگ را جداگانه تغییر دهید. در هر ردیف یا کد رنگ را بنویسید "
+                    "(مثل #000000 یا rgba(0,0,0,.5) برای شفافیت) یا از مربع رنگ انتخاب کنید. "
+                    "فیلد خالی = رنگ پیش‌فرض سایت؛ دکمه «پیش‌فرض» هر ردیف تغییر را برمی‌گرداند. "
+                    "بعد از ذخیره، سایت را یک‌بار با Ctrl+F5 باز کنید. — " + group.description
+                )
+            component_sets.append((
+                group.title,
+                {"fields": [token.field_name for token in group.tokens], "description": description,
+                 **({} if index == 0 else {"classes": ("collapse",)})},
+            ))
+        return tuple(component_sets) + self.base_fieldsets
+
+    class Media:
+        css = {"all": ("css/admin-theme-colors.css",)}
+        js = ("js/admin-theme-colors.js",)
+
     def has_add_permission(self, request):
         return not SiteTheme.objects.exists()
+
     def has_delete_permission(self, request, obj=None):
         return False
+
 
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):
     fieldsets=(
         ("برند / Brand",{"fields":("brand_name","legal_name","logo","logo_light","favicon",("tagline","tagline_en"))}),
         ("تماس / Contact",{"fields":("phone","email","address","instagram_url","linkedin_url")}),
-        ("چرخش پروژه‌ها / Projects carousel",{"fields":("projects_carousel_enabled","projects_carousel_speed","projects_carousel_on_list")}),
+        ("چرخش پروژه‌ها / Projects carousel",{"fields":("projects_carousel_enabled","projects_carousel_speed")}),
         ("رزرو / Booking",{"fields":("booking_url","working_hours_weekday","working_hours_weekend")}),
         ("SEO",{"fields":("meta_title","meta_description")}),
     )
@@ -151,6 +264,14 @@ class SiteTextsAdmin(admin.ModelAdmin):
         return False
 
 
+class MenuSubItemInline(admin.TabularInline):
+    model = MenuSubItem
+    extra = 0
+    fields = ("title", "title_en", "url", "order", "is_active")
+    verbose_name = "زیرمنو"
+    verbose_name_plural = "زیرمنوها (با کلیک روی آیتم، این گزینه‌ها باز می‌شوند)"
+
+
 @admin.register(MenuItem)
 class MenuItemAdmin(admin.ModelAdmin):
     """منوی اصلی سایت (هدر دسکتاپ + منوی موبایل): افزودن، حذف، تغییر عنوان/لینک و ترتیب."""
@@ -159,6 +280,7 @@ class MenuItemAdmin(admin.ModelAdmin):
     list_filter = ("is_active", "open_consult")
     search_fields = ("title", "title_en", "url")
     ordering = ("order", "id")
+    inlines = [MenuSubItemInline]
     fieldsets = (
         ("آیتم منو", {"fields": (("title", "title_en"), "url", "open_consult", ("order", "is_active"))}),
     )

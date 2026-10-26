@@ -1,0 +1,25 @@
+{% load site_icons %}{% comment %}ردیف پروژه برای صفحه «پروژه‌ها» (نمایش لیستی). متغیر: project{% endcomment %}
+{% with cover=project.cover_image %}
+<a class="proj-row{% if project.is_featured %} is-featured{% endif %}" href="{{ project.get_absolute_url }}">
+  <div class="proj-row-media">
+    {% if cover %}<img src="{{ cover.url }}" alt="{% if is_en %}{{ project.title_en|default:project.title }}{% else %}{{ project.title }}{% endif %}" loading="lazy" draggable="false">{% else %}<span class="proj-row-empty" aria-hidden="true">{% icon "building" 40 %}</span>{% endif %}
+    {% if project.is_featured and project.badge_text %}<span class="proj-row-badge">{% if is_en %}{{ project.badge_text_en|default:project.badge_text }}{% else %}{{ project.badge_text }}{% endif %}</span>{% endif %}
+  </div>
+  <div class="proj-row-body">
+    <div class="proj-row-top">
+      <span class="proj-row-status ps-{{ project.status }}"><i aria-hidden="true"></i>{% if project.status == "completed" %}{% if is_en %}Completed{% else %}به اتمام رسیده{% endif %}{% else %}{% if is_en %}In progress{% else %}در حال اجرا{% endif %}{% endif %}</span>
+      {% if project.code %}<span class="proj-row-code">{{ project.code }}</span>{% endif %}
+    </div>
+    <h3 class="proj-row-title">{% if is_en %}{{ project.title_en|default:project.title }}{% else %}{{ project.title }}{% endif %}</h3>
+    {% if project.location or project.location_en or project.year %}<div class="proj-row-meta">
+      {% if project.location or project.location_en %}<span>{% icon "pin" 15 %}{% if is_en %}{{ project.location_en|default:project.location }}{% else %}{{ project.location }}{% endif %}</span>{% endif %}
+      {% if project.year %}<span>{% icon "calendar" 15 %}{{ project.year }}</span>{% endif %}
+    </div>{% endif %}
+    {% if project.short_description or project.short_description_en %}<p class="proj-row-desc">{% if is_en %}{{ project.short_description_en|default:project.short_description }}{% else %}{{ project.short_description }}{% endif %}</p>{% endif %}
+    <div class="proj-row-foot">
+      {% if project.status_note or project.status_note_en %}<span class="proj-row-note">{% if is_en %}{{ project.status_note_en|default:project.status_note }}{% else %}{{ project.status_note }}{% endif %}</span>{% endif %}
+      <span class="proj-row-btn"><span>{% if is_en %}View project{% else %}مشاهده پروژه{% endif %}</span><em aria-hidden="true">{% icon "arrow-up-right" 15 %}</em></span>
+    </div>
+  </div>
+</a>
+{% endwith %}

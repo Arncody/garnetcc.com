@@ -201,7 +201,7 @@ html[dir="rtl"] .footer-brand{align-items:flex-end}
 @media(max-width:560px){.footer-grid-reference{grid-template-columns:1fr 1fr;gap:22px 18px;}.footer-grid-reference .footer-newsletter-col{grid-column:1/-1;}.footer-grid-reference .footer-logo-area{grid-column:1/-1;}.newsletter-form{width:100%;}.footer-wordmark{width:var(--logo-mobile,145px);max-width:145px;}.floating-call{width:48px;height:48px;inset-inline-end:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));}}
 /* (removed) a reduced-motion rule here forced transform:none on the track, which froze auto-scroll AND manual dragging */
 
-.site-footer{position:relative;isolation:isolate;background-color:#35094b!important;background-image:radial-gradient(ellipse 38% 28px at 8% 0%,rgba(157,104,179,.42) 0 98%,transparent 100%),radial-gradient(ellipse 30% 24px at 39% 0%,rgba(157,104,179,.28) 0 98%,transparent 100%),radial-gradient(ellipse 42% 30px at 82% 0%,rgba(157,104,179,.34) 0 98%,transparent 100%)!important;border-top:0!important;}
+.site-footer{position:relative;isolation:isolate;background:#000!important;background-image:none!important;border-top:0!important;}
 
 .footer-logo-inline{margin:0 0 18px!important;}
 
@@ -239,3 +239,86 @@ html[dir="ltr"] .pc-top,html[dir="ltr"] .pc-bottom{direction:ltr;text-align:left
 .rail-nav-right{right:8px}
 .proj-rail:focus-visible{outline:2px solid rgba(9,38,52,.45);outline-offset:2px}
 @media(max-width:520px){.rail-nav{width:34px;height:34px;margin-top:-17px}.rail-nav-left{left:4px}.rail-nav-right{right:4px}}
+
+
+/* =====================================================================
+   V26 — زیرمنوی پروژه‌ها، صفحه‌ی لیستی پروژه‌ها، یکدست‌سازی بخش پروژه‌های صفحه اصلی
+   ===================================================================== */
+
+/* ---------- زیرمنوی «پروژه‌ها» (دسکتاپ) ---------- */
+.g-nav-group{position:relative;display:flex;align-items:center}
+.g-nav .g-nav-parent{display:inline-flex;align-items:center;gap:6px}
+.g-chev{flex:0 0 auto;opacity:.85;transition:transform .25s ease}
+.g-nav-group.is-open .g-chev,.g-panel-group.is-open .g-chev{transform:rotate(180deg)}
+.g-nav-group.is-open>.g-nav-parent{color:#fff}
+.g-sub{position:absolute;top:100%;left:50%;z-index:5;min-width:220px;margin-top:22px;padding:8px;display:flex;flex-direction:column;gap:4px;border-radius:18px;
+  background:rgba(12,20,26,.9);border:1px solid rgba(255,255,255,.28);
+  backdrop-filter:blur(22px) saturate(140%);-webkit-backdrop-filter:blur(22px) saturate(140%);box-shadow:0 22px 60px rgba(0,0,0,.3);
+  opacity:0;visibility:hidden;transform:translate(-50%,6px);transition:opacity .2s ease,transform .2s ease,visibility .2s}
+.g-sub::before{content:"";position:absolute;inset-inline:0;top:-26px;height:26px}
+.g-nav-group.is-open>.g-sub{opacity:1;visibility:visible;transform:translate(-50%,0)}
+@media(hover:hover) and (pointer:fine){.g-nav-group:hover>.g-sub{opacity:1;visibility:visible;transform:translate(-50%,0)}}
+.g-nav .g-sub a{display:flex;align-items:center;min-height:42px;padding:0 16px;border-radius:12px;font-size:.82rem;color:#fff;background:transparent;white-space:nowrap}
+.g-nav .g-sub a::after{display:none}
+.g-nav .g-sub a:hover,.g-nav .g-sub a:focus-visible{background:rgba(255,255,255,.16);color:#fff}
+html[dir="rtl"] .g-sub{direction:rtl;text-align:right}
+html[dir="ltr"] .g-sub{direction:ltr;text-align:left}
+
+/* ---------- زیرمنوی «پروژه‌ها» (منوی موبایل: آکاردئون) ---------- */
+.g-panel-group{display:flex;flex-direction:column;gap:4px}
+.g-panel a.g-panel-parent{justify-content:space-between}
+.g-panel-sub{display:flex;flex-direction:column;gap:4px;padding-inline-start:14px}
+.g-panel-sub[hidden]{display:none}
+.g-panel .g-panel-sub a{min-height:38px;font-size:.78rem;background:rgba(255,255,255,.1)}
+
+/* ---------- صفحه‌ی اصلی: بخش «گارنت، در یک نگاه» هم‌رنگ «درباره گارنت»، بدون سایه‌ی کناری ---------- */
+.section-overview,.section.home-projects{min-height:0;background:transparent}
+.proj-rail{-webkit-mask-image:none;mask-image:none}
+.home-projects .mini-project,.home-projects .mini-project.project-preview,
+.home-projects .mini-project:hover,.home-projects .mini-project.project-preview:hover{box-shadow:none}
+
+/* ---------- صفحه‌ی «پروژه‌ها»: نمایش لیستی ---------- */
+.projects-block .empty-state{padding:14px 0;color:#60727d}
+.proj-list{display:flex;flex-direction:column;gap:16px}
+.proj-row{position:relative;display:grid;grid-template-columns:minmax(230px,38%) minmax(0,1fr);overflow:hidden;border-radius:26px;color:#0b2a3a;
+  background:#fff;border:1px solid rgba(9,38,52,.1);transition:transform .28s ease,box-shadow .28s ease,border-color .28s ease}
+.proj-row:hover{transform:translateY(-3px);border-color:rgba(9,38,52,.22);box-shadow:0 18px 44px rgba(7,29,43,.10)}
+.proj-row:focus-visible{outline:2px solid #092634;outline-offset:3px}
+.proj-row-media{position:relative;display:block;min-height:230px;overflow:hidden;background:linear-gradient(160deg,#0b2a3a,#004E72)}
+.proj-row-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .8s ease;-webkit-user-drag:none}
+.proj-row:hover .proj-row-media img{transform:scale(1.05)}
+.proj-row-empty{position:absolute;inset:0;display:grid;place-items:center;color:rgba(255,255,255,.55)}
+.proj-row-badge{position:absolute;top:14px;inset-inline-start:14px;max-width:calc(100% - 28px);padding:5px 13px;border-radius:999px;font-size:.68rem;font-weight:700;line-height:1.7;color:#fff;
+  background:#ff6e42;box-shadow:0 8px 20px rgba(255,110,66,.35)}
+.proj-row-body{display:flex;flex-direction:column;justify-content:center;gap:11px;min-width:0;padding:clamp(18px,2.6vw,32px)}
+.proj-row-top{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.proj-row-status{display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 13px;border-radius:999px;font-size:.7rem;font-weight:700;line-height:1;border:1.5px solid transparent}
+.proj-row-status i{width:8px;height:8px;border-radius:50%}
+.proj-row-status.ps-ongoing{color:#14804a;background:rgba(44,240,138,.12);border-color:rgba(44,200,120,.4)}
+.proj-row-status.ps-ongoing i{background:#2cf08a;box-shadow:0 0 9px rgba(44,240,138,.9)}
+.proj-row-status.ps-completed{color:#1f5f93;background:rgba(124,196,255,.16);border-color:rgba(100,170,230,.45)}
+.proj-row-status.ps-completed i{background:#7cc4ff;box-shadow:0 0 9px rgba(124,196,255,.9)}
+.proj-row-code{display:inline-flex;align-items:center;height:28px;padding:0 12px;border-radius:999px;font-size:.7rem;font-weight:700;color:#60727d;background:#f1f5f7}
+.proj-row-title{margin:0;font-size:clamp(1.15rem,2vw,1.6rem);line-height:1.55;font-weight:var(--card-weight,600);color:#0b2a3a}
+.proj-row-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;font-size:.78rem;line-height:1.7;color:#60727d}
+.proj-row-meta span{display:inline-flex;align-items:center;gap:6px}
+.proj-row-desc{margin:0;font-size:.88rem;line-height:2;color:#4b6370;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.proj-row-tags{display:flex;flex-wrap:wrap;gap:6px}
+.proj-row-tags span{padding:3px 12px;border-radius:999px;font-size:.7rem;line-height:1.8;color:#33474f;background:#f1f5f7}
+.proj-row-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-top:4px}
+.proj-row-note{font-size:.74rem;color:#b95739;background:rgba(255,110,66,.1);padding:3px 12px;border-radius:999px;line-height:1.8}
+.proj-row-btn{display:inline-flex;align-items:center;gap:10px;height:42px;padding-inline:20px 5px;border-radius:999px;font-size:.78rem;font-weight:700;color:#fff;background:#0b2a3a;margin-inline-start:auto;transition:background .25s ease,transform .25s ease}
+.proj-row-btn em{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:#fff;color:#0b2a3a;font-style:normal}
+.proj-row-btn em svg{color:#0b2a3a;stroke:#0b2a3a}
+.proj-row:hover .proj-row-btn{background:#004E72}
+html[dir="rtl"] .proj-row{direction:rtl;text-align:right}
+html[dir="ltr"] .proj-row{direction:ltr;text-align:left}
+html[dir="rtl"] .proj-row-btn em svg{transform:scaleX(-1)}
+@media(max-width:760px){
+  .proj-row{grid-template-columns:1fr;border-radius:22px}
+  .proj-row-media{min-height:0;aspect-ratio:16/10}
+  .proj-row-body{gap:9px;padding:16px 16px 18px}
+  .proj-row-desc{font-size:.84rem;line-height:1.95}
+  .proj-row-foot{flex-direction:row}
+}
+@media(prefers-reduced-motion:reduce){.proj-row,.proj-row-media img{transition:none}.proj-row:hover{transform:none}.proj-row:hover .proj-row-media img{transform:none}}

@@ -14,12 +14,18 @@
 
     <div class="projects-block" id="ongoing">
       <div class="projects-block-head"><h2>{% if is_en %}In progress{% else %}پروژه‌های در حال اجرا{% endif %}</h2></div>
-      {% if is_en %}{% include "website/_projects_rail.html" with projects=ongoing_projects rail=rail_list grid_class="cards-grid" empty_text="No projects in progress yet." %}{% else %}{% include "website/_projects_rail.html" with projects=ongoing_projects rail=rail_list grid_class="cards-grid" empty_text="فعلاً پروژه در حال اجرایی ثبت نشده است." %}{% endif %}
+      <div class="proj-list">
+        {% for project in ongoing_projects %}{% include "website/_project_row.html" with project=project %}
+        {% empty %}<p class="empty-state">{% if is_en %}No projects in progress yet.{% else %}فعلاً پروژه در حال اجرایی ثبت نشده است.{% endif %}</p>{% endfor %}
+      </div>
     </div>
 
     <div class="projects-block" id="completed">
       <div class="projects-block-head"><h2>{% if is_en %}Completed projects{% else %}پروژه‌های اتمام شده{% endif %}</h2></div>
-      {% if is_en %}{% include "website/_projects_rail.html" with projects=completed_projects rail=rail_list grid_class="cards-grid" empty_text="No completed projects yet." %}{% else %}{% include "website/_projects_rail.html" with projects=completed_projects rail=rail_list grid_class="cards-grid" empty_text="فعلاً پروژه اتمام‌شده‌ای ثبت نشده است." %}{% endif %}
+      <div class="proj-list">
+        {% for project in completed_projects %}{% include "website/_project_row.html" with project=project %}
+        {% empty %}<p class="empty-state">{% if is_en %}No completed projects yet.{% else %}فعلاً پروژه اتمام‌شده‌ای ثبت نشده است.{% endif %}</p>{% endfor %}
+      </div>
     </div>
   </div>
 </section>

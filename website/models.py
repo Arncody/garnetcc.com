@@ -188,6 +188,30 @@ class MenuItem(models.Model):
         return self.title
 
 
+class MenuSubItem(models.Model):
+    """زیرمنوی یک آیتم منوی اصلی (مثلاً «در حال اجرا» و «تمام‌شده» زیر «پروژه‌ها»)؛ از پنل ادمین قابل ویرایش است."""
+
+    parent = models.ForeignKey(
+        MenuItem, related_name="children", on_delete=models.CASCADE, verbose_name="آیتم والد",
+    )
+    title = models.CharField("عنوان", max_length=60)
+    title_en = models.CharField("عنوان (EN)", max_length=60, blank=True)
+    url = models.CharField(
+        "لینک", max_length=200,
+        help_text="مثال: /projects/#ongoing یا /projects/#completed",
+    )
+    order = models.PositiveIntegerField("ترتیب نمایش", default=0)
+    is_active = models.BooleanField("نمایش در زیرمنو", default=True)
+
+    class Meta:
+        verbose_name = "زیرمنو"
+        verbose_name_plural = "زیرمنوها"
+        ordering = ["order", "id"]
+
+    def __str__(self):
+        return f"{self.parent} › {self.title}"
+
+
 class SiteTheme(SingletonModel):
     """پوسته بصری سایت؛ رنگ، شفافیت و وزن‌های اصلی تایپوگرافی را کنترل می‌کند."""
     background = models.CharField("پس‌زمینه اصلی", max_length=30, default="#F9F9F9")
@@ -240,6 +264,10 @@ class SiteTheme(SingletonModel):
     logo_width_desktop = models.PositiveIntegerField("ارتفاع لوگو دسکتاپ (px)", default=56, help_text="لوگوی ترکیبی (نماد + نام شرکت) با این ارتفاع و به نسبت اصلی خودش نمایش داده می‌شود.")
     logo_width_mobile = models.PositiveIntegerField("ارتفاع لوگو موبایل (px)", default=46, help_text="لوگوی ترکیبی (نماد + نام شرکت) با این ارتفاع و به نسبت اصلی خودش نمایش داده می‌شود.")
     custom_css = models.TextField("CSS پیشرفته (اختیاری)", blank=True, help_text="برای سفارشی‌سازی حرفه‌ای. فقط CSS معتبر وارد کنید.")
+    color_overrides = models.JSONField(
+        "رنگ‌های سفارشی اجزای سایت", default=dict, blank=True, editable=False,
+        help_text="فقط رنگ‌هایی که از پنل «رنگ اجزای سایت» تغییر داده شده‌اند (کلید → رنگ). فیلد خالی = ظاهر پیش‌فرض.",
+    )
 
     class Meta:
         verbose_name = "پوسته و طراحی سایت"
