@@ -322,3 +322,34 @@ html[dir="rtl"] .proj-row-btn em svg{transform:scaleX(-1)}
   .proj-row-foot{flex-direction:row}
 }
 @media(prefers-reduced-motion:reduce){.proj-row,.proj-row-media img{transition:none}.proj-row:hover{transform:none}.proj-row:hover .proj-row-media img{transform:none}}
+
+
+/* Garnet polish 2026-10-26: unify home sections and keep project previews clean. */
+:root{--garnet-warm-bg:#F6F3ED;--garnet-charcoal:#202B2D;--garnet-bronze:#B78362;--garnet-line:#DCD6CB}
+.section.home-projects,.section.about-lux-section,.section.projects-page{background:var(--garnet-warm-bg)!important}
+.section.home-projects{padding-block:clamp(34px,5vw,64px)}
+.home-projects .mini-project.project-preview,.home-projects .mini-project.project-preview:hover,
+.home-projects .proj-rail .mini-project.project-preview,.home-projects .proj-rail .mini-project.project-preview:hover{box-shadow:none!important;filter:none!important}
+.home-projects .mini-project.project-preview{border:1px solid rgba(32,43,45,.08)}
+.about-glass{box-shadow:none!important;border:1px solid var(--garnet-line)}
+.about-glass::before{background:rgba(255,255,255,.88)!important}
+.about-glass .about-bg{filter:none!important;opacity:.08}
+.site-footer{background:#000!important;background-image:none!important;color:#fff}
+.projects-page .proj-list{display:grid;gap:18px}
+.projects-page .proj-row{background:#fff;border:1px solid var(--garnet-line);box-shadow:none;transition:border-color .2s ease,transform .2s ease}
+.projects-page .proj-row:hover{box-shadow:none;border-color:var(--garnet-bronze);transform:translateY(-2px)}
+.projects-page .proj-row-title{color:var(--garnet-charcoal)}
+.projects-page .proj-row-btn{background:var(--garnet-charcoal)}
+.projects-page .proj-row:hover .proj-row-btn{background:var(--garnet-bronze)}
+.projects-page .projects-tabs a{border:1px solid var(--garnet-line);box-shadow:none}
+@media(prefers-reduced-motion:reduce){.projects-page .proj-row{transition:none}.projects-page .proj-row:hover{transform:none}}
+.projects-block{scroll-margin-top:105px}
+.g-header .g-cta .ic,.g-header .g-cta svg[data-decorative="true"]{display:none!important}
+/* Garnet bug-fix pass 2026-10-26b: consistent project palette and no preview shadows. */
+.section.home-projects,.section.about-lux-section,.section.projects-page{background:#F6F3ED!important}
+.home-projects .mini-project.project-preview,
+.home-projects .mini-project.project-preview:hover,
+.home-projects .proj-rail .mini-project.project-preview,
+.home-projects .proj-rail .mini-project.project-preview:hover{box-shadow:none!important;filter:none!important}
+.home-projects .mini-project.project-preview{background-color:#F6F3ED}
+.site-footer{background:#000!important;background-image:none!important;color:#fff!important}

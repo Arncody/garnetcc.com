@@ -56,6 +56,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const parent = group.querySelector('[data-nav-parent]');
     if (!parent) return;
     parent.addEventListener('click', (event) => {
+      // بار اول منو باز می‌شود؛ اگر دوباره روی والد کلیک شود، صفحه‌ی اصلی پروژه‌ها باز شود.
+      if (group.classList.contains('is-open')) {
+        const targetUrl = parent.getAttribute('href');
+        if (targetUrl && targetUrl !== '#') return;
+      }
       event.preventDefault();
       const open = !group.classList.contains('is-open');
       closeGroups(group);
@@ -64,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (open && samePath(parent.getAttribute('data-nav-path')) && window.scrollY > 4) scrollTopSmooth();
     });
     group.querySelectorAll('.g-sub a').forEach((link) => link.addEventListener('click', () => closeGroups(null)));
+    // زیرمنو لینک واقعی است؛ هیچ handler نباید جلوی انتقال به /projects/#... را بگیرد.
     group.addEventListener('focusout', (event) => {
       if (!group.contains(event.relatedTarget)) closeGroups(null);
     });
@@ -81,6 +87,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const sub = group.querySelector('.g-panel-sub');
     if (!parent || !sub) return;
     parent.addEventListener('click', (event) => {
+      // بار اول زیرمنو باز می‌شود؛ با کلیک دوباره، لینک واقعی صفحه پروژه‌ها اجرا می‌شود.
+      // اگر مقصد همین صفحه باشد، رفتار عادی مرورگر/اسکرول بالای صفحه حفظ می‌شود.
+      if (!sub.hidden) {
+        const targetUrl = parent.getAttribute('href');
+        if (targetUrl && targetUrl !== '#') {
+          closeNav();
+          return;
+        }
+      }
       event.preventDefault();
       const open = sub.hidden;
       sub.hidden = !open;

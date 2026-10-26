@@ -35,7 +35,7 @@ small,.small{font-weight:var(--small-weight)}
 {% if site_theme.custom_css %}{{ site_theme.custom_css|safe }}{% endif %}
 </style>
 <link rel="stylesheet" href="{% static 'css/consult-modal.css' %}?v=20261013-redesign1">
-<link rel="stylesheet" href="{% static 'css/garnet-ui.css' %}?v=20261026a">
+<link rel="stylesheet" href="{% static 'css/garnet-ui.css' %}?v=20261026b">
 
 {% block extra_head %}{% endblock %}
 {% if theme_css %}<style id="garnet-colors">
@@ -134,6 +134,6 @@ small,.small{font-weight:var(--small-weight)}
   <div class="container footer-bottom"><span>© {% now "Y" %} {{ site_settings.brand_name }}. {% if is_en %}All rights reserved.{% else %}تمامی حقوق محفوظ است.{% endif %}</span><a class="footer-top-link" href="#main-content">{% if is_en %}Back to top{% else %}بازگشت به بالا{% endif %} {% icon "arrow-up" 14 %}</a></div>
 </footer>
 <a class="floating-call" href="tel:{{ site_settings.phone }}" aria-label="{% if is_en %}Call Garnet{% else %}تماس با گارنت{% endif %}">{% icon "phone" 22 %}</a>
-<script src="{% static 'js/main.js' %}?v=20261026a" defer></script>
+<script src="{% static 'js/main.js' %}?v=20261026b" defer></script>
 {% block extra_scripts %}{% endblock %}
 </body></html>
