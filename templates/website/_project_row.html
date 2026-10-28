@@ -7,7 +7,7 @@
   </div>
   <div class="proj-row-body">
     <div class="proj-row-top">
-      <span class="proj-row-status ps-{{ project.status }}"><i aria-hidden="true"></i>{% if project.status == "completed" %}{% if is_en %}Completed{% else %}به اتمام رسیده{% endif %}{% else %}{% if is_en %}In progress{% else %}در حال اجرا{% endif %}{% endif %}</span>
+      <span class="proj-row-status ps-{{ project.status }}"><i aria-hidden="true"></i>{% if project.status == "completed" %}{% if is_en %}Completed{% else %}تکمیل شده  {% endif %}{% else %}{% if is_en %}In progress{% else %}در حال اجرا{% endif %}{% endif %}</span>
       {% if project.code %}<span class="proj-row-code">{{ project.code }}</span>{% endif %}
     </div>
     <h3 class="proj-row-title">{% if is_en %}{{ project.title_en|default:project.title }}{% else %}{{ project.title }}{% endif %}</h3>
