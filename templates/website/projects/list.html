@@ -9,7 +9,7 @@
 
     <nav class="projects-tabs" aria-label="{% if is_en %}Project groups{% else %}دسته‌بندی پروژه‌ها{% endif %}">
       <a href="#ongoing"><i class="tab-dot tab-ongoing"></i>{% if is_en %}In progress{% else %}در حال اجرا{% endif %}<b>{{ ongoing_projects|length }}</b></a>
-      <a href="#completed"><i class="tab-dot tab-completed"></i>{% if is_en %}Completed{% else %}به اتمام رسیده{% endif %}<b>{{ completed_projects|length }}</b></a>
+      <a href="#completed"><i class="tab-dot tab-completed"></i>{% if is_en %}Completed{% else %}تکمیل شده {% endif %}<b>{{ completed_projects|length }}</b></a>
     </nav>
 
     <div class="projects-block" id="ongoing">
@@ -21,7 +21,7 @@
     </div>
 
     <div class="projects-block" id="completed">
-      <div class="projects-block-head"><h2>{% if is_en %}Completed projects{% else %}پروژه‌های اتمام شده{% endif %}</h2></div>
+      <div class="projects-block-head"><h2>{% if is_en %}Completed projects{% else %}پروژه‌های تکمیل شده {% endif %}</h2></div>
       <div class="proj-list">
         {% for project in completed_projects %}{% include "website/_project_row.html" with project=project %}
         {% empty %}<p class="empty-state">{% if is_en %}No completed projects yet.{% else %}فعلاً پروژه اتمام‌شده‌ای ثبت نشده است.{% endif %}</p>{% endfor %}
