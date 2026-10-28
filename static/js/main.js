@@ -392,7 +392,10 @@ document.addEventListener('DOMContentLoaded', () => {
       function moveDrag(x) {
         if (!dragging) return;
         var dx = x - startX;
-        if (Math.abs(dx) > 5) moved = true;
+        if (Math.abs(dx) > 10) { 
+        moved = true;
+        rail.classList.add('is-dragging');
+      } 
         if (moved) { pos = wrap(startPos - dx); render(); } /* finger right => content right */
       }
       function endDrag(delay) { if (!dragging) return; dragging = false; resume(delay); }
@@ -409,7 +412,6 @@ document.addEventListener('DOMContentLoaded', () => {
       rail.addEventListener('mousedown', function (e) {
         if (e.button !== 0) return;
         beginDrag(e.clientX);
-        rail.classList.add('is-dragging');
       });
       window.addEventListener('mousemove', function (e) { moveDrag(e.clientX); });
       window.addEventListener('mouseup', function () {
