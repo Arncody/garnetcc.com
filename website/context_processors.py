@@ -43,7 +43,7 @@ def _menu_items(request, lang):
             if is_projects_item:
                 children = [
                     {"label": "Ongoing projects" if lang == "en" else "پروژه‌های در حال اجرا", "url": "/projects/#ongoing"},
-                    {"label": "Completed projects" if lang == "en" else "پروژه‌های تمام‌شده", "url": "/projects/#completed"},
+                    {"label": "Completed projects" if lang == "en" else "پروژه‌های تکمیل شده", "url": "/projects/#completed"},
                 ]
         # لینک والد پروژه‌ها همیشه به صفحه واقعی پروژه‌ها می‌رود؛ حتی اگر مقدار قدیمی
         # دیتابیس خالی یا به یک anchor صفحه اصلی اشاره کند.
