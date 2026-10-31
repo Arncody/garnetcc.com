@@ -4,7 +4,7 @@
   {% if cover %}<img class="pp-image" src="{{ cover.url }}" alt="{% if is_en %}{{ project.title_en|default:project.title }}{% else %}{{ project.title }}{% endif %}" loading="lazy" draggable="false">{% else %}<span class="pp-image pp-empty" aria-hidden="true"></span>{% endif %}
   <div class="pc-top">
     <small class="pc-label">{% if is_en %}STATUS{% else %}وضعیت{% endif %}</small>
-    <span class="pc-status pc-{{ project.status }}"><i aria-hidden="true"></i>{% if project.status == "completed" %}{% if is_en %}Completed{% else %}به اتمام رسیده{% endif %}{% else %}{% if is_en %}In progress{% else %}در حال اجرا{% endif %}{% endif %}</span>
+    <span class="pc-status pc-{{ project.status }}"><i aria-hidden="true"></i>{% if project.status == "completed" %}{% if is_en %}Completed{% else %}تکمیل شده{% endif %}{% else %}{% if is_en %}In progress{% else %}در حال اجرا{% endif %}{% endif %}</span>
   </div>
   <div class="pc-bottom">
     <h3>{% if is_en %}{{ project.title_en|default:project.title }}{% else %}{{ project.title }}{% endif %}</h3>
