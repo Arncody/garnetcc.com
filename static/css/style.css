@@ -1632,3 +1632,24 @@ html.consult-scroll-locked{overflow:hidden!important}
   .pd-btn.pd-btn-primary::after,
   .pd-aside .pd-cta::after { animation: none !important; opacity: 0 !important; }
 }
+
+/* GARNET PATCH 2026-11-02 — compact, icon-free project actions across desktop/mobile */
+.pd-actions .pd-btn {
+  min-height: 40px !important;
+  height: 40px !important;
+  padding: 0 16px !important;
+  gap: 0 !important;
+  font-size: .76rem !important;
+  border-radius: 999px !important;
+  flex: 0 0 auto !important;
+}
+.pd-actions .pd-btn-icon { display: none !important; }
+.pd-related-square .pd-related-head { justify-content: flex-end !important; }
+.pd-related-square .pd-related-all { margin-inline-start: auto !important; }
+.pd-related-square .pd-related-all-mark { display: none !important; }
+@media (max-width: 600px) {
+  .pd-actions { flex-direction: row !important; flex-wrap: wrap !important; gap: 7px !important; }
+  .pd-actions .pd-btn { min-height: 36px !important; height: 36px !important; padding: 0 12px !important; font-size: .68rem !important; }
+  .pd-related-square .pd-related-head { margin-bottom: 12px !important; }
+  .pd-related-square .pd-related-all { min-height: 34px !important; padding: 4px 12px !important; font-size: .68rem !important; }
+}
