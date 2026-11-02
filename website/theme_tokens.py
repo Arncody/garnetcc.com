@@ -207,6 +207,8 @@ GROUPS = [
         Token("pd_btn_main_bg", "دکمه بالای صفحه پروژه (مشاوره) — پس‌زمینه", "#CC6C42", ".pd-btn.pd-btn-primary{background:{v}!important;background-image:none!important}"),
         Token("pd_btn_glass_bg", "دکمه شیشه‌ای (گالری) — پس‌زمینه", "rgba(255,255,255,.13)", ".pd-btn.pd-btn-glass{background:{v}!important}"),
         Token("pd_btn_text", "متن دکمه‌های بالای صفحه پروژه", "#FFFFFF", ".pd-btn,.pd-btn .pd-btn-label{color:{v}!important}"),
+        Token("pd_btn_shadow", "رنگ سایه دکمه درخواست خرید / مشاوره", "rgba(150,80,45,.38)", ".pd-btn.pd-btn-primary,.pd-cta{box-shadow:0 12px 32px {v}!important}"),
+        Token("pd_btn_pulse", "رنگ هاله ضربانی دکمه درخواست خرید / مشاوره", "rgba(204,108,66,.42)", ".pd-btn.pd-btn-primary::after,.pd-cta::after{border-color:{v}!important}"),
         Token("pd_chip_bg", "کپسول‌های کد / وضعیت / سال", "rgba(20,26,30,.28)", ".pd-chips li{background:{v}!important}"),
     ]),
     Group("blog_pages", "📰 صفحات مقالات و اخبار", "متن و تیترهای صفحه داخلی مقاله.", [

@@ -381,6 +381,10 @@ class Project(models.Model):
     )
     cta_text_en = models.CharField("متن دکمه اقدام (EN)", max_length=50, blank=True)
     cta_text = models.CharField("متن دکمه اقدام", max_length=50, blank=True, default="اطلاعات و پیش‌خرید")
+    catalog_file = models.FileField(
+        "کاتالوگ PDF پروژه", upload_to="projects/catalogs/", validators=PDF_VALIDATORS, blank=True,
+        help_text="فایل PDF اختصاصی همین پروژه؛ حداکثر ۲۰ مگابایت. در صورت خالی بودن، دکمه کاتالوگ نمایش داده نمی‌شود.",
+    )
     is_featured = models.BooleanField(
         "نمایش برجسته (مثلاً گارنت میدو)", default=False,
         help_text="برای معرفی برجسته‌تر یک پروژه (مثل پروژه گارنت میدو) فعال کنید.",
@@ -630,6 +634,7 @@ class BlogPost(models.Model):
 SITE_TEXT_DEFAULTS = {
     "all_articles_link": ("همه مقالات", "All articles"),
     "all_projects_btn": ("مشاهده همه پروژه‌ها", "View all projects"),
+    "project_catalog_button_text": ("کاتالوگ پروژه", "Project catalog"),
     "journal_eyebrow": ("بلاگ گارنت", "GARNET JOURNAL"),
     "journal_title": ("ایده‌هایی پشت معماری.", "Ideas behind the architecture."),
     "blog_page_eyebrow": ("بلاگ گارنت", "GARNET JOURNAL"),
@@ -681,6 +686,8 @@ class SiteTexts(SingletonModel):
     all_articles_link_en = models.CharField("لینک «همه مقالات» (EN)", max_length=250, blank=True, default="All articles")
     all_projects_btn = models.CharField("متن دکمه «مشاهده همه پروژه‌ها»", max_length=250, blank=True, default="مشاهده همه پروژه‌ها")
     all_projects_btn_en = models.CharField("متن دکمه «مشاهده همه پروژه‌ها» (EN)", max_length=250, blank=True, default="View all projects")
+    project_catalog_button_text = models.CharField("عنوان دکمه کاتالوگ پروژه", max_length=80, blank=True, default="کاتالوگ پروژه")
+    project_catalog_button_text_en = models.CharField("عنوان دکمه کاتالوگ پروژه (EN)", max_length=80, blank=True, default="Project catalog")
     journal_eyebrow = models.CharField("برچسب کوچک کارت بلاگ", max_length=250, blank=True, default="بلاگ گارنت")
     journal_eyebrow_en = models.CharField("برچسب کوچک کارت بلاگ (EN)", max_length=250, blank=True, default="GARNET JOURNAL")
     journal_title = models.CharField("تیتر کارت بلاگ", max_length=250, blank=True, default="ایده‌هایی پشت معماری.")

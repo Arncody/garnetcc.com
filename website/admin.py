@@ -200,7 +200,7 @@ class ProjectImageInline(admin.TabularInline):
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
     list_display=("title","title_en","status","location","year","is_featured","is_active","order"); list_editable=("is_featured","is_active","order"); list_filter=("status","is_active","is_featured"); search_fields=("title","title_en","code","location","location_en"); prepopulated_fields={"slug":("title",)}; ordering=("order",); inlines=[ProjectImageInline]
-    fieldsets=(("فارسی",{"fields":("title","code","slug","status","status_note","location","year","short_description","full_description","feature_list","badge_text","cta_text")}), ("English",{"fields":("title_en","status_note_en","location_en","short_description_en","full_description_en","feature_list_en","badge_text_en","cta_text_en")}), ("تصویر و نمایش",{"fields":("main_image","is_featured","is_active","order")}), ("سیستمی",{"fields":("created_at",)})); readonly_fields=("created_at",)
+    fieldsets=(("فارسی",{"fields":("title","code","slug","status","status_note","location","year","short_description","full_description","feature_list","badge_text","cta_text")}), ("English",{"fields":("title_en","status_note_en","location_en","short_description_en","full_description_en","feature_list_en","badge_text_en","cta_text_en")}), ("تصویر، کاتالوگ و نمایش",{"fields":("main_image","catalog_file","is_featured","is_active","order")}), ("سیستمی",{"fields":("created_at",)})); readonly_fields=("created_at",)
 
 @admin.register(PhilosophyFeature)
 class PhilosophyFeatureAdmin(admin.ModelAdmin):
@@ -248,6 +248,7 @@ class SiteTextsAdmin(admin.ModelAdmin):
     """ویرایش عنوان‌های صفحه اصلی، کادر مشاوره و تمام متن‌های فرم درخواست (فارسی + انگلیسی)."""
     fieldsets = (
         ("🔘 دکمه‌ی آیکونی «مشاهده همه پروژه‌ها» (صفحه اصلی)", {"fields": (("all_projects_btn","all_projects_btn_en"),), "description": "دکمه فقط آیکون دارد؛ این متن برای راهنمای شناور (tooltip) و دسترس‌پذیری استفاده می‌شود."}),
+        ("📘 دکمه کاتالوگ در صفحه داخلی پروژه", {"fields": (("project_catalog_button_text", "project_catalog_button_text_en"),), "description": "عنوان دکمه دانلود کاتالوگ اختصاصی هر پروژه؛ فایل PDF هر پروژه در فرم همان پروژه بارگذاری می‌شود."}),
         ("📰 بخش بلاگ (صفحه اصلی)", {"fields": (("journal_title","journal_title_en"),("all_articles_link","all_articles_link_en"),)}),
         ("📚 صفحه «همه مقالات»", {"fields": (("blog_page_title","blog_page_title_en"),)}),
         ("📞 عنوان دکمه‌های درخواست مشاوره", {"fields": (("consultation_button_text", "consultation_button_text_en"), ("cta_button", "cta_button_en"))}),
