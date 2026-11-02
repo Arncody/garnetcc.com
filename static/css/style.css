@@ -1439,3 +1439,49 @@ html.consult-scroll-locked{overflow:hidden!important}
 }
 @media(max-width:800px){#consultModal.is-open:not([hidden]){padding:10px!important}}
 @media(max-width:520px){#consultModal.is-open:not([hidden]){padding:6px!important}}
+
+
+/* =========================================================
+   V24 — COMPACT PROJECT CTAs + ONE-LINE SUGGESTED PROJECTS
+   Responsive overrides: buttons follow their label width.
+   ========================================================= */
+.pd-actions{display:flex!important;flex-direction:row!important;flex-wrap:wrap!important;align-items:center!important;gap:10px!important;margin-top:20px!important}
+.pd-actions .pd-btn{display:inline-flex!important;flex:0 0 auto!important;width:auto!important;min-width:0!important;max-width:100%;min-height:44px!important;height:44px!important;padding:0 18px!important;gap:8px;white-space:nowrap;font-size:.82rem!important}
+.pd-actions .pd-btn-icon{position:static!important;inset:auto!important;transform:none!important;width:26px!important;height:26px!important;flex:0 0 26px}
+.pd-actions .pd-btn-icon svg{width:15px!important;height:15px!important}
+.pd-actions .pd-btn-primary{box-shadow:0 6px 16px rgba(150,80,45,.22)!important}
+.pd-actions .pd-btn-primary::after{inset:-3px;animation-duration:3.8s}
+.pd-aside .pd-cta{display:inline-flex!important;width:auto!important;min-width:0!important;min-height:40px!important;height:auto!important;padding:9px 17px!important;margin-top:14px!important;border-radius:999px!important;font-size:.78rem!important}
+.pd-aside .pd-cta::after{inset:-3px;animation-duration:3.8s}
+.pd-related{margin-top:48px!important}
+.pd-related-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.pd-related-head h2{margin:0;font-size:clamp(1rem,1.8vw,1.25rem);font-weight:600;color:var(--navy)}
+.pd-related-all{display:inline-flex;align-items:center;gap:6px;min-height:30px;padding:0 11px;border:1px solid rgba(9,38,52,.13);border-radius:999px;background:#fff;color:var(--navy);font-size:.68rem;font-weight:600;white-space:nowrap;transition:background .2s ease,border-color .2s ease}
+.pd-related-all:hover{background:#f5f2ed;border-color:rgba(9,38,52,.25)}
+.pd-related-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.pd-related-item{display:flex;align-items:center;gap:10px;min-width:0;min-height:76px;padding:8px;border:1px solid rgba(9,38,52,.09);border-radius:13px;background:rgba(255,255,255,.9);color:var(--navy);box-shadow:0 4px 14px rgba(7,29,43,.035);transition:transform .2s ease,border-color .2s ease}
+.pd-related-item:hover{transform:translateY(-2px);border-color:rgba(183,131,98,.45)}
+.pd-related-item>img,.pd-related-placeholder{width:58px;height:58px;flex:0 0 58px;object-fit:cover;border-radius:9px;background:#e9e5df}
+.pd-related-info{display:flex;flex:1;flex-direction:column;gap:3px;min-width:0}
+.pd-related-info strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.76rem;font-weight:700}
+.pd-related-info small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#73818a;font-size:.64rem}
+.pd-related-arrow{display:grid;place-items:center;flex:0 0 24px;width:24px;height:24px;border-radius:50%;background:#f4f1ed;color:#9b684b;font-size:.8rem}
+@media(max-width:900px){.pd-related-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){
+ .pd-actions{gap:8px!important;margin-top:15px!important}
+ .pd-actions .pd-btn{min-height:38px!important;height:38px!important;padding:0 12px!important;font-size:.7rem!important;border-radius:999px!important}
+ .pd-actions .pd-btn-icon{width:22px!important;height:22px!important;flex-basis:22px}
+ .pd-actions .pd-btn-icon svg{width:13px!important;height:13px!important}
+ .pd-related{margin-top:34px!important}
+ .pd-related-list{display:flex;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;gap:8px;padding:2px 1px 9px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+ .pd-related-item{flex:0 0 min(78vw,245px);min-height:66px;padding:7px;gap:8px;scroll-snap-align:start}
+ .pd-related-item>img,.pd-related-placeholder{width:50px;height:50px;flex-basis:50px}
+ .pd-related-info strong{font-size:.72rem}
+ .pd-related-info small{font-size:.61rem}
+ .pd-related-arrow{width:21px;height:21px;flex-basis:21px}
+ .pd-related-head{margin-bottom:10px}
+ .pd-related-head h2{font-size:1rem}
+ .pd-related-all{min-height:28px;padding:0 9px;font-size:.62rem}
+ .pd-aside .pd-cta{min-height:36px;padding:8px 14px!important;font-size:.7rem!important}
+}
+@media(prefers-reduced-motion:reduce){.pd-related-item,.pd-actions .pd-btn{transition:none}.pd-actions .pd-btn-primary::after,.pd-aside .pd-cta::after{animation:none!important}}

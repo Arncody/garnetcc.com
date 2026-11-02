@@ -56,10 +56,20 @@
 
   {% if related_projects %}
   <div class="container pd-related">
-    <div class="compact-heading"><div><h2>{% if is_en %}Explore other projects{% else %}پروژه‌های دیگر گارنت{% endif %}</h2></div></div>
-    <div class="showcase-strip">
-      {% for item in related_projects %}
-      {% include "website/_project_card.html" with project=item %}
+    <div class="pd-related-head">
+      <h2>{% if is_en %}Suggested projects{% else %}پروژه‌های پیشنهادی{% endif %}</h2>
+      <a class="pd-related-all" href="{% url 'website:projects_list' %}">{% if is_en %}View all projects{% else %}نمایش همه پروژه‌ها{% endif %}<span aria-hidden="true">←</span></a>
+    </div>
+    <div class="pd-related-list">
+      {% for item in related_projects|slice:":4" %}
+      <a class="pd-related-item" href="{{ item.get_absolute_url }}">
+        {% if item.cover_image %}<img src="{{ item.cover_image.url }}" alt="{% if is_en %}{{ item.title_en|default:item.title }}{% else %}{{ item.title }}{% endif %}" loading="lazy">{% else %}<span class="pd-related-placeholder" aria-hidden="true"></span>{% endif %}
+        <span class="pd-related-info">
+          <strong>{% if is_en %}{{ item.title_en|default:item.title }}{% else %}{{ item.title }}{% endif %}</strong>
+          <small>{% if item.location_en or item.location %}{% if is_en %}{{ item.location_en|default:item.location }}{% else %}{{ item.location }}{% endif %}{% else %}{% if is_en %}{{ item.get_status_display }}{% else %}{{ item.get_status_display }}{% endif %}{% endif %}</small>
+        </span>
+        <span class="pd-related-arrow" aria-hidden="true">↗</span>
+      </a>
       {% endfor %}
     </div>
   </div>
