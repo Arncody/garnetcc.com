@@ -1,6 +1,134 @@
 {% extends "website/base.html" %}
 {% block title %}{% if is_en %}{{ project.title_en|default:project.title }}{% else %}{{ project.title }}{% endif %} | {{ site_settings.brand_name }}{% endblock %}
 {% block meta_description %}{% if is_en %}{{ project.short_description_en|default:project.short_description }}{% else %}{{ project.short_description }}{% endif %}{% endblock %}
+{% block extra_head %}
+<style id="garnet-project-visual-fix">
+/* Project detail page: deliberately scoped and loaded after all site stylesheets. */
+.pd-hero .pd-copy .pd-actions{
+  display:flex!important; flex-direction:row!important; flex-wrap:wrap!important;
+  align-items:center!important; justify-content:flex-start!important;
+  gap:9px!important; width:100%!important; margin-top:18px!important;
+}
+.pd-hero .pd-copy .pd-actions > .pd-btn{
+  display:inline-flex!important; flex:0 0 auto!important;
+  width:max-content!important; min-width:0!important; max-width:100%!important;
+  min-height:42px!important; height:42px!important;
+  padding:0 15px!important; margin:0!important; gap:8px!important;
+  box-sizing:border-box!important; white-space:nowrap!important;
+  font-size:.78rem!important; line-height:1.2!important;
+}
+.pd-hero .pd-copy .pd-actions > .pd-btn .pd-btn-label{
+  display:inline!important; flex:0 1 auto!important; width:auto!important;
+  min-width:0!important; white-space:nowrap!important;
+}
+.pd-hero .pd-copy .pd-actions > .pd-btn .pd-btn-icon{
+  position:static!important; inset:auto!important; transform:none!important;
+  display:inline-grid!important; place-items:center!important;
+  flex:0 0 19px!important; width:19px!important; height:19px!important;
+  margin:0!important;
+}
+.pd-hero .pd-copy .pd-actions > .pd-btn .pd-btn-icon svg{
+  display:block!important; width:16px!important; height:16px!important;
+}
+.pd-hero .pd-copy .pd-actions > .pd-btn-primary::after{
+  inset:-2px!important; animation-duration:4s!important;
+}
+
+/* Suggested projects: compact editorial cards, never oversized preview tiles. */
+.pd-body .pd-related{
+  width:min(100% - 40px,1180px)!important;
+  margin:42px auto 0!important;
+}
+.pd-body .pd-related-head{
+  display:flex!important; align-items:center!important; justify-content:space-between!important;
+  gap:12px!important; margin:0 0 14px!important;
+}
+.pd-body .pd-related-head h2{margin:0!important;font-size:1.05rem!important;line-height:1.6!important}
+.pd-body .pd-related-list{
+  display:grid!important; grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:12px!important; width:100%!important; overflow:visible!important;
+  padding:0!important; margin:0!important;
+}
+.pd-body .pd-related-item{
+  display:flex!important; align-items:center!important; gap:9px!important;
+  width:100%!important; min-width:0!important; min-height:68px!important;
+  height:auto!important; padding:8px!important; margin:0!important;
+  box-sizing:border-box!important; border:1px solid rgba(9,38,52,.10)!important;
+  border-radius:12px!important; background:#fff!important;
+  box-shadow:0 3px 12px rgba(7,29,43,.045)!important;
+  overflow:hidden!important; text-decoration:none!important;
+}
+.pd-body .pd-related-item > img,
+.pd-body .pd-related-item > .pd-related-placeholder{
+  display:block!important; flex:0 0 52px!important;
+  width:52px!important; height:52px!important; min-width:52px!important;
+  border-radius:8px!important; object-fit:cover!important;
+}
+.pd-body .pd-related-info{
+  display:flex!important; flex:1 1 auto!important; flex-direction:column!important;
+  gap:3px!important; min-width:0!important; overflow:hidden!important;
+}
+.pd-body .pd-related-info strong{
+  display:block!important; overflow:hidden!important; text-overflow:ellipsis!important;
+  white-space:nowrap!important; font-size:.76rem!important; line-height:1.6!important;
+}
+.pd-body .pd-related-info small{
+  display:block!important; overflow:hidden!important; text-overflow:ellipsis!important;
+  white-space:nowrap!important; font-size:.65rem!important; line-height:1.5!important;
+}
+.pd-body .pd-related-arrow{
+  display:grid!important; place-items:center!important; flex:0 0 22px!important;
+  width:22px!important; height:22px!important; font-size:.72rem!important;
+}
+.pd-body .pd-related-item:hover{transform:translateY(-2px)!important}
+@media(max-width:900px){
+  .pd-body .pd-related-list{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+}
+@media(max-width:600px){
+  .pd-hero .pd-copy .pd-actions{gap:7px!important;margin-top:14px!important}
+  .pd-hero .pd-copy .pd-actions > .pd-btn{
+    min-height:36px!important;height:36px!important;
+    padding:0 11px!important;gap:6px!important;font-size:.70rem!important;
+    border-radius:999px!important;
+  }
+  .pd-hero .pd-copy .pd-actions > .pd-btn .pd-btn-icon{
+    flex-basis:17px!important;width:17px!important;height:17px!important;
+  }
+  .pd-hero .pd-copy .pd-actions > .pd-btn .pd-btn-icon svg{
+    width:14px!important;height:14px!important;
+  }
+  .pd-body .pd-related{width:calc(100% - 28px)!important;margin-top:30px!important}
+  .pd-body .pd-related-head{margin-bottom:10px!important}
+  .pd-body .pd-related-head h2{font-size:.94rem!important}
+  .pd-body .pd-related-list{
+    display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:8px!important;overflow:visible!important;
+    scroll-snap-type:none!important;
+  }
+  .pd-body .pd-related-item{
+    min-height:62px!important;padding:6px!important;gap:6px!important;
+    border-radius:10px!important;
+  }
+  .pd-body .pd-related-item > img,
+  .pd-body .pd-related-item > .pd-related-placeholder{
+    flex-basis:42px!important;width:42px!important;height:42px!important;min-width:42px!important;
+    border-radius:7px!important;
+  }
+  .pd-body .pd-related-info strong{font-size:.68rem!important}
+  .pd-body .pd-related-info small{font-size:.59rem!important}
+  .pd-body .pd-related-arrow{flex-basis:18px!important;width:18px!important;height:18px!important;font-size:.65rem!important}
+}
+@media(max-width:360px){
+  .pd-body .pd-related-list{grid-template-columns:1fr!important}
+  .pd-hero .pd-copy .pd-actions > .pd-btn{padding-inline:9px!important;font-size:.66rem!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .pd-hero .pd-copy .pd-actions > .pd-btn-primary::after{animation:none!important}
+  .pd-body .pd-related-item{transition:none!important}
+}
+</style>
+{% endblock %}
+
 {% block content %}
 {% with cover=project.cover_image %}
 <section class="pd-hero" id="project-top">
