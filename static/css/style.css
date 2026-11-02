@@ -1653,3 +1653,62 @@ html.consult-scroll-locked{overflow:hidden!important}
   .pd-related-square .pd-related-head { margin-bottom: 12px !important; }
   .pd-related-square .pd-related-all { min-height: 34px !important; padding: 4px 12px !important; font-size: .68rem !important; }
 }
+
+
+/* =========================================================
+   GARNET PATCH — 2026-11-02
+   Project action alignment + related projects link alignment
+   Scope: project detail page only; no container spacing changes.
+   ========================================================= */
+
+/* Keep purchase and catalog actions together and aligned right (RTL). */
+.pd-body .pd-actions {
+  display: flex !important;
+  flex-direction: row !important;
+  direction: rtl !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  width: 100%;
+}
+
+.pd-body .pd-actions > .pd-btn {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* The recommendations header contains only the "All projects" link.
+   LTR flex direction makes flex-end place it at the visual right edge. */
+.pd-body .pd-related.pd-related-square .pd-related-head {
+  display: flex !important;
+  direction: ltr !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+.pd-body .pd-related.pd-related-square .pd-related-all {
+  direction: rtl !important;
+  margin-inline: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  align-self: flex-end !important;
+}
+
+/* Preserve compact controls on narrow screens without changing page gutters. */
+@media (max-width: 600px) {
+  .pd-body .pd-actions {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    gap: 7px !important;
+  }
+
+  .pd-body .pd-actions > .pd-btn {
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+  }
+}
