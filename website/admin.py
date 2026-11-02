@@ -199,7 +199,7 @@ class ProjectImageInline(admin.TabularInline):
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
-    list_display=("title","title_en","status","location","year","is_featured","is_active","order"); list_editable=("is_featured","is_active","order"); list_filter=("status","is_active","is_featured"); search_fields=("title","title_en","code","location","location_en"); prepopulated_fields={"slug":("title",)}; ordering=("order",); inlines=[ProjectImageInline]
+    list_display=("title","title_en","status","location","year","is_featured","is_active","purchase_request_enabled","order"); list_editable=("is_featured","is_active","purchase_request_enabled","order"); list_filter=("status","is_active","is_featured","purchase_request_enabled"); search_fields=("title","title_en","code","location","location_en"); prepopulated_fields={"slug":("title",)}; ordering=("order",); inlines=[ProjectImageInline]
     fieldsets=(("فارسی",{"fields":("title","code","slug","status","status_note","location","year","short_description","full_description","feature_list","badge_text","cta_text")}), ("English",{"fields":("title_en","status_note_en","location_en","short_description_en","full_description_en","feature_list_en","badge_text_en","cta_text_en")}), ("تصویر، کاتالوگ و نمایش",{"fields":("main_image","catalog_file","is_featured","is_active","order")}), ("سیستمی",{"fields":("created_at",)})); readonly_fields=("created_at",)
 
 @admin.register(PhilosophyFeature)

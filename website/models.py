@@ -390,6 +390,10 @@ class Project(models.Model):
         help_text="برای معرفی برجسته‌تر یک پروژه (مثل پروژه گارنت میدو) فعال کنید.",
     )
     is_active = models.BooleanField("نمایش در سایت", default=True)
+    purchase_request_enabled = models.BooleanField(
+        "فعال بودن دکمه درخواست خرید", default=True,
+        help_text="برای پروژه‌هایی که فروش آن‌ها تمام شده یا درخواست خرید موقتاً بسته است، غیرفعال کنید. نمایش پروژه و کاتالوگ مستقل می‌ماند.",
+    )
     order = models.PositiveIntegerField("ترتیب نمایش", default=0)
     created_at = models.DateTimeField("تاریخ ثبت", auto_now_add=True)
 
