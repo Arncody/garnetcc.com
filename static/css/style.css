@@ -1509,3 +1509,126 @@ html.consult-scroll-locked{overflow:hidden!important}
     font-size: .7rem !important;
   }
 }
+
+
+/* =========================================================
+   GARNET PATCH 2026-11 — project detail actions & recommendations
+   Compact, content-sized actions; stable effects controlled by SiteTheme.
+   ========================================================= */
+.pd-btn.pd-btn-primary,
+.pd-aside .pd-cta {
+  --pd-button-shadow-color: rgba(150,80,45,.38);
+  box-shadow: 0 12px 32px var(--pd-button-shadow-color) !important;
+}
+.pd-btn.pd-btn-primary::after,
+.pd-aside .pd-cta::after {
+  --pd-button-pulse-color: rgba(204,108,66,.42);
+  border-color: var(--pd-button-pulse-color) !important;
+  box-shadow: 0 0 0 0 var(--pd-button-pulse-color);
+  animation: pd-button-pulse-v2 2.8s ease-out infinite;
+}
+@keyframes pd-button-pulse-v2 {
+  0% { opacity: .72; transform: scale(.985); box-shadow: 0 0 0 0 var(--pd-button-pulse-color); }
+  70% { opacity: .18; transform: scale(1.035); box-shadow: 0 0 0 7px transparent; }
+  100% { opacity: 0; transform: scale(1.045); box-shadow: 0 0 0 9px transparent; }
+}
+.pd-btn {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: auto;
+  min-width: 0;
+  padding: 0 24px;
+  box-sizing: border-box;
+}
+.pd-btn-icon {
+  position: static;
+  inset: auto;
+  top: auto;
+  transform: none;
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+}
+.pd-btn-label { display: inline-block; min-width: 0; }
+.pd-actions .pd-btn-catalog { box-shadow: 0 8px 22px rgba(0,0,0,.10); }
+.pd-related-list {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+  overflow: visible !important;
+}
+.pd-related-item {
+  min-width: 0;
+  min-height: 68px;
+  padding: 7px 9px;
+  gap: 9px;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(7,29,43,.035);
+}
+.pd-related-item > img,
+.pd-related-placeholder {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+  border-radius: 8px;
+}
+.pd-related-info strong { font-size: .78rem; line-height: 1.5; }
+.pd-related-info small { font-size: .65rem; }
+.pd-related-arrow { flex-basis: 22px; width: 22px; height: 22px; }
+@media (min-width: 760px) {
+  .pd-actions .pd-btn { min-width: 0; min-height: 46px; }
+}
+@media (max-width: 759px) {
+  .pd-actions { justify-content: flex-start; gap: 8px !important; }
+  .pd-actions .pd-btn {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: 100%;
+    min-height: 38px !important;
+    height: 38px !important;
+    padding: 0 12px !important;
+    gap: 6px;
+    font-size: .72rem !important;
+    white-space: nowrap;
+  }
+  .pd-actions .pd-btn-icon {
+    position: static;
+    width: 22px !important;
+    height: 22px !important;
+    flex: 0 0 22px;
+  }
+  .pd-actions .pd-btn-icon svg { width: 13px !important; height: 13px !important; }
+  .pd-related { margin-top: 38px !important; }
+  .pd-related-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+  .pd-related-item {
+    min-height: 60px;
+    padding: 6px;
+    gap: 7px;
+  }
+  .pd-related-item > img,
+  .pd-related-placeholder {
+    width: 42px;
+    height: 42px;
+    flex-basis: 42px;
+  }
+  .pd-related-info strong { font-size: .68rem; }
+  .pd-related-info small { font-size: .59rem; }
+  .pd-related-arrow { display: none; }
+}
+@media (max-width: 380px) {
+  .pd-actions .pd-btn { padding-inline: 9px !important; font-size: .67rem !important; gap: 5px; }
+  .pd-related-list { grid-template-columns: minmax(0, 1fr) !important; }
+  .pd-related-item { min-height: 58px; }
+  .pd-related-arrow { display: grid; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pd-btn.pd-btn-primary::after,
+  .pd-aside .pd-cta::after { animation: none !important; opacity: 0 !important; }
+}
