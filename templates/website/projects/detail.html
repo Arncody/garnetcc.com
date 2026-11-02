@@ -112,6 +112,18 @@
   .pd-related-square .pd-related-all,.pd-related-square .pd-related-image-mark{transition:none!important}
 }
 </style>
+
+<style id="garnet-project-compact-controls-fix">
+/* Compact CTA controls: button size follows its label, with consistent padding. */
+.pd-actions .pd-btn{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;width:auto!important;min-width:0!important;min-height:40px!important;padding:9px 16px!important;border-radius:999px!important;font-size:.88rem!important;line-height:1.35!important;white-space:nowrap!important;box-sizing:border-box!important}
+.pd-actions .pd-btn-label{font-size:inherit!important;line-height:inherit!important}
+.pd-actions .pd-btn-icon{display:none!important}
+.pd-actions{display:flex!important;flex-wrap:wrap!important;align-items:center!important;gap:10px!important}
+.pd-related-square .pd-related-head{justify-content:flex-end!important}
+.pd-related-square .pd-related-all{min-height:0!important;height:auto!important;padding:7px 14px!important;gap:0!important;border:0!important;border-radius:999px!important;background:transparent!important;box-shadow:none!important;font-size:.78rem!important}
+.pd-related-square .pd-related-all:hover{background:transparent!important;box-shadow:none!important;transform:none!important}
+@media(max-width:760px){.pd-actions .pd-btn{min-height:36px!important;padding:8px 12px!important;font-size:.78rem!important;gap:6px!important}.pd-actions{gap:8px!important}.pd-related-square .pd-related-all{padding:6px 10px!important;font-size:.72rem!important}}
+</style>
 {% endblock %}
 
 {% block content %}
@@ -129,8 +141,8 @@
         {% if project.year %}<li><span>{% if is_en %}Year{% else %}سال{% endif %}</span><strong>{{ project.year }}</strong></li>{% endif %}
       </ul>
       <div class="pd-actions">
-        {% if project.purchase_request_enabled %}<button type="button" class="pd-btn pd-btn-primary" data-consult-open><span class="pd-btn-label">{% if is_en %}Request to buy{% else %}درخواست خرید{% endif %}</span></button>{% endif %}
-        {% if project.catalog_file %}<a href="{{ project.catalog_file.url }}" class="pd-btn pd-btn-glass pd-btn-catalog" target="_blank" rel="noopener"><span class="pd-btn-label">{% if is_en %}{{ T.project_catalog_button_text_en|default:"Project catalog" }}{% else %}{{ T.project_catalog_button_text|default:"کاتالوگ پروژه" }}{% endif %}</span></a>{% endif %}
+        {% if project.purchase_request_enabled %}<button type="button" class="pd-btn pd-btn-primary" data-consult-open><span class="pd-btn-label">{% if is_en %}Request to buy{% else %}درخواست خرید{% endif %}</span><span class="pd-btn-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 15a2 2 0 0 1-2 2H9l-4 3v-3H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/><path d="M8.5 9.5h7M8.5 12.5h4"/></svg></span></button>{% endif %}
+        {% if project.catalog_file %}<a href="{{ project.catalog_file.url }}" class="pd-btn pd-btn-glass pd-btn-catalog" target="_blank" rel="noopener"><span class="pd-btn-label">{% if is_en %}{{ T.project_catalog_button_text_en|default:"Project catalog" }}{% else %}{{ T.project_catalog_button_text|default:"کاتالوگ پروژه" }}{% endif %}</span><span class="pd-btn-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.8h8l4 4V20H6z"/><path d="M14 4v4h4M9 13h6M9 16h6"/></svg></span></a>{% endif %}
       </div>
     </div>
   </div>
@@ -170,9 +182,11 @@
   {% if related_projects %}
   <div class="container pd-related pd-related-square">
     <div class="pd-related-head">
+      
       <a class="pd-related-all" href="{% url 'website:projects_list' %}">
+        
         <span>{% if is_en %}All projects{% else %}نمایش همه پروژه‌ها{% endif %}</span>
-        <span class="pd-related-all-arrow" aria-hidden="true">←</span>
+        
       </a>
     </div>
     <div class="pd-related-list">
