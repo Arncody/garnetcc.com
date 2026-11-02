@@ -173,9 +173,13 @@ def project_detail(request, slug):
     context = _common_context()
     context["project"] = project
     context["gallery"] = project.images.all()
-    context["related_projects"] = (
-        Project.objects.filter(is_active=True).exclude(pk=project.pk).prefetch_related("images")[:3]
-    )
+    # پیشنهادها بر اساس وضعیت پروژه جاری انتخاب می‌شوند:
+    # دو پروژه از همان وضعیت + یک پروژه از وضعیت مقابل.
+    # ترتیب مدل (برجسته، ترتیب دستی، سال) حفظ می‌شود.
+    candidates = Project.objects.filter(is_active=True).exclude(pk=project.pk).prefetch_related("images")
+    same_status = list(candidates.filter(status=project.status)[:2])
+    other_status = list(candidates.exclude(status=project.status)[:1])
+    context["related_projects"] = same_status + other_status
     return render(request, "website/projects/detail.html", context)
 
 

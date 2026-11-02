@@ -2,129 +2,114 @@
 {% block title %}{% if is_en %}{{ project.title_en|default:project.title }}{% else %}{{ project.title }}{% endif %} | {{ site_settings.brand_name }}{% endblock %}
 {% block meta_description %}{% if is_en %}{{ project.short_description_en|default:project.short_description }}{% else %}{{ project.short_description }}{% endif %}{% endblock %}
 {% block extra_head %}
-<style id="garnet-project-visual-fix">
-/* Project detail page: deliberately scoped and loaded after all site stylesheets. */
-.pd-hero .pd-copy .pd-actions{
-  display:flex!important; flex-direction:row!important; flex-wrap:wrap!important;
-  align-items:center!important; justify-content:flex-start!important;
-  gap:9px!important; width:100%!important; margin-top:18px!important;
+<style id="garnet-project-recommendations-v3">
+/* Square project recommendations: image first, title underneath. */
+.pd-body .pd-related.pd-related-square{
+  width:min(100% - 40px,1120px)!important;
+  margin:54px auto 34px!important;
 }
-.pd-hero .pd-copy .pd-actions > .pd-btn{
-  display:inline-flex!important; flex:0 0 auto!important;
-  width:max-content!important; min-width:0!important; max-width:100%!important;
-  min-height:42px!important; height:42px!important;
-  padding:0 15px!important; margin:0!important; gap:8px!important;
-  box-sizing:border-box!important; white-space:nowrap!important;
-  font-size:.78rem!important; line-height:1.2!important;
+.pd-related-square .pd-related-head{
+  display:flex!important;align-items:center!important;justify-content:space-between!important;
+  gap:18px!important;margin:0 0 22px!important;
 }
-.pd-hero .pd-copy .pd-actions > .pd-btn .pd-btn-label{
-  display:inline!important; flex:0 1 auto!important; width:auto!important;
-  min-width:0!important; white-space:nowrap!important;
+.pd-related-square .pd-related-kicker{
+  color:var(--theme-muted,#60727d)!important;font-size:.72rem!important;
+  font-weight:700!important;letter-spacing:.08em!important;
 }
-.pd-hero .pd-copy .pd-actions > .pd-btn .pd-btn-icon{
-  position:static!important; inset:auto!important; transform:none!important;
-  display:inline-grid!important; place-items:center!important;
-  flex:0 0 19px!important; width:19px!important; height:19px!important;
-  margin:0!important;
+.pd-related-square .pd-related-all{
+  display:inline-flex!important;align-items:center!important;gap:10px!important;
+  min-height:46px!important;padding:5px 15px 5px 7px!important;
+  border:1px solid rgba(9,38,52,.13)!important;border-radius:999px!important;
+  background:#fff!important;color:var(--theme-primary,#092634)!important;
+  text-decoration:none!important;font-size:.78rem!important;font-weight:700!important;
+  box-shadow:0 8px 24px rgba(9,38,52,.08)!important;transition:transform .2s ease,box-shadow .2s ease!important;
 }
-.pd-hero .pd-copy .pd-actions > .pd-btn .pd-btn-icon svg{
-  display:block!important; width:16px!important; height:16px!important;
+.pd-related-square .pd-related-all:hover{transform:translateY(-2px)!important;box-shadow:0 12px 28px rgba(9,38,52,.13)!important}
+.pd-related-square .pd-related-all-mark{
+  position:relative!important;display:grid!important;place-items:center!important;
+  width:34px!important;height:34px!important;border-radius:50%!important;
+  color:#fff!important;background:linear-gradient(145deg,#173c4c,#092634)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28)!important;
 }
-.pd-hero .pd-copy .pd-actions > .pd-btn-primary::after{
-  inset:-2px!important; animation-duration:4s!important;
+.pd-related-square .pd-related-all-mark b{font-family:Georgia,serif!important;font-size:19px!important;line-height:1!important}
+.pd-related-square .pd-related-all-mark i{
+  position:absolute!important;right:-2px!important;bottom:-2px!important;
+  display:grid!important;place-items:center!important;width:15px!important;height:15px!important;
+  border-radius:50%!important;background:#d9774e!important;color:white!important;
+  border:2px solid #fff!important;font-size:9px!important;font-style:normal!important;
 }
-
-/* Suggested projects: compact editorial cards, never oversized preview tiles. */
-.pd-body .pd-related{
-  width:min(100% - 40px,1180px)!important;
-  margin:42px auto 0!important;
+.pd-related-square .pd-related-all-arrow{font-size:1rem!important;opacity:.7!important}
+.pd-related-square .pd-related-list{
+  display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:22px!important;width:100%!important;margin:0!important;padding:0!important;
+  overflow:visible!important;
 }
-.pd-body .pd-related-head{
-  display:flex!important; align-items:center!important; justify-content:space-between!important;
-  gap:12px!important; margin:0 0 14px!important;
+.pd-related-square .pd-related-item{
+  display:flex!important;flex-direction:column!important;align-items:stretch!important;
+  gap:10px!important;width:100%!important;min-width:0!important;height:auto!important;
+  padding:0!important;margin:0!important;border:0!important;border-radius:0!important;
+  background:transparent!important;box-shadow:none!important;text-decoration:none!important;
+  overflow:visible!important;transform:none!important;
 }
-.pd-body .pd-related-head h2{margin:0!important;font-size:1.05rem!important;line-height:1.6!important}
-.pd-body .pd-related-list{
-  display:grid!important; grid-template-columns:repeat(4,minmax(0,1fr))!important;
-  gap:12px!important; width:100%!important; overflow:visible!important;
-  padding:0!important; margin:0!important;
+.pd-related-square .pd-related-image{
+  position:relative!important;display:block!important;width:100%!important;
+  aspect-ratio:1/1!important;overflow:hidden!important;border-radius:14px!important;
+  background:#e9e7e2!important;box-shadow:0 12px 30px rgba(7,29,43,.12)!important;
 }
-.pd-body .pd-related-item{
-  display:flex!important; align-items:center!important; gap:9px!important;
-  width:100%!important; min-width:0!important; min-height:68px!important;
-  height:auto!important; padding:8px!important; margin:0!important;
-  box-sizing:border-box!important; border:1px solid rgba(9,38,52,.10)!important;
-  border-radius:12px!important; background:#fff!important;
-  box-shadow:0 3px 12px rgba(7,29,43,.045)!important;
-  overflow:hidden!important; text-decoration:none!important;
+.pd-related-square .pd-related-image img,
+.pd-related-square .pd-related-placeholder{
+  display:block!important;width:100%!important;height:100%!important;
+  min-width:0!important;object-fit:cover!important;border-radius:0!important;
 }
-.pd-body .pd-related-item > img,
-.pd-body .pd-related-item > .pd-related-placeholder{
-  display:block!important; flex:0 0 52px!important;
-  width:52px!important; height:52px!important; min-width:52px!important;
-  border-radius:8px!important; object-fit:cover!important;
+.pd-related-square .pd-related-image-mark{
+  position:absolute!important;left:11px!important;bottom:11px!important;
+  display:grid!important;place-items:center!important;width:30px!important;height:30px!important;
+  border:1px solid rgba(255,255,255,.65)!important;border-radius:50%!important;
+  color:#fff!important;background:rgba(7,29,43,.46)!important;
+  backdrop-filter:blur(8px)!important;font-size:14px!important;
+  opacity:0!important;transform:translateY(4px)!important;
+  transition:opacity .2s ease,transform .2s ease!important;
 }
-.pd-body .pd-related-info{
-  display:flex!important; flex:1 1 auto!important; flex-direction:column!important;
-  gap:3px!important; min-width:0!important; overflow:hidden!important;
+.pd-related-square .pd-related-item:hover .pd-related-image-mark{
+  opacity:1!important;transform:translateY(0)!important;
 }
-.pd-body .pd-related-info strong{
-  display:block!important; overflow:hidden!important; text-overflow:ellipsis!important;
-  white-space:nowrap!important; font-size:.76rem!important; line-height:1.6!important;
+.pd-related-square .pd-related-info{
+  display:flex!important;flex-direction:column!important;align-items:center!important;
+  gap:3px!important;width:100%!important;min-width:0!important;text-align:center!important;
+  overflow:visible!important;
 }
-.pd-body .pd-related-info small{
-  display:block!important; overflow:hidden!important; text-overflow:ellipsis!important;
-  white-space:nowrap!important; font-size:.65rem!important; line-height:1.5!important;
+.pd-related-square .pd-related-info strong{
+  display:block!important;width:100%!important;overflow:hidden!important;
+  text-overflow:ellipsis!important;white-space:nowrap!important;
+  color:var(--theme-text,#1a1c1c)!important;font-size:.9rem!important;
+  line-height:1.7!important;font-weight:700!important;
 }
-.pd-body .pd-related-arrow{
-  display:grid!important; place-items:center!important; flex:0 0 22px!important;
-  width:22px!important; height:22px!important; font-size:.72rem!important;
+.pd-related-square .pd-related-info small{
+  display:block!important;color:var(--theme-muted,#60727d)!important;
+  font-size:.7rem!important;line-height:1.6!important;
 }
-.pd-body .pd-related-item:hover{transform:translateY(-2px)!important}
-@media(max-width:900px){
-  .pd-body .pd-related-list{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
-}
-@media(max-width:600px){
-  .pd-hero .pd-copy .pd-actions{gap:7px!important;margin-top:14px!important}
-  .pd-hero .pd-copy .pd-actions > .pd-btn{
-    min-height:36px!important;height:36px!important;
-    padding:0 11px!important;gap:6px!important;font-size:.70rem!important;
-    border-radius:999px!important;
+@media(max-width:760px){
+  .pd-body .pd-related.pd-related-square{width:calc(100% - 32px)!important;margin:36px auto 26px!important}
+  .pd-related-square .pd-related-head{margin-bottom:15px!important;gap:10px!important}
+  .pd-related-square .pd-related-kicker{font-size:.62rem!important}
+  .pd-related-square .pd-related-all{min-height:40px!important;padding:4px 11px 4px 5px!important;gap:7px!important;font-size:.69rem!important}
+  .pd-related-square .pd-related-all-mark{width:29px!important;height:29px!important}
+  .pd-related-square .pd-related-all-mark b{font-size:16px!important}
+  .pd-related-square .pd-related-list{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:8px!important;
   }
-  .pd-hero .pd-copy .pd-actions > .pd-btn .pd-btn-icon{
-    flex-basis:17px!important;width:17px!important;height:17px!important;
-  }
-  .pd-hero .pd-copy .pd-actions > .pd-btn .pd-btn-icon svg{
-    width:14px!important;height:14px!important;
-  }
-  .pd-body .pd-related{width:calc(100% - 28px)!important;margin-top:30px!important}
-  .pd-body .pd-related-head{margin-bottom:10px!important}
-  .pd-body .pd-related-head h2{font-size:.94rem!important}
-  .pd-body .pd-related-list{
-    display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
-    gap:8px!important;overflow:visible!important;
-    scroll-snap-type:none!important;
-  }
-  .pd-body .pd-related-item{
-    min-height:62px!important;padding:6px!important;gap:6px!important;
-    border-radius:10px!important;
-  }
-  .pd-body .pd-related-item > img,
-  .pd-body .pd-related-item > .pd-related-placeholder{
-    flex-basis:42px!important;width:42px!important;height:42px!important;min-width:42px!important;
-    border-radius:7px!important;
-  }
-  .pd-body .pd-related-info strong{font-size:.68rem!important}
-  .pd-body .pd-related-info small{font-size:.59rem!important}
-  .pd-body .pd-related-arrow{flex-basis:18px!important;width:18px!important;height:18px!important;font-size:.65rem!important}
+  .pd-related-square .pd-related-image{border-radius:11px!important}
+  .pd-related-square .pd-related-info strong{font-size:.78rem!important}
+  .pd-related-square .pd-related-info small{font-size:.63rem!important}
 }
 @media(max-width:360px){
-  .pd-body .pd-related-list{grid-template-columns:1fr!important}
-  .pd-hero .pd-copy .pd-actions > .pd-btn{padding-inline:9px!important;font-size:.66rem!important}
+  .pd-related-square .pd-related-list{gap:6px!important}
+  .pd-related-square .pd-related-info strong{font-size:.66rem!important}
+  .pd-related-square .pd-related-info small{font-size:.56rem!important}
 }
 @media(prefers-reduced-motion:reduce){
-  .pd-hero .pd-copy .pd-actions > .pd-btn-primary::after{animation:none!important}
-  .pd-body .pd-related-item{transition:none!important}
+  .pd-related-square .pd-related-all,.pd-related-square .pd-related-image-mark{transition:none!important}
 }
 </style>
 {% endblock %}
@@ -183,20 +168,26 @@
   {% endif %}
 
   {% if related_projects %}
-  <div class="container pd-related">
+  <div class="container pd-related pd-related-square">
     <div class="pd-related-head">
-      <h2>{% if is_en %}Suggested projects{% else %}پروژه‌های پیشنهادی{% endif %}</h2>
-      <a class="pd-related-all" href="{% url 'website:projects_list' %}">{% if is_en %}View all projects{% else %}نمایش همه پروژه‌ها{% endif %}<span aria-hidden="true">←</span></a>
+      <span class="pd-related-kicker">{% if is_en %}DISCOVER GARNET{% else %}نگاهی دیگر به گارنت{% endif %}</span>
+      <a class="pd-related-all" href="{% url 'website:projects_list' %}">
+        <span class="pd-related-all-mark" aria-hidden="true"><b>G</b><i>↗</i></span>
+        <span>{% if is_en %}All projects{% else %}نمایش همه پروژه‌ها{% endif %}</span>
+        <span class="pd-related-all-arrow" aria-hidden="true">←</span>
+      </a>
     </div>
     <div class="pd-related-list">
-      {% for item in related_projects|slice:":4" %}
-      <a class="pd-related-item" href="{{ item.get_absolute_url }}">
-        {% if item.cover_image %}<img src="{{ item.cover_image.url }}" alt="{% if is_en %}{{ item.title_en|default:item.title }}{% else %}{{ item.title }}{% endif %}" loading="lazy">{% else %}<span class="pd-related-placeholder" aria-hidden="true"></span>{% endif %}
+      {% for item in related_projects|slice:":3" %}
+      <a class="pd-related-item" href="{{ item.get_absolute_url }}" aria-label="{% if is_en %}{{ item.title_en|default:item.title }}{% else %}{{ item.title }}{% endif %}">
+        <span class="pd-related-image">
+          {% if item.cover_image %}<img src="{{ item.cover_image.url }}" alt="{% if is_en %}{{ item.title_en|default:item.title }}{% else %}{{ item.title }}{% endif %}" loading="lazy">{% else %}<span class="pd-related-placeholder" aria-hidden="true"></span>{% endif %}
+          <span class="pd-related-image-mark" aria-hidden="true">↗</span>
+        </span>
         <span class="pd-related-info">
           <strong>{% if is_en %}{{ item.title_en|default:item.title }}{% else %}{{ item.title }}{% endif %}</strong>
-          <small>{% if item.location_en or item.location %}{% if is_en %}{{ item.location_en|default:item.location }}{% else %}{{ item.location }}{% endif %}{% else %}{% if is_en %}{{ item.get_status_display }}{% else %}{{ item.get_status_display }}{% endif %}{% endif %}</small>
+          <small>{% if is_en %}{% if item.status == "completed" %}Completed{% else %}In progress{% endif %}{% else %}{{ item.get_status_display }}{% endif %}</small>
         </span>
-        <span class="pd-related-arrow" aria-hidden="true">↗</span>
       </a>
       {% endfor %}
     </div>

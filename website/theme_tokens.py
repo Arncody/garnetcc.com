@@ -207,8 +207,8 @@ GROUPS = [
         Token("pd_btn_main_bg", "دکمه بالای صفحه پروژه (مشاوره) — پس‌زمینه", "#CC6C42", ".pd-btn.pd-btn-primary{background:{v}!important;background-image:none!important}"),
         Token("pd_btn_glass_bg", "دکمه شیشه‌ای (گالری) — پس‌زمینه", "rgba(255,255,255,.13)", ".pd-btn.pd-btn-glass{background:{v}!important}"),
         Token("pd_btn_text", "متن دکمه‌های بالای صفحه پروژه", "#FFFFFF", ".pd-btn,.pd-btn .pd-btn-label{color:{v}!important}"),
-        Token("pd_btn_shadow", "رنگ سایه دکمه درخواست خرید / مشاوره", "rgba(150,80,45,.38)", ".pd-btn.pd-btn-primary,.pd-cta{--pd-button-shadow-color:{v}!important;box-shadow:0 12px 32px var(--pd-button-shadow-color)!important}"),
-        Token("pd_btn_pulse", "رنگ هاله ضربانی دکمه درخواست خرید / مشاوره", "rgba(204,108,66,.42)", ".pd-btn.pd-btn-primary::after,.pd-cta::after{--pd-button-pulse-color:{v}!important;border-color:var(--pd-button-pulse-color)!important;box-shadow:0 0 0 0 var(--pd-button-pulse-color)!important}"),
+        Token("pd_btn_shadow", "رنگ سایه دکمه درخواست خرید / مشاوره", "rgba(150,80,45,.38)", ".pd-btn.pd-btn-primary,.pd-cta{box-shadow:0 12px 32px {v}!important}"),
+        Token("pd_btn_pulse", "رنگ هاله ضربانی دکمه درخواست خرید / مشاوره", "rgba(204,108,66,.42)", ".pd-btn.pd-btn-primary::after,.pd-cta::after{border-color:{v}!important}"),
         Token("pd_chip_bg", "کپسول‌های کد / وضعیت / سال", "rgba(20,26,30,.28)", ".pd-chips li{background:{v}!important}"),
     ]),
     Group("blog_pages", "📰 صفحات مقالات و اخبار", "متن و تیترهای صفحه داخلی مقاله.", [
@@ -252,6 +252,21 @@ GROUPS = [
         Token("back_btn_text", "دکمه «بازگشت» — متن", "#092634", ".mobile-back,.mobile-back b{color:{v}!important}"),
         Token("toast_bg", "پیام‌های سایت — پس‌زمینه", "rgba(255,255,255,.9)", ".site-toast{background:{v}!important}"),
         Token("toast_text", "پیام‌های سایت — متن", "#1A1C1C", ".site-toast{color:{v}!important}"),
+    ]),
+    Group("shadow_colors", "🌘 رنگ سایه‌ها در تمام بخش‌های سایت",
+          "رنگ سایه اجزای اصلی را مستقل تنظیم کنید. مقدار rgba برای کنترل شدت و شفافیت مناسب است؛ مثال rgba(9,38,52,.18). این تنظیمات فقط رنگ سایه را در خانواده مربوط تغییر می‌دهند.", [
+        Token("shadow_surfaces", "سایه کارت‌ها و سطوح (کارت‌ها، پنل‌ها و باکس‌ها)", "rgba(7,29,43,.12)",
+              ".glass-panel,.glass-card,.light-mini,.hero-card,.about-glass,.about-panel,.pd-aside,.pd-related-item,.article-card,.journal-card,.service-card,.contact-panel,.contact-details{box-shadow:0 18px 48px {v}!important}"),
+        Token("shadow_buttons", "سایه دکمه‌ها (اصلی، شیشه‌ای، هدر و CTA)", "rgba(180,83,46,.28)",
+              ".btn-primary,.btn-glass,.header-consult-btn,.g-cta,.pd-btn-primary,.pd-btn-glass,.pd-cta,.about-btn-copper,.about-btn-light,.more-btn{box-shadow:0 10px 28px {v}!important}"),
+        Token("shadow_navigation", "سایه هدر و منوها", "rgba(7,29,43,.16)",
+              ".site-header,.g-bar,.main-nav,.g-panel,.site-header .main-nav{box-shadow:0 14px 42px {v}!important}"),
+        Token("shadow_project_cards", "سایه کارت‌ها و ردیف‌های پروژه", "rgba(7,29,43,.12)",
+              ".mini-project,.mini-project:hover,.mini-project.project-preview,.proj-row,.proj-row:hover,.project-card,.featured-project,.pd-related-item{box-shadow:0 14px 38px {v}!important}"),
+        Token("shadow_floating", "سایه دکمه‌های شناور و بازگشت", "rgba(7,29,43,.16)",
+              ".floating-call,.mobile-back,.pd-back,.pc-view{box-shadow:0 10px 30px {v}!important}"),
+        Token("shadow_modal", "سایه پنجره‌ها و فرم‌ها", "rgba(7,29,43,.24)",
+              ".consult-modal,.consult-modal-inner,.gender-option:has(input:checked),.site-toast{box-shadow:0 28px 80px {v}!important}"),
     ]),
 ]
 
