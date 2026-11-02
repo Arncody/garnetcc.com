@@ -1486,45 +1486,26 @@ html.consult-scroll-locked{overflow:hidden!important}
 }
 @media(prefers-reduced-motion:reduce){.pd-related-item,.pd-actions .pd-btn{transition:none}.pd-actions .pd-btn-primary::after,.pd-aside .pd-cta::after{animation:none!important}}
 
-/* Garnet project cards + project action buttons: compact responsive correction */
-.compact-projects,
-.projects-grid,
-.proj-grid,
-.showcase-strip,
-.pd-related .showcase-strip {
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:14px;
+/* Final alignment guard: compact purchase/catalog controls */
+.pd-actions {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 10px !important;
 }
-.proj-rail-track {
-  display:grid;
-  grid-auto-flow:column;
-  grid-auto-columns:clamp(220px,24%,300px);
-  gap:14px;
-}
-.mini-project { min-width:0; height:auto; }
-.mini-project img,.mini-project .pp-image { height:clamp(145px,17vw,205px); object-fit:cover; }
-.pd-actions { display:flex!important; flex-direction:row!important; flex-wrap:wrap!important; align-items:center!important; gap:10px!important; }
 .pd-actions .pd-btn {
-  flex:0 1 auto!important; width:auto!important; min-width:0!important;
-  min-height:42px!important; height:42px!important; padding:0 42px 0 16px!important;
-  font-size:.78rem!important; border-radius:12px!important; white-space:nowrap;
+  flex: 0 1 auto !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
 }
-.pd-actions .pd-btn-icon { width:28px!important;height:28px!important;inset-inline-start:6px!important; }
-.pd-actions .pd-btn-primary::after { animation:none!important; }
-@media(max-width:900px) {
-  .compact-projects,.projects-grid,.proj-grid,.showcase-strip,.pd-related .showcase-strip {
-    grid-template-columns:repeat(3,minmax(0,1fr));
+@media (max-width: 600px) {
+  .pd-actions .pd-btn {
+    min-height: 38px !important;
+    height: 38px !important;
+    padding-inline: 12px !important;
+    font-size: .7rem !important;
   }
-  .proj-rail-track { grid-auto-columns:clamp(205px,31%,270px); }
-}
-@media(max-width:640px) {
-  .compact-projects,.projects-grid,.proj-grid,.showcase-strip,.pd-related .showcase-strip {
-    grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;
-  }
-  .proj-rail-track { grid-auto-columns:calc(50% - 5px);gap:10px; }
-  .mini-project { border-radius:14px; }
-  .mini-project img,.mini-project .pp-image { height:135px; }
-  .mini-project>div { padding:10px 11px 12px; }
-  .mini-project h3 { font-size:.88rem; }
 }
