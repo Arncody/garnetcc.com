@@ -354,104 +354,136 @@ html[dir="rtl"] .proj-row-btn em svg{transform:scaleX(-1)}
 .home-projects .mini-project.project-preview{background-color:#F6F3ED}
 .site-footer{background:#000!important;background-image:none!important;color:#fff!important}
 
+
 /* =========================================================
-   GARNET UI PATCH — transparent-to-light header, clean previews,
-   restrained button shadows and charcoal floating call button.
+   GARNET UI FIX 2026-11-18 — final overrides
+   Loaded after theme-generated CSS in base.html.
    ========================================================= */
 
-/* Header: fully clear over the hero; soft white glass only after scrolling. */
-.g-header .g-bar{
-  background:transparent!important;
-  border-color:transparent!important;
-  box-shadow:none!important;
-  -webkit-backdrop-filter:none!important;
-  backdrop-filter:none!important;
-  transition:background .28s ease,border-color .28s ease,box-shadow .28s ease;
+/* Header: clear over the hero, then soft white glass after scrolling. */
+.g-header .g-bar {
+  background: transparent !important;
+  background-image: none !important;
+  border: 1px solid transparent !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  transition: background .28s ease, border-color .28s ease, box-shadow .28s ease,
+              -webkit-backdrop-filter .28s ease, backdrop-filter .28s ease;
 }
-.g-header.scrolled .g-bar{
-  background:rgba(255,255,255,.88)!important;
-  border:1px solid rgba(25,37,43,.09)!important;
-  box-shadow:0 5px 22px rgba(15,25,30,.08)!important;
-  -webkit-backdrop-filter:blur(16px) saturate(135%)!important;
-  backdrop-filter:blur(16px) saturate(135%)!important;
+.g-header.scrolled .g-bar {
+  background: rgba(255,255,255,.91) !important;
+  border: 1px solid rgba(25,37,43,.12) !important;
+  box-shadow: 0 5px 22px rgba(15,25,30,.10) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(135%) !important;
+  backdrop-filter: blur(16px) saturate(135%) !important;
 }
 .g-header.scrolled .g-nav a,
 .g-header.scrolled .g-nav .g-nav-btn,
 .g-header.scrolled .g-nav a:hover,
 .g-header.scrolled .g-nav a.is-active,
-.g-header.scrolled .g-nav .g-nav-btn:hover{color:#243238!important}
+.g-header.scrolled .g-nav .g-nav-btn:hover,
+.g-header.scrolled .g-brand .brand-text {
+  color: #243238 !important;
+}
 .g-header.scrolled .g-nav a::after,
-.g-header.scrolled .g-nav .g-nav-btn::after{background:#243238!important}
-.g-header.scrolled .g-brand .brand-text{color:#243238!important}
-.g-header.scrolled .g-toggle{background:rgba(28,42,49,.045)!important;border-color:rgba(28,42,49,.14)!important}
-.g-header.scrolled .g-toggle span{background:#243238!important}
-.g-header.scrolled .g-panel{
-  background:rgba(255,255,255,.97)!important;border-color:rgba(25,37,43,.12)!important;
-  box-shadow:0 14px 34px rgba(15,25,30,.12)!important;
+.g-header.scrolled .g-nav .g-nav-btn::after { background: #243238 !important; }
+.g-header.scrolled .g-brand img { filter: brightness(0) saturate(100%) !important; }
+.g-header.scrolled .g-toggle {
+  background: rgba(28,42,49,.045) !important;
+  border: 1px solid rgba(28,42,49,.16) !important;
+}
+.g-header.scrolled .g-toggle span { background: #243238 !important; }
+.g-header.scrolled .g-panel {
+  background: rgba(255,255,255,.98) !important;
+  border-color: rgba(25,37,43,.13) !important;
+  box-shadow: 0 14px 34px rgba(15,25,30,.12) !important;
 }
 .g-header.scrolled .g-panel a,
-.g-header.scrolled .g-panel .g-panel-btn{color:#243238!important;background:rgba(20,35,42,.035)!important}
+.g-header.scrolled .g-panel .g-panel-btn { color: #243238 !important; background: rgba(20,35,42,.035) !important; }
 .g-header.scrolled .g-panel a:hover,
-.g-header.scrolled .g-panel .g-panel-btn:hover{background:rgba(20,35,42,.09)!important}
-.g-header.scrolled .g-panel .g-panel-lang{border-color:rgba(25,37,43,.15)!important}
-.g-header.scrolled .g-sub{background:rgba(255,255,255,.98)!important;border-color:rgba(25,37,43,.12)!important;box-shadow:0 14px 34px rgba(15,25,30,.12)!important}
-.g-header.scrolled .g-nav .g-sub a{color:#243238!important}
-.g-header.scrolled .g-nav .g-sub a:hover{background:rgba(20,35,42,.07)!important;color:#17252b!important}
+.g-header.scrolled .g-panel .g-panel-btn:hover { background: rgba(20,35,42,.09) !important; }
+.g-header.scrolled .g-panel .g-panel-lang,
+.g-header.scrolled .g-sub { border-color: rgba(25,37,43,.14) !important; }
+.g-header.scrolled .g-sub { background: rgba(255,255,255,.98) !important; box-shadow: 0 14px 34px rgba(15,25,30,.12) !important; }
+.g-header.scrolled .g-nav .g-sub a { color: #243238 !important; }
+.g-header.scrolled .g-nav .g-sub a:hover { background: rgba(20,35,42,.07) !important; color: #17252b !important; }
 
-/* Preview cards: remove the thin colored outline, retain the clean image edge. */
+/* Preview cards: remove thin outlines and blue edge effects, not image content. */
 .mini-project.project-preview,
 .home-projects .mini-project.project-preview,
-.home-projects .proj-rail .mini-project.project-preview,
-.home-cards .mini-project.project-preview,
-.cards-grid .mini-project.project-preview{
-  border:0!important;outline:0!important;
+.proj-rail .mini-project.project-preview {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
 }
-.proj-rail,.proj-rail-track{border:0!important;outline:0!important;box-shadow:none!important}
-.proj-rail::before,.proj-rail::after,.proj-rail-track::before,.proj-rail-track::after{border:0!important;box-shadow:none!important}
+.mini-project.project-preview::before,
+.mini-project.project-preview::after,
+.proj-rail::before,
+.proj-rail::after,
+.proj-rail-track::before,
+.proj-rail-track::after { border: 0 !important; outline: 0 !important; box-shadow: none !important; }
+/* The blue line in the status chip is also removed; its status dot remains. */
+.mini-project.project-preview .pc-status { border: 0 !important; box-shadow: none !important; }
+.mini-project.project-preview .pc-status i { box-shadow: none !important; }
 
-/* Secondary buttons stay flat. Keep depth only on the primary actions. */
-.btn:not(.btn-primary),
-.btn-glass,.btn-minimal,
-button:not(.g-cta):not(.btn-primary):not(.header-consult-btn):not(.pd-btn-primary):not(.pd-cta):not(.floating-call),
-.proj-row-btn,.pc-view,.pc-view em,.more-btn,.projects-tabs a,
-.pd-btn-glass,.pd-back,.pd-related-all{
-  box-shadow:none!important;
+/* Remove elevation from secondary controls only. */
+.btn:not(.btn-primary):not(.pd-cta),
+.button:not(.btn-primary),
+.btn-glass,
+.btn-minimal,
+.pd-btn-glass,
+.pd-back,
+.pd-related-all,
+.pd-actions .pd-btn-catalog,
+.pc-view,
+.pc-view em,
+.proj-row-btn,
+.more-btn,
+.projects-tabs a,
+.hero .hero-glass-action,
+.all-projects-btn {
+  box-shadow: none !important;
 }
-/* The three intentional elevated actions: consultation, purchase request and call. */
-.g-header .g-cta{box-shadow:0 7px 18px rgba(180,83,46,.22)!important}
-.pd-btn-primary{box-shadow:0 7px 18px rgba(150,80,45,.24)!important}
-.pd-cta{box-shadow:0 7px 18px rgba(150,80,45,.22)!important}
+/* Retain the requested shadows on the three primary actions. */
+.g-header .g-cta { box-shadow: 0 7px 18px rgba(180,83,46,.24) !important; }
+.pd-btn.pd-btn-primary { box-shadow: 0 7px 18px rgba(150,80,45,.25) !important; }
+.pd-aside .pd-cta { box-shadow: 0 7px 18px rgba(150,80,45,.23) !important; }
 
-/* Floating phone: charcoal face and matching charcoal pulse. */
-.floating-call{
-  color:#fff!important;
-  background:linear-gradient(145deg,#30383c,#111719)!important;
-  border:1px solid rgba(255,255,255,.24)!important;
-  box-shadow:0 7px 20px rgba(10,16,18,.28)!important;
+/* Floating phone: charcoal button and matching pulse. */
+.floating-call {
+  color: #fff !important;
+  background: linear-gradient(145deg,#343d42,#111719) !important;
+  border: 1px solid rgba(255,255,255,.22) !important;
+  box-shadow: 0 7px 20px rgba(10,16,18,.28) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
 }
-.floating-call::before{
-  background:rgba(35,43,47,.42)!important;
-  animation-name:garnetCallPulse!important;
+.floating-call::before {
+  background: rgba(39,48,53,.42) !important;
+  animation: garnetCallPulse 2.4s ease-out infinite !important;
 }
-@keyframes garnetCallPulse{
-  0%{transform:scale(.92);opacity:.55}
-  75%,100%{transform:scale(1.65);opacity:0}
+@keyframes garnetCallPulse {
+  0% { transform: scale(.92); opacity: .55; }
+  75%,100% { transform: scale(1.65); opacity: 0; }
 }
-@media(prefers-reduced-motion:reduce){.floating-call::before{animation:none!important;display:none!important}}
 
-/* Small screens: preserve safe-area spacing and prevent header overflow. */
-@media(max-width:1020px){
-  .g-header{padding-top:max(7px,env(safe-area-inset-top))}
-  .g-wrap{width:calc(100% - 20px)}
-  .g-bar{min-width:0}
-  .g-brand{min-width:0;max-width:44%}
-  .g-brand img{max-width:100%;height:var(--logo-mobile,40px)}
-  .g-actions{flex:0 0 auto}
+/* Responsive header spacing for narrow phones. */
+@media (max-width:1020px) {
+  .g-header { padding-top: max(7px, env(safe-area-inset-top)); }
+  .g-wrap { width: calc(100% - 20px); }
+  .g-bar { min-width: 0; }
+  .g-brand { min-width: 0; max-width: 44%; }
+  .g-brand img { max-width: 100%; height: var(--logo-mobile,40px); }
+  .g-actions { flex: 0 0 auto; }
 }
-@media(max-width:380px){
-  .g-wrap{width:calc(100% - 14px)}
-  .g-bar{gap:7px;padding-inline:8px}
-  .g-brand{max-width:39%}
-  .g-cta{padding-inline:8px!important;font-size:.62rem!important}
-  .g-toggle{width:34px;height:34px}
+@media (max-width:380px) {
+  .g-wrap { width: calc(100% - 14px); }
+  .g-bar { gap: 7px; padding-inline: 8px; }
+  .g-brand { max-width: 39%; }
+  .g-cta { padding-inline: 8px !important; font-size: .62rem !important; }
+  .g-toggle { width: 34px; height: 34px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .floating-call::before { animation: none !important; display: none !important; }
 }

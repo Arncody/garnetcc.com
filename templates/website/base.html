@@ -35,12 +35,13 @@ small,.small{font-weight:var(--small-weight)}
 {% if site_theme.custom_css %}{{ site_theme.custom_css|safe }}{% endif %}
 </style>
 <link rel="stylesheet" href="{% static 'css/consult-modal.css' %}?v=20261013-redesign1">
-<link rel="stylesheet" href="{% static 'css/garnet-ui.css' %}?v=20261118-header-buttons-v1">
+
 
 {% block extra_head %}{% endblock %}
 {% if theme_css %}<style id="garnet-colors">
 {{ theme_css|safe }}
 </style>{% endif %}
+<link rel="stylesheet" href="{% static 'css/garnet-ui.css' %}?v=20261118-finalfix2">
 </head>
 <body class="site-shell">
 <a class="skip-link" href="#main-content">{% if is_en %}Skip to content{% else %}رفتن به محتوای اصلی{% endif %}</a>
