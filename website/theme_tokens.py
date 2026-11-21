@@ -136,23 +136,23 @@ GROUPS = [
     ]),
     Group("mobile_menu", "☰ منوی موبایل (دکمه سه‌خط و پنل باز شونده)", "ظاهر منو در موبایل و تبلت.", [
         Token("toggle_lines", "رنگ سه‌خط منو (همبرگری)", CHARCOAL, ".g-header{--header-strip-toggle:{v}}"),
-        Token("toggle_bg", "پس‌زمینه دکمه سه‌خط", WHITE, ".g-header .g-toggle{background:{v}!important}"),
+        Token("toggle_bg", "پس‌زمینه دکمه سه‌خط", WHITE, ".g-header .g-toggle{--header-toggle-tint:{v}}"),
         Token("toggle_border", "لبه دکمه سه‌خط", "rgba(255,255,255,.18)", ".g-header .g-toggle{border-color:{v}!important}"),
-        Token("panel_bg", "پس‌زمینه پنل منو", WHITE, ".g-header .g-panel{background:{v}!important}"),
-        Token("panel_border", "لبه پنل منو", STONE, ".g-header .g-panel{border-color:{v}!important}"),
+        Token("panel_bg", "پس‌زمینه پنل منو", WHITE, ".g-header .g-mobile-panel{background:{v}!important}"),
+        Token("panel_border", "لبه پنل منو", STONE, ".g-header .g-mobile-panel{border-color:{v}!important}"),
         Token("panel_item_bg", "پس‌زمینه گزینه‌های پنل", "rgba(255,255,255,.06)",
-              ".g-header .g-panel a,.g-header .g-panel .g-panel-btn{background:{v}!important}"),
+              ".g-header .g-mobile-panel a,.g-header .g-mobile-panel .g-panel-btn{background:{v}!important}"),
         Token("panel_item_hover", "گزینه‌های پنل هنگام لمس / فعال", STONE,
-              ".g-header .g-panel a:hover,.g-header .g-panel a.is-active,.g-header .g-panel .g-panel-btn:hover{background:{v}!important}"),
+              ".g-header .g-mobile-panel a:hover,.g-header .g-mobile-panel a.is-active,.g-header .g-mobile-panel .g-panel-btn:hover{background:{v}!important}"),
         Token("panel_item_text", "متن گزینه‌های پنل", CHARCOAL,
-              ".g-header .g-panel a,.g-header .g-panel .g-panel-btn{color:{v}!important}"),
-        Token("panel_sub_bg", "زیرگزینه‌های پروژه‌ها در پنل — پس‌زمینه", "rgba(255,255,255,.1)", ".g-header .g-panel .g-panel-sub a{background:{v}!important}"),
+              ".g-header .g-mobile-panel a,.g-header .g-mobile-panel .g-panel-btn{color:{v}!important}"),
+        Token("panel_sub_bg", "زیرگزینه‌های پروژه‌ها در پنل — پس‌زمینه", "rgba(255,255,255,.1)", ".g-header .g-mobile-panel .g-panel-sub a{background:{v}!important}"),
     ]),
     Group("hero", "🎬 بخش اصلی (Hero) صفحه اصلی", "تیتر، توضیح و دکمه‌های روی تصویر/ویدیوی اول صفحه.", [
         Token("hero_title", "تیتر اصلی", "#FFFFFF", ".hero h1{color:{v}!important}"),
         Token("hero_text", "متن زیر تیتر", "rgba(255,255,255,.78)", ".hero .hero-copy>p{color:{v}!important}"),
-        Token("hero_btn_text", "متن دکمه‌های شیشه‌ای Hero", CHARCOAL, ".hero .hero-glass-action{color:{v}!important}"),
-        Token("hero_btn_hover", "دکمه‌های Hero هنگام Hover", STONE, ".hero .hero-glass-action:hover{background:{v}!important}"),
+        Token("hero_btn_text", "متن دکمه‌های شیشه‌ای Hero", CHARCOAL, ".hero .hero-action-link{color:{v}!important}"),
+        Token("hero_btn_hover", "دکمه‌های Hero هنگام Hover", STONE, ".hero .hero-action-link:hover{background:{v}!important}"),
     ]),
     Group("preview_cards", "🏗️ کارت‌های پیش‌نمایش پروژه و مقاله (صفحه اصلی، جزئیات پروژه، لیست مقالات)",
           "کارت‌هایی که روی تصویر نوشته دارند؛ شامل وضعیت، عنوان، موقعیت و دکمه‌ی مشاهده.", [
@@ -287,7 +287,7 @@ GROUPS = [
 ]
 
 RETIRED_DECORATIONS = frozenset({
-    "header_border", "card_btn_circle", "shadow_buttons", "shadow_navigation", "pd_btn_shadow", "pd_btn_pulse",
+    "header_border", "toggle_border", "card_btn_circle", "shadow_buttons", "shadow_navigation", "pd_btn_shadow", "pd_btn_pulse",
     "card_status_ongoing_dot", "card_status_completed_dot",
     "row_status_ongoing_dot", "row_status_completed_dot",
 })

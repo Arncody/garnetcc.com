@@ -15,5 +15,6 @@
 | GNT-008 | P1 | Monochrome design system and P1 shared components · requires GNT-000, GNT-001, GNT-003 | done |
 | GNT-009 | P2 | Shared header and footer refinement · requires GNT-008 | done |
 | GNT-010 | P1 | Header, home, project and footer corrections · requires GNT-009 | done |
+| GNT-011 | P1 | Transparent header, mobile disclosure and component alignment · requires GNT-010 | done |
 
 Only one task active. Changes to this list are not automatically complete tasks.

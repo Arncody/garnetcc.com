@@ -7,11 +7,8 @@
 .ic{display:block;flex:0 0 auto}
 
 /* ---------- ساختار هدر و منو ---------- */
-.g-bar{gap:clamp(10px,2vw,28px);min-height:60px;padding:6px clamp(12px,1.8vw,22px);border-radius:22px}
 .g-brand img{height:var(--logo-desktop,48px);max-width:min(220px,40vw)}
 .g-nav{flex:1 1 auto;justify-content:center;margin-inline:0;gap:clamp(14px,2vw,30px);min-width:0}
-html[dir="rtl"] .g-nav,html[dir="rtl"] .g-cta,html[dir="rtl"] .g-panel{direction:rtl}
-html[dir="ltr"] .g-nav,html[dir="ltr"] .g-cta,html[dir="ltr"] .g-panel{direction:ltr}
 .g-nav a,.g-nav .g-nav-btn{position:relative;padding:6px 2px;font:inherit;font-size:.82rem;font-weight:var(--nav-weight,500);color:rgba(255,255,255,.86);white-space:nowrap;
   background:none;border:0;cursor:pointer;transition:color .2s ease}
 .g-nav .g-nav-btn::after{content:"";position:absolute;inset-inline:0;bottom:-3px;height:1.5px;border-radius:2px;background:#fff;transform:scaleX(0);transition:transform .25s ease}
@@ -20,17 +17,10 @@ html[dir="ltr"] .g-nav,html[dir="ltr"] .g-cta,html[dir="ltr"] .g-panel{direction
 .g-actions{margin-inline-start:0;margin-inline-end:0;gap:8px;flex:0 0 auto}
 .g-cta{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 16px;border-radius:12px;font-size:.76rem}
 .g-cta .ic{width:16px;height:16px}
-.g-toggle{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18)}
-.g-toggle:hover{background:rgba(255,255,255,.16)}
-.g-toggle span{width:20px}
-.g-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
-.g-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
 @media(max-width:1020px){
   .g-nav{display:none}
-  .g-bar{justify-content:space-between;min-height:54px;padding:6px 10px;border-radius:18px}
   .g-brand img{height:var(--logo-mobile,40px);max-width:min(170px,42vw)}
   .g-cta{min-height:36px;padding:0 12px;font-size:.7rem}
-  .g-toggle{width:36px;height:36px}
 }
 @media(max-width:380px){.g-cta{padding:0 9px;gap:6px;font-size:.64rem}.g-cta .ic{width:14px;height:14px}.g-brand img{max-width:36vw}}
 

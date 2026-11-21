@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const mobileMenu = document.getElementById('mobile-menu');
   const navToggle = document.getElementById('nav-toggle');
   const nav = document.getElementById('main-nav');
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -10,39 +11,31 @@ document.addEventListener('DOMContentLoaded', () => {
     group.querySelector('.g-panel-sub').hidden = !open;
   }
 
+  const resetMobileGroups = () => mobileGroups.forEach((group) => setMobileGroup(group, false));
   const closeNav = () => {
-    if (!nav || !navToggle) return;
-    nav.hidden = true;
-    navToggle.setAttribute('aria-expanded', 'false');
-    mobileGroups.forEach((group) => setMobileGroup(group, false));
+    if (!mobileMenu) return;
+    mobileMenu.open = false;
+    resetMobileGroups();
   };
 
-  if (navToggle && nav) {
-    navToggle.addEventListener('click', () => {
-      if (nav.hidden) {
-        nav.hidden = false;
-        navToggle.setAttribute('aria-expanded', 'true');
-      } else {
-        closeNav();
-      }
+  if (mobileMenu && navToggle && nav) {
+    mobileMenu.addEventListener('toggle', () => {
+      if (!mobileMenu.open) resetMobileGroups();
     });
     nav.addEventListener('click', (event) => {
       const link = event.target.closest('a');
       if (link && !link.matches('[data-panel-parent]')) closeNav();
     });
-    nav.addEventListener('focusout', (event) => {
-      const next = event.relatedTarget;
-      if (next && next !== navToggle && !nav.contains(next)) closeNav();
+    mobileMenu.addEventListener('focusout', (event) => {
+      if (event.relatedTarget && !mobileMenu.contains(event.relatedTarget)) closeNav();
     });
     document.addEventListener('click', (event) => {
-      if (!nav.hidden && !nav.contains(event.target) && !navToggle.contains(event.target)) closeNav();
+      if (mobileMenu.open && !mobileMenu.contains(event.target)) closeNav();
     });
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && !nav.hidden) {
-        const focusWasInMenu = nav.contains(document.activeElement);
-        closeNav();
-        if (focusWasInMenu) navToggle.focus();
-      }
+    mobileMenu.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape' || !mobileMenu.open) return;
+      closeNav();
+      navToggle.focus();
     });
   }
 
@@ -134,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (restoreFocus) menu.trigger.focus();
   });
   window.addEventListener('resize', () => {
-    if (navToggle && !navToggle.getClientRects().length) closeNav();
+    if (mobileMenu && !mobileMenu.getClientRects().length) closeNav();
     menuGroups.forEach((menu) => {
       if (!menu.trigger.getClientRects().length) setMenuOpen(menu, false);
       else if (menu.group.classList.contains('is-open')) positionMenu(menu.panel);
@@ -159,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // اگر کاربر همین‌الان در همان صفحه است و روی لینک همان صفحه (بدون #) بزند، مرورگر صفحه را Reload می‌کند و
   // جای اسکرول را نگه می‌دارد؛ اینجا به‌جای آن، نرم به بالای صفحه می‌رویم.
-  document.querySelectorAll('.g-brand, .g-nav > a, .g-panel > a').forEach((link) => {
+  document.querySelectorAll('.g-brand, .g-nav > a, .g-mobile-panel > a').forEach((link) => {
     link.addEventListener('click', (event) => {
       if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.button) return;
       let url;
@@ -182,10 +175,46 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   const header = document.querySelector('.g-header');
-  const updateHeader = () => header?.classList.toggle('scrolled', window.scrollY > 16);
+  const updateHeader = () => header?.classList.toggle('scrolled', window.scrollY > 0);
   updateHeader();
   window.addEventListener('scroll', updateHeader, { passive: true });
   window.addEventListener('pageshow', updateHeader);
+
+  // Align the visible mark when the uploaded PNG includes transparent padding.
+  const footerLogo = document.querySelector('.footer-wordmark');
+  if (footerLogo) {
+    const alignFooterLogo = () => {
+      const { naturalWidth, naturalHeight } = footerLogo;
+      if (!naturalWidth || !naturalHeight) return;
+      const scale = Math.min(1, 256 / Math.max(naturalWidth, naturalHeight));
+      const canvas = document.createElement('canvas');
+      const width = canvas.width = Math.max(1, Math.round(naturalWidth * scale));
+      const height = canvas.height = Math.max(1, Math.round(naturalHeight * scale));
+      const context = canvas.getContext('2d');
+      if (!context) return;
+
+      context.drawImage(footerLogo, 0, 0, width, height);
+      let pixels;
+      try {
+        pixels = context.getImageData(0, 0, width, height).data;
+      } catch (error) {
+        if (error.name === 'SecurityError') return;
+        throw error;
+      }
+
+      const rtl = document.documentElement.dir === 'rtl';
+      for (let offset = 0; offset < width; offset += 1) {
+        const x = rtl ? width - 1 - offset : offset;
+        for (let y = 0; y < height; y += 1) {
+          if (pixels[(y * width + x) * 4 + 3] <= 16) continue;
+          footerLogo.style.setProperty('--footer-mark-shift', `${(rtl ? 1 : -1) * offset / width * 100}%`);
+          return;
+        }
+      }
+    };
+    if (footerLogo.complete) alignFooterLogo();
+    else footerLogo.addEventListener('load', alignFooterLogo, { once: true });
+  }
 
   document.querySelectorAll('.site-toast').forEach((toast) => {
     window.setTimeout(() => {

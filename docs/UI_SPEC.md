@@ -20,11 +20,11 @@ Regional colors remain available for operational feedback such as validation. Pr
 
 - Type: IRANSansWebFaNum in FA, system sans in EN. Body 16px, controls 14px, metadata 13px. Display and section headings scale fluidly.
 - Layout: max width 1200px, shared gutters from 16 to 40px, section spacing from 32 to 64px. Header and content follow inline direction.
-- Header: a full-width pale glass strip on all pages with a 3-percentage-point opacity increase and a slightly paler tint after scroll. Blur is capped at 12px. The desktop submenu aligns with its trigger and stays inside the viewport. Smaller viewports use the collapsible menu aligned to the header grid.
-- Buttons: filled primary, outlined secondary, and text variants with a 10px control radius. Home cards and action buttons have no decorative outer borders. Project view actions size to their labels and use a directional arrow. Interactive targets are at least 44×44px where the button itself is the hit area. Use a visible 2px focus outline with light or dark color for the surrounding surface.
+- Header: a transparent header at the top and one full-width translucent glass layer after scrolling. Blur is capped at 14px. The desktop submenu aligns with its trigger and stays inside the viewport. Smaller viewports use a native disclosure aligned to the header grid. JavaScript enhances dismissal and submenus.
+- Buttons: filled primary, outlined secondary, and text variants with a 12px control radius. Home cards and action buttons have no decorative outer borders. Project view actions size to their labels and use a directional arrow inside the full-card link. Interactive targets are at least 44×44px where the button itself is the hit area. Use a visible 2px focus outline with light or dark color for the surrounding surface.
 - Motion: state transitions use 150ms. Shared transitions are removed for reduced-motion preferences.
 - Hero: neutral scrim keeps text readable over bright media, with a matching fallback for media-free states.
-- Footer: brand and purchase CTA above four groups for quick links, company information, contact, and newsletter/social links. Groups wrap to two columns on tablets and one column on narrow phones. Buy opens the existing request form. Use configured brand text, contacts and social destinations. The wordmark is rendered in white using the image alpha channel. The language switch lives in the footer.
+- Footer: brand and purchase CTA above four groups for quick links, company information, contact, and newsletter/social links. Groups wrap to two columns on tablets and one column on narrow phones. Buy opens the existing request form. Use configured brand text, contacts and social destinations. The white wordmark starts at the grid edge. For same-origin transparent images, align the outermost visible pixels by compensating for transparent padding. The language switch lives in the footer.
 
 ## SiteTheme compatibility
 

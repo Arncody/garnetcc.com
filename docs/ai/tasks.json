@@ -228,5 +228,28 @@
       "2026-11-21: 70 local Chromium combinations passed; desktop/mobile menus, pointer/touch/keyboard, contrast, footer language switching, purchase and newsletter verified. See CHANGE_LOG.md."
     ],
     "rollback": "Revert the GNT-010 commit to the GNT-009 checkpoint; no database rollback required"
+  },
+  {
+    "id": "GNT-011",
+    "priority": "P1",
+    "title": "Fix transparent header, mobile disclosure, and component alignment",
+    "status": "done",
+    "depends_on": [
+      "GNT-010"
+    ],
+    "modules": [
+      "M01",
+      "M02",
+      "M07"
+    ],
+    "acceptance": [
+      "A transparent header at the top and one continuous glass layer only after scrolling",
+      "Dotless home actions, subtly larger corner radii and project view controls sized to text",
+      "Mobile disclosure opens by touch and with JavaScript absent; visible footer wordmark aligns with the RTL grid"
+    ],
+    "verification_evidence": [
+      "2026-11-21: 70 Chromium page cases and 12 mobile touch cases passed, including no-JS menu, simulated legacy overrides, uniform glass samples, padded logo alignment and local form submissions."
+    ],
+    "rollback": "Revert GNT-011 to the GNT-010 checkpoint; no database rollback required"
   }
 ]

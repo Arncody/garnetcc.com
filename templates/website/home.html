@@ -18,9 +18,9 @@
       <p>{% if is_en %}{{ hero.subtitle_en|default:hero.subtitle }}{% else %}{{ hero.subtitle }}{% endif %}</p>
 
       <div class="hero-actions hero-quick-actions">
-        <a href="{% url 'website:projects_list' %}#ongoing" class="btn btn-glass hero-glass-action">{% if is_en %}Ongoing Projects{% else %}پروژه‌های در حال اجرا{% endif %}</a>
-        <a href="{% url 'website:projects_list' %}#completed" class="btn btn-glass hero-glass-action">{% if is_en %}Built Portfolio{% else %}نمونه‌کارهای اجرا شده{% endif %}</a>
-        {% if catalog %}<a href="{{ catalog.file.url }}" class="btn btn-glass hero-glass-action" target="_blank" rel="noopener">{% if is_en %}Company Catalog{% else %}کاتالوگ شرکت{% endif %}</a>{% endif %}
+        <a href="{% url 'website:projects_list' %}#ongoing" class="btn hero-action-link">{% if is_en %}Ongoing Projects{% else %}پروژه‌های در حال اجرا{% endif %}</a>
+        <a href="{% url 'website:projects_list' %}#completed" class="btn hero-action-link">{% if is_en %}Built Portfolio{% else %}نمونه‌کارهای اجرا شده{% endif %}</a>
+        {% if catalog %}<a href="{{ catalog.file.url }}" class="btn hero-action-link" target="_blank" rel="noopener">{% if is_en %}Company Catalog{% else %}کاتالوگ شرکت{% endif %}</a>{% endif %}
       </div>
     </div>
 

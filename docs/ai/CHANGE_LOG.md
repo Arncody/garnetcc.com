@@ -34,3 +34,12 @@
 - Render the footer wordmark in white using the logo alpha channel. Increase the social SVGs to 28px and give newsletter submission a dedicated contrast-safe button.
 - Verified 70 local Chromium page/language/viewport combinations and pointer, touch and keyboard navigation. Also verified menus in a short viewport and during desktop/mobile resizing. Tested against sample legacy theme color overrides and fixture media. Minimum measured header contrast was 5.79:1, and newsletter control contrast was 14.16:1. Purchase and newsletter submissions and their saved rows were verified in both languages.
 - Django system checks, collectstatic, JS syntax and GDCS checks passed. Production branding assets and separately configured custom CSS were unavailable. No schema migration.
+
+## 2026-11-21 — GNT-011 · Transparent header, mobile menu and component alignment
+
+- Keep the header transparent at the top. Scrolling reveals one full-width tinted glass overlay. The content wrapper stays transparent. Replace old wrapper/action selectors that could retain the opaque center or a decorative dot from site custom CSS.
+- Use a native details/summary disclosure for the mobile menu. JavaScript enhances dismissal, focus restoration and nested menus. Keep desktop dropdown navigation and existing form routes.
+- Use 12px button radii. Size project actions to their text and icon with 10px horizontal padding. Keep the entire project card clickable.
+- Align the white wordmark to the inline start of the footer grid. Compensate for transparent padding in same-origin logo assets without changing their files.
+- Verified 70 local Chromium page combinations, 12 touch scenarios in FA/EN with JavaScript enabled or disabled, desktop keyboard navigation, and both form submissions. Under fixture CSS simulating the old white wrapper and dot, the scrolled strip measured the same pixel value across six horizontal samples. The transparent padded logo reached the grid boundary at the sampled desktop sizes. Minimum tested nav contrast over black was 4.92:1.
+- Django check, collectstatic, JS syntax, GDCS and Git whitespace checks passed. These tests use local fixture settings and media. No schema migration.
