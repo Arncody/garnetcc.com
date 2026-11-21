@@ -13,7 +13,7 @@
 <link rel="apple-touch-icon" href="{{ site_settings.favicon.url }}">{% else %}<link rel="icon" href="{% url 'website:favicon' %}">{% endif %}
 <meta property="og:site_name" content="{{ site_settings.brand_name }}"><meta property="og:type" content="website"><meta property="og:url" content="{{ request.build_absolute_uri }}">{% if site_settings.logo %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ site_settings.logo.url }}">{% endif %}
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"{{ site_settings.brand_name|escapejs }}","legalName":"{{ site_settings.legal_name|escapejs }}","url":"{{ request.scheme }}://{{ request.get_host }}/"{% if site_settings.logo %},"logo":"{{ request.scheme }}://{{ request.get_host }}{{ site_settings.logo.url }}"{% endif %}{% if site_settings.instagram_url or site_settings.linkedin_url %},"sameAs":[{% if site_settings.instagram_url %}"{{ site_settings.instagram_url|escapejs }}"{% endif %}{% if site_settings.instagram_url and site_settings.linkedin_url %},{% endif %}{% if site_settings.linkedin_url %}"{{ site_settings.linkedin_url|escapejs }}"{% endif %}]{% endif %}}</script>
-<link rel="stylesheet" href="{% static 'css/fonts.css' %}"><link rel="stylesheet" href="{% static 'css/style.css' %}?v=GNT-009">
+<link rel="stylesheet" href="{% static 'css/fonts.css' %}"><link rel="stylesheet" href="{% static 'css/style.css' %}?v=GNT-010">
 <style id="garnet-theme">
 :root{
  {% for key, value in theme_palette.items %}--{{ key }}:{{ value }};{% endfor %}
@@ -40,41 +40,40 @@ small,.small{font-weight:var(--small-weight)}
 {% if theme_css %}<style id="garnet-colors">
 {{ theme_css|safe }}
 </style>{% endif %}
-<link rel="stylesheet" href="{% static 'css/garnet-ui.css' %}?v=GNT-009">
-<link rel="stylesheet" href="{% static 'css/design-system.css' %}?v=GNT-009">
+<link rel="stylesheet" href="{% static 'css/garnet-ui.css' %}?v=GNT-010">
+<link rel="stylesheet" href="{% static 'css/design-system.css' %}?v=GNT-010">
 {% if site_theme.custom_css %}<style id="garnet-custom-css">{{ site_theme.custom_css|safe }}</style>{% endif %}
 </head>
-<body class="site-shell">
+<body class="site-shell{% if request.resolver_match.view_name == 'website:home' %} site-home{% endif %}">
 <a class="skip-link" href="#main-content">{% if is_en %}Skip to content{% else %}رفتن به محتوای اصلی{% endif %}</a>
 <header class="g-header">
   <div class="g-wrap">
     <div class="g-bar">
       <a href="{% url 'website:home' %}" class="g-brand" aria-label="{{ site_settings.brand_name }}">
-        {% if site_settings.logo or site_settings.logo_light %}
-          {% if site_settings.logo %}<img class="g-logo-day{% if not site_settings.logo_light %} g-logo-only{% endif %}" src="{{ site_settings.logo.url }}" alt="{{ site_settings.brand_name }}">{% endif %}
-          {% if site_settings.logo_light %}<img class="g-logo-night{% if not site_settings.logo %} g-logo-only{% endif %}" src="{{ site_settings.logo_light.url }}" alt="{{ site_settings.brand_name }}">{% endif %}
+        {% if site_settings.logo %}
+          <img src="{{ site_settings.logo.url }}" alt="{{ site_settings.brand_name }}">
+        {% elif site_settings.logo_light %}
+          <img class="g-logo-light-fallback" src="{{ site_settings.logo_light.url }}" alt="{{ site_settings.brand_name }}">
         {% else %}
           <span class="brand-text">{{ site_settings.brand_name }}</span>
         {% endif %}
       </a>
       <nav class="g-nav" aria-label="{% if is_en %}Main{% else %}منوی اصلی{% endif %}">
         {% for item in menu_items %}{% if item.consult %}<button type="button" class="g-nav-btn" data-consult-open>{{ item.label }}</button>{% elif item.children %}<div class="g-nav-group" data-nav-group>
-          <a href="{{ item.url }}" class="g-nav-parent{% if item.active %} is-active{% endif %}"{% if item.active %} aria-current="page"{% endif %} aria-expanded="false" data-nav-parent data-nav-path="{{ item.base }}">{{ item.label }}<svg class="g-chev" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></a>
-          <div class="g-sub">{% for child in item.children %}<a href="{{ child.url }}">{{ child.label }}</a>{% endfor %}</div>
+          <a href="{{ item.url }}" class="g-nav-parent{% if item.active %} is-active{% endif %}"{% if item.active %} aria-current="page"{% endif %} aria-expanded="false" aria-controls="desktop-submenu-{{ forloop.counter }}" data-nav-parent>{{ item.label }}<svg class="g-chev" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></a>
+          <div class="g-sub" id="desktop-submenu-{{ forloop.counter }}">{% for child in item.children %}<a href="{{ child.url }}">{{ child.label }}</a>{% endfor %}</div>
         </div>{% else %}<a href="{{ item.url }}"{% if item.active %} class="is-active" aria-current="page"{% endif %}>{{ item.label }}</a>{% endif %}{% endfor %}
       </nav>
       <div class="g-actions">
-        <a class="g-lang" href="{% url 'website:set_language' %}?lang={% if is_en %}fa{% else %}en{% endif %}"><span lang="{% if is_en %}fa{% else %}en{% endif %}">{% if is_en %}فارسی{% else %}English{% endif %}</span></a>
         <button type="button" class="g-cta" data-consult-open><span>{{ T.consultation_button_text }}</span></button>
         <button type="button" class="g-toggle" id="nav-toggle" aria-label="{% if is_en %}Menu{% else %}منو{% endif %}" aria-expanded="false" aria-controls="main-nav"><span></span><span></span><span></span></button>
       </div>
     </div>
-    <nav class="g-panel" id="main-nav" aria-label="{% if is_en %}Menu{% else %}منو{% endif %}">
+    <nav class="g-panel" id="main-nav" hidden aria-label="{% if is_en %}Menu{% else %}منو{% endif %}">
       {% for item in menu_items %}{% if item.consult %}<button type="button" class="g-panel-btn" data-consult-open>{{ item.label }}</button>{% elif item.children %}<div class="g-panel-group" data-panel-group>
-        <a href="{{ item.url }}" class="g-panel-parent{% if item.active %} is-active{% endif %}"{% if item.active %} aria-current="page"{% endif %} aria-expanded="false" data-panel-parent data-nav-path="{{ item.base }}"><span>{{ item.label }}</span><svg class="g-chev" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></a>
-        <div class="g-panel-sub" hidden>{% for child in item.children %}<a href="{{ child.url }}">{{ child.label }}</a>{% endfor %}</div>
+        <a href="{{ item.url }}" class="g-panel-parent{% if item.active %} is-active{% endif %}"{% if item.active %} aria-current="page"{% endif %} aria-expanded="false" aria-controls="mobile-submenu-{{ forloop.counter }}" data-panel-parent><span>{{ item.label }}</span><svg class="g-chev" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></a>
+        <div class="g-panel-sub" id="mobile-submenu-{{ forloop.counter }}" hidden>{% for child in item.children %}<a href="{{ child.url }}">{{ child.label }}</a>{% endfor %}</div>
       </div>{% else %}<a href="{{ item.url }}"{% if item.active %} class="is-active" aria-current="page"{% endif %}>{{ item.label }}</a>{% endif %}{% endfor %}
-      <a class="g-panel-lang" href="{% url 'website:set_language' %}?lang={% if is_en %}fa{% else %}en{% endif %}">{% icon "globe" 16 %}<span>{% if is_en %}فارسی{% else %}English{% endif %}</span></a>
     </nav>
   </div>
 </header>
@@ -104,6 +103,6 @@ small,.small{font-weight:var(--small-weight)}
 {% if request.path != '/' %}<a class="mobile-back" href="javascript:history.back()" aria-label="{% if is_en %}Back{% else %}بازگشت{% endif %}"><span aria-hidden="true">{% if is_en %}{% icon "arrow-left" 16 %}{% else %}{% icon "arrow-right" 16 %}{% endif %}</span><b>{% if is_en %}Back{% else %}بازگشت{% endif %}</b></a>{% endif %}
 {% include "website/_footer.html" %}
 <a class="floating-call" href="tel:{{ site_settings.phone }}" aria-label="{% if is_en %}Call Garnet{% else %}تماس با گارنت{% endif %}">{% icon "phone" 22 %}</a>
-<script src="{% static 'js/main.js' %}?v=20261121-phase2" defer></script>
+<script src="{% static 'js/main.js' %}?v=GNT-010" defer></script>
 {% block extra_scripts %}{% endblock %}
 </body></html>

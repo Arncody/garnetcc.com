@@ -113,15 +113,15 @@ GROUPS = [
     ]),
     Group("header", "▣ هدر (نوار بالای سایت) و منوی دسکتاپ", "نوار شیشه‌ای بالای سایت، لینک‌های منو و دکمه مشاوره.", [
         Token("header_bg", "پس‌زمینه نوار هدر", WHITE,
-              ".g-header{--header-strip-base:{v}!important}"),
+              ".g-header{--header-strip-tint:{v}}"),
         Token("header_border", "خط دور نوار هدر", "rgba(255,255,255,.34)", ".g-header .g-bar{border-color:{v}!important}"),
         Token("header_link", "رنگ لینک‌های منو", CHARCOAL,
-              ".g-header .g-nav>a,.g-header .g-nav .g-nav-btn,.g-header .g-nav .g-nav-parent{color:{v}!important}"),
+              ".g-header{--header-strip-ink:{v}}"),
         Token("header_link_hover", "رنگ لینک منو هنگام نگه‌داشتن ماوس / صفحه فعال", GRAPHITE,
-              ".g-header .g-nav>a:hover,.g-header .g-nav>a.is-active,.g-header .g-nav .g-nav-parent:hover,.g-header .g-nav .g-nav-parent.is-active,.g-header .g-nav .g-nav-btn:hover,.g-header .g-nav .g-nav-btn:focus-visible,.g-header .g-nav .g-nav-group.is-open>.g-nav-parent{color:{v}!important}"),
+              ".g-header{--header-strip-hover:{v}}"),
         Token("header_underline", "خط زیر لینک فعال منو", CHARCOAL,
-              ".g-header .g-nav>a::after,.g-header .g-nav .g-nav-parent::after,.g-header .g-nav .g-nav-btn::after{background:{v}!important}"),
-        Token("header_brand_text", "نام برند (وقتی لوگو آپلود نشده)", CHARCOAL, ".g-header .g-brand .brand-text{color:{v}!important}"),
+              ".g-header{--header-strip-rule:{v}}"),
+        Token("header_brand_text", "نام برند (وقتی لوگو آپلود نشده)", CHARCOAL, ".g-header .g-brand{--header-brand-tint:{v}}"),
         Token("header_cta_bg", "دکمه «درخواست مشاوره» — پس‌زمینه", CHARCOAL,
               ".g-header .g-cta{background:{v}!important;background-image:none!important}"),
         Token("header_cta_hover", "دکمه «درخواست مشاوره» — پس‌زمینه هنگام Hover", GRAPHITE,
@@ -135,7 +135,7 @@ GROUPS = [
               ".g-header .g-sub a:hover,.g-header .g-sub a:focus-visible{background:{v}!important}"),
     ]),
     Group("mobile_menu", "☰ منوی موبایل (دکمه سه‌خط و پنل باز شونده)", "ظاهر منو در موبایل و تبلت.", [
-        Token("toggle_lines", "رنگ سه‌خط منو (همبرگری)", CHARCOAL, ".g-header .g-toggle span{background:{v}!important}"),
+        Token("toggle_lines", "رنگ سه‌خط منو (همبرگری)", CHARCOAL, ".g-header{--header-strip-toggle:{v}}"),
         Token("toggle_bg", "پس‌زمینه دکمه سه‌خط", WHITE, ".g-header .g-toggle{background:{v}!important}"),
         Token("toggle_border", "لبه دکمه سه‌خط", "rgba(255,255,255,.18)", ".g-header .g-toggle{border-color:{v}!important}"),
         Token("panel_bg", "پس‌زمینه پنل منو", WHITE, ".g-header .g-panel{background:{v}!important}"),
@@ -242,9 +242,9 @@ GROUPS = [
               ".site-footer .footer-grid-reference .footer-col>a:hover{color:{v}!important}"),
         Token("footer_contact_icon", "آیکون تلفن و ایمیل", WHITE, ".site-footer .footer-contact-icon{color:{v}!important}"),
         Token("footer_social", "آیکون‌های اینستاگرام و لینکدین", "#FFFFFF", ".site-footer .footer-social-links a{color:{v}!important}"),
-        Token("footer_news_bg", "فرم خبرنامه — پس‌زمینه", "#FFFFFF", ".site-footer .newsletter-form{background:{v}!important}"),
-        Token("footer_news_text", "فرم خبرنامه — رنگ متن ایمیل", CHARCOAL, ".site-footer .newsletter-form input[type=email]{color:{v}!important}"),
-        Token("footer_news_btn", "فرم خبرنامه — دکمه ثبت", CHARCOAL, ".site-footer .newsletter-form button{background:{v}!important}"),
+        Token("footer_news_bg", "فرم خبرنامه — پس‌زمینه", "#FFFFFF", ".site-footer .newsletter-form{--newsletter-surface-tint:{v}}"),
+        Token("footer_news_text", "فرم خبرنامه — رنگ متن ایمیل", CHARCOAL, ".site-footer .newsletter-form{--newsletter-text-tint:{v}}"),
+        Token("footer_news_btn", "فرم خبرنامه — دکمه ثبت", CHARCOAL, ".site-footer .newsletter-form{--newsletter-action-tint:{v}}"),
         Token("footer_bottom_text", "نوار پایین فوتر (کپی‌رایت و بازگشت به بالا)", "rgba(255,255,255,.66)", ".site-footer .footer-bottom,.site-footer .footer-bottom small,.site-footer .footer-bottom a{color:{v}!important}"),
         Token("footer_bottom_line", "خط بالای نوار پایین فوتر", "rgba(255,255,255,.09)", ".site-footer .footer-bottom{border-top-color:{v}!important}"),
     ]),
@@ -287,7 +287,7 @@ GROUPS = [
 ]
 
 RETIRED_DECORATIONS = frozenset({
-    "header_border", "shadow_buttons", "shadow_navigation", "pd_btn_shadow", "pd_btn_pulse",
+    "header_border", "card_btn_circle", "shadow_buttons", "shadow_navigation", "pd_btn_shadow", "pd_btn_pulse",
     "card_status_ongoing_dot", "card_status_completed_dot",
     "row_status_ongoing_dot", "row_status_completed_dot",
 })

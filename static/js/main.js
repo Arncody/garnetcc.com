@@ -3,25 +3,42 @@ document.addEventListener('DOMContentLoaded', () => {
   const nav = document.getElementById('main-nav');
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  const mobileGroups = [...document.querySelectorAll('[data-panel-group]')];
+  function setMobileGroup(group, open) {
+    group.classList.toggle('is-open', open);
+    group.querySelector('[data-panel-parent]').setAttribute('aria-expanded', String(open));
+    group.querySelector('.g-panel-sub').hidden = !open;
+  }
+
   const closeNav = () => {
     if (!nav || !navToggle) return;
-    nav.classList.remove('open');
+    nav.hidden = true;
     navToggle.setAttribute('aria-expanded', 'false');
+    mobileGroups.forEach((group) => setMobileGroup(group, false));
   };
 
   if (navToggle && nav) {
-    navToggle.addEventListener('click', (event) => {
-      event.stopPropagation();
-      const open = nav.classList.toggle('open');
-      navToggle.setAttribute('aria-expanded', String(open));
+    navToggle.addEventListener('click', () => {
+      if (nav.hidden) {
+        nav.hidden = false;
+        navToggle.setAttribute('aria-expanded', 'true');
+      } else {
+        closeNav();
+      }
     });
-    // لینک‌های والدِ زیرمنو فقط زیرمنو را باز/بسته می‌کنند و پنل را نمی‌بندند.
-    nav.querySelectorAll('a:not([data-panel-parent])').forEach((a) => a.addEventListener('click', closeNav));
+    nav.addEventListener('click', (event) => {
+      const link = event.target.closest('a');
+      if (link && !link.matches('[data-panel-parent]')) closeNav();
+    });
+    nav.addEventListener('focusout', (event) => {
+      const next = event.relatedTarget;
+      if (next && next !== navToggle && !nav.contains(next)) closeNav();
+    });
     document.addEventListener('click', (event) => {
-      if (nav.classList.contains('open') && !nav.contains(event.target) && !navToggle.contains(event.target)) closeNav();
+      if (!nav.hidden && !nav.contains(event.target) && !navToggle.contains(event.target)) closeNav();
     });
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && nav.classList.contains('open')) {
+      if (event.key === 'Escape' && !nav.hidden) {
         const focusWasInMenu = nav.contains(document.activeElement);
         closeNav();
         if (focusWasInMenu) navToggle.focus();
@@ -50,66 +67,93 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   const scrollTopSmooth = () => window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
 
-  // دسکتاپ: کلیک روی «پروژه‌ها» دو گزینه را باز می‌کند (با ماوس هم با Hover باز می‌شود).
-  const navGroups = Array.prototype.slice.call(document.querySelectorAll('[data-nav-group]'));
-  const closeGroups = (except) => navGroups.forEach((group) => {
-    if (group === except) return;
-    group.classList.remove('is-open');
-    group.querySelector('[data-nav-parent]')?.setAttribute('aria-expanded', 'false');
+  const menuGroups = [...document.querySelectorAll('[data-nav-group]')].map((group) => ({
+    group,
+    trigger: group.querySelector('[data-nav-parent]'),
+    panel: group.querySelector('.g-sub'),
+    pinned: false,
+  }));
+  const isModifiedClick = (event) => event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0;
+
+  const positionMenu = (panel) => {
+    panel.style.removeProperty('--g-sub-shift');
+    const { left, right } = panel.getBoundingClientRect();
+    const leftEdge = 12;
+    const rightEdge = document.documentElement.clientWidth - 12;
+    const shift = Math.min(Math.max(0, leftEdge - left), rightEdge - right);
+    if (shift) panel.style.setProperty('--g-sub-shift', `${shift}px`);
+  };
+
+  function setMenuOpen(menu, open) {
+    menu.group.classList.toggle('is-open', open);
+    menu.trigger.setAttribute('aria-expanded', String(open));
+    if (open) positionMenu(menu.panel);
+    else menu.pinned = false;
+  }
+
+  const closeMenus = (except) => menuGroups.forEach((menu) => {
+    if (menu !== except) setMenuOpen(menu, false);
   });
-  navGroups.forEach((group) => {
-    const parent = group.querySelector('[data-nav-parent]');
-    if (!parent) return;
-    parent.addEventListener('click', (event) => {
-      // بار اول منو باز می‌شود؛ اگر دوباره روی والد کلیک شود، صفحه‌ی اصلی پروژه‌ها باز شود.
-      if (group.classList.contains('is-open')) {
-        const targetUrl = parent.getAttribute('href');
-        if (targetUrl && targetUrl !== '#') return;
-      }
+
+  menuGroups.forEach((menu) => {
+    const { group, trigger, panel } = menu;
+    group.addEventListener('pointerenter', (event) => {
+      if (event.pointerType !== 'mouse') return;
+      closeMenus(menu);
+      setMenuOpen(menu, true);
+    });
+    group.addEventListener('pointerleave', () => {
+      if (!menu.pinned && !panel.contains(document.activeElement)) setMenuOpen(menu, false);
+    });
+    trigger.addEventListener('click', (event) => {
+      if (isModifiedClick(event)) return;
+      const target = trigger.getAttribute('href');
+      if (menu.pinned && target && target !== '#') return;
       event.preventDefault();
-      const open = !group.classList.contains('is-open');
-      closeGroups(group);
-      group.classList.toggle('is-open', open);
-      parent.setAttribute('aria-expanded', String(open));
-      if (open && samePath(parent.getAttribute('data-nav-path')) && window.scrollY > 4) scrollTopSmooth();
+      closeMenus(menu);
+      menu.pinned = !menu.pinned;
+      setMenuOpen(menu, menu.pinned);
     });
-    group.querySelectorAll('.g-sub a').forEach((link) => link.addEventListener('click', () => closeGroups(null)));
-    // زیرمنو لینک واقعی است؛ هیچ handler نباید جلوی انتقال به /projects/#... را بگیرد.
+    panel.addEventListener('click', (event) => {
+      if (event.target.closest('a')) setMenuOpen(menu, false);
+    });
     group.addEventListener('focusout', (event) => {
-      if (!group.contains(event.relatedTarget)) closeGroups(null);
+      if (!group.contains(event.relatedTarget)) setMenuOpen(menu, false);
     });
   });
+
   document.addEventListener('click', (event) => {
-    if (!event.target.closest || !event.target.closest('[data-nav-group]')) closeGroups(null);
+    if (!event.target.closest('[data-nav-group]')) closeMenus();
   });
   document.addEventListener('keydown', (event) => {
     if (event.key !== 'Escape') return;
-    const group = navGroups.find((item) => item.classList.contains('is-open'));
-    if (!group) return;
-    closeGroups(null);
-    if (group.contains(document.activeElement)) group.querySelector('[data-nav-parent]')?.focus();
+    const menu = menuGroups.find(({ group }) => group.classList.contains('is-open'));
+    if (!menu) return;
+    const restoreFocus = menu.panel.contains(document.activeElement);
+    setMenuOpen(menu, false);
+    if (restoreFocus) menu.trigger.focus();
+  });
+  window.addEventListener('resize', () => {
+    if (navToggle && !navToggle.getClientRects().length) closeNav();
+    menuGroups.forEach((menu) => {
+      if (!menu.trigger.getClientRects().length) setMenuOpen(menu, false);
+      else if (menu.group.classList.contains('is-open')) positionMenu(menu.panel);
+    });
   });
 
-  // موبایل: داخل پنل منو، «پروژه‌ها» مثل آکاردئون باز می‌شود.
-  document.querySelectorAll('[data-panel-group]').forEach((group) => {
+  mobileGroups.forEach((group) => {
     const parent = group.querySelector('[data-panel-parent]');
     const sub = group.querySelector('.g-panel-sub');
-    if (!parent || !sub) return;
     parent.addEventListener('click', (event) => {
-      // بار اول زیرمنو باز می‌شود؛ با کلیک دوباره، لینک واقعی صفحه پروژه‌ها اجرا می‌شود.
-      // اگر مقصد همین صفحه باشد، رفتار عادی مرورگر/اسکرول بالای صفحه حفظ می‌شود.
-      if (!sub.hidden) {
-        const targetUrl = parent.getAttribute('href');
-        if (targetUrl && targetUrl !== '#') {
-          closeNav();
-          return;
-        }
+      if (isModifiedClick(event)) return;
+      const target = parent.getAttribute('href');
+      if (!sub.hidden && target && target !== '#') {
+        closeNav();
+        return;
       }
       event.preventDefault();
-      const open = sub.hidden;
-      sub.hidden = !open;
-      group.classList.toggle('is-open', open);
-      parent.setAttribute('aria-expanded', String(open));
+      if (sub.hidden) mobileGroups.forEach((item) => setMobileGroup(item, item === group));
+      else setMobileGroup(group, false);
     });
   });
 
@@ -137,9 +181,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  window.addEventListener('scroll', () => {
-    document.querySelector('.g-header')?.classList.toggle('scrolled', window.scrollY > 16);
-  }, { passive: true });
+  const header = document.querySelector('.g-header');
+  const updateHeader = () => header?.classList.toggle('scrolled', window.scrollY > 16);
+  updateHeader();
+  window.addEventListener('scroll', updateHeader, { passive: true });
+  window.addEventListener('pageshow', updateHeader);
 
   document.querySelectorAll('.site-toast').forEach((toast) => {
     window.setTimeout(() => {

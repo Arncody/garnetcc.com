@@ -25,20 +25,12 @@ html[dir="ltr"] .g-nav,html[dir="ltr"] .g-cta,html[dir="ltr"] .g-panel{direction
 .g-toggle span{width:20px}
 .g-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
 .g-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
-/* پنل منو زیر دکمه‌ی منو (سمت راست) باز می‌شود */
-.g-panel{inset-inline-end:auto;inset-inline-start:auto;right:0;left:auto;width:min(300px,100%);gap:4px;padding:8px}
-.g-panel a,.g-panel .g-panel-btn{display:flex;align-items:center;gap:10px;min-height:42px;padding:0 14px;border-radius:12px;border:0;width:100%;
-  font:inherit;font-size:.82rem;color:#fff;background:rgba(255,255,255,.06);cursor:pointer;text-align:start;transition:background .2s ease}
-.g-panel a:hover,.g-panel .g-panel-btn:hover{background:rgba(255,255,255,.16)}
-.g-panel a.is-active{background:rgba(255,255,255,.18)}
-.g-panel .g-panel-lang{justify-content:center;font-weight:700;border:1px solid rgba(255,255,255,.22);margin-top:2px}
 @media(max-width:1020px){
   .g-nav{display:none}
   .g-bar{justify-content:space-between;min-height:54px;padding:6px 10px;border-radius:18px}
   .g-brand img{height:var(--logo-mobile,40px);max-width:min(170px,42vw)}
   .g-cta{min-height:36px;padding:0 12px;font-size:.7rem}
   .g-toggle{width:36px;height:36px}
-  .g-panel{width:min(320px,100%)}
 }
 @media(max-width:380px){.g-cta{padding:0 9px;gap:6px;font-size:.64rem}.g-cta .ic{width:14px;height:14px}.g-brand img{max-width:36vw}}
 
@@ -188,26 +180,10 @@ html[dir="ltr"] .pc-top,html[dir="ltr"] .pc-bottom{direction:ltr;text-align:left
 .g-nav .g-nav-parent{display:inline-flex;align-items:center;gap:6px}
 .g-chev{flex:0 0 auto;opacity:.85;transition:transform .25s ease}
 .g-nav-group.is-open .g-chev,.g-panel-group.is-open .g-chev{transform:rotate(180deg)}
-.g-nav-group.is-open>.g-nav-parent{color:#fff}
-.g-sub{position:absolute;top:100%;left:50%;z-index:5;min-width:220px;margin-top:22px;padding:8px;display:flex;flex-direction:column;gap:4px;border-radius:18px;
-  background:rgba(12,20,26,.9);border:1px solid rgba(255,255,255,.28);
-  backdrop-filter:blur(22px) saturate(140%);-webkit-backdrop-filter:blur(22px) saturate(140%);box-shadow:0 22px 60px rgba(0,0,0,.3);
-  opacity:0;visibility:hidden;transform:translate(-50%,6px);transition:opacity .2s ease,transform .2s ease,visibility .2s}
-.g-sub::before{content:"";position:absolute;inset-inline:0;top:-26px;height:26px}
-.g-nav-group.is-open>.g-sub{opacity:1;visibility:visible;transform:translate(-50%,0)}
-@media(hover:hover) and (pointer:fine){.g-nav-group:hover>.g-sub{opacity:1;visibility:visible;transform:translate(-50%,0)}}
-.g-nav .g-sub a{display:flex;align-items:center;min-height:42px;padding:0 16px;border-radius:12px;font-size:.82rem;color:#fff;background:transparent;white-space:nowrap}
-.g-nav .g-sub a::after{display:none}
-.g-nav .g-sub a:hover,.g-nav .g-sub a:focus-visible{background:rgba(255,255,255,.16);color:#fff}
-html[dir="rtl"] .g-sub{direction:rtl;text-align:right}
-html[dir="ltr"] .g-sub{direction:ltr;text-align:left}
-
 /* ---------- زیرمنوی «پروژه‌ها» (منوی موبایل: آکاردئون) ---------- */
 .g-panel-group{display:flex;flex-direction:column;gap:4px}
-.g-panel a.g-panel-parent{justify-content:space-between}
-.g-panel-sub{display:flex;flex-direction:column;gap:4px;padding-inline-start:14px}
+.g-panel-sub{display:flex;flex-direction:column;gap:4px}
 .g-panel-sub[hidden]{display:none}
-.g-panel .g-panel-sub a{min-height:38px;font-size:.78rem;background:rgba(255,255,255,.1)}
 
 /* ---------- صفحه‌ی اصلی: بخش «گارنت، در یک نگاه» هم‌رنگ «درباره گارنت»، بدون سایه‌ی کناری ---------- */
 .section-overview,.section.home-projects{min-height:0;background:transparent}
@@ -231,11 +207,8 @@ html[dir="ltr"] .g-sub{direction:ltr;text-align:left}
 .proj-row-body{display:flex;flex-direction:column;justify-content:center;gap:11px;min-width:0;padding:clamp(18px,2.6vw,32px)}
 .proj-row-top{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
 .proj-row-status{display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 13px;border-radius:999px;font-size:.7rem;font-weight:700;line-height:1;border:1.5px solid transparent}
-.proj-row-status i{width:8px;height:8px;border-radius:50%}
 .proj-row-status.ps-ongoing{color:#14804a;background:rgba(44,240,138,.12);border-color:rgba(44,200,120,.4)}
-.proj-row-status.ps-ongoing i{background:#2cf08a;box-shadow:0 0 9px rgba(44,240,138,.9)}
 .proj-row-status.ps-completed{color:#1f5f93;background:rgba(124,196,255,.16);border-color:rgba(100,170,230,.45)}
-.proj-row-status.ps-completed i{background:#7cc4ff;box-shadow:0 0 9px rgba(124,196,255,.9)}
 .proj-row-code{display:inline-flex;align-items:center;height:28px;padding:0 12px;border-radius:999px;font-size:.7rem;font-weight:700;color:#60727d;background:#f1f5f7}
 .proj-row-title{margin:0;font-size:clamp(1.15rem,2vw,1.6rem);line-height:1.55;font-weight:var(--card-weight,600);color:#0b2a3a}
 .proj-row-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;font-size:.78rem;line-height:1.7;color:#60727d}
@@ -246,12 +219,9 @@ html[dir="ltr"] .g-sub{direction:ltr;text-align:left}
 .proj-row-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-top:4px}
 .proj-row-note{font-size:.74rem;color:#b95739;background:rgba(255,110,66,.1);padding:3px 12px;border-radius:999px;line-height:1.8}
 .proj-row-btn{display:inline-flex;align-items:center;gap:10px;height:42px;padding-inline:20px 5px;border-radius:999px;font-size:.78rem;font-weight:700;color:#fff;background:#0b2a3a;margin-inline-start:auto;transition:background .25s ease,transform .25s ease}
-.proj-row-btn em{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:#fff;color:#0b2a3a;font-style:normal}
-.proj-row-btn em svg{color:#0b2a3a;stroke:#0b2a3a}
 .proj-row:hover .proj-row-btn{background:#004E72}
 html[dir="rtl"] .proj-row{direction:rtl;text-align:right}
 html[dir="ltr"] .proj-row{direction:ltr;text-align:left}
-html[dir="rtl"] .proj-row-btn em svg{transform:scaleX(-1)}
 @media(max-width:760px){
   .proj-row{grid-template-columns:1fr;border-radius:22px}
   .proj-row-media{min-height:0;aspect-ratio:16/10}
@@ -312,6 +282,5 @@ html[dir="rtl"] .proj-row-btn em svg{transform:scaleX(-1)}
 .proj-rail::after,
 .proj-rail-track::before,
 .proj-rail-track::after { border: 0 !important; outline: 0 !important; box-shadow: none !important; }
-/* The blue line in the status chip is also removed; its status dot remains. */
+/* Keep project state badges text-only. */
 .mini-project.project-preview .pc-status { border: 0 !important; box-shadow: none !important; }
-.mini-project.project-preview .pc-status i { box-shadow: none !important; }

@@ -7,7 +7,7 @@
   </div>
   <div class="proj-row-body">
     <div class="proj-row-top">
-      <span class="proj-row-status ps-{{ project.status }}">{% if project.status == "completed" %}{% if is_en %}Completed{% else %}تکمیل شده  {% endif %}{% else %}{% if is_en %}In progress{% else %}در حال اجرا{% endif %}{% endif %}</span>
+      <span class="proj-row-status ps-{{ project.status }}">{% if project.status == "completed" %}{% if is_en %}Completed{% else %}تکمیل شده{% endif %}{% else %}{% if is_en %}In progress{% else %}در حال اجرا{% endif %}{% endif %}</span>
       {% if project.code %}<span class="proj-row-code">{{ project.code }}</span>{% endif %}
     </div>
     <h3 class="proj-row-title">{% if is_en %}{{ project.title_en|default:project.title }}{% else %}{{ project.title }}{% endif %}</h3>
@@ -18,7 +18,7 @@
     {% if project.short_description or project.short_description_en %}<p class="proj-row-desc">{% if is_en %}{{ project.short_description_en|default:project.short_description }}{% else %}{{ project.short_description }}{% endif %}</p>{% endif %}
     <div class="proj-row-foot">
       {% if project.status_note or project.status_note_en %}<span class="proj-row-note">{% if is_en %}{{ project.status_note_en|default:project.status_note }}{% else %}{{ project.status_note }}{% endif %}</span>{% endif %}
-      <span class="proj-row-btn"><span>{% if is_en %}View project{% else %}مشاهده پروژه{% endif %}</span><em aria-hidden="true">{% icon "arrow-up-right" 15 %}</em></span>
+      {% include "website/_project_view_action.html" with action_class="proj-row-btn" %}
     </div>
   </div>
 </a>

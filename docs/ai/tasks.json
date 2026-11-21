@@ -203,5 +203,30 @@
       "2026-11-21: 50 Chromium layout checks in FA/EN passed; keyboard menus, footer anchors, header contrast, and both forms verified with local fixture data. See CHANGE_LOG.md."
     ],
     "rollback": "Revert the GNT-009 commit to the GNT-008 checkpoint"
+  },
+  {
+    "id": "GNT-010",
+    "priority": "P1",
+    "title": "Resolve header, home controls, project card and footer visual regressions",
+    "status": "done",
+    "depends_on": [
+      "GNT-009"
+    ],
+    "modules": [
+      "M01",
+      "M02",
+      "M05",
+      "M07"
+    ],
+    "acceptance": [
+      "One pale glass header before and after scroll, with a subtle opacity increase and no language link in the header",
+      "Menus align with their triggers in FA/EN and work with pointer, touch and keyboard",
+      "Borderless home controls, consistent project links, text-only status, white footer logo and readable newsletter control",
+      "Verify the shared layouts, links and forms on local fixture data"
+    ],
+    "verification_evidence": [
+      "2026-11-21: 70 local Chromium combinations passed; desktop/mobile menus, pointer/touch/keyboard, contrast, footer language switching, purchase and newsletter verified. See CHANGE_LOG.md."
+    ],
+    "rollback": "Revert the GNT-010 commit to the GNT-009 checkpoint; no database rollback required"
   }
 ]

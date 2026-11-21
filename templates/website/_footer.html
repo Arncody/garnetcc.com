@@ -7,7 +7,7 @@
           {% if site_settings.logo_light %}
             <img src="{{ site_settings.logo_light.url }}" alt="{{ site_settings.brand_name }}" class="footer-wordmark">
           {% elif site_settings.logo %}
-            <img src="{{ site_settings.logo.url }}" alt="{{ site_settings.brand_name }}" class="footer-wordmark footer-logo-fallback">
+            <img src="{{ site_settings.logo.url }}" alt="{{ site_settings.brand_name }}" class="footer-wordmark">
           {% else %}
             <span class="footer-brand-name">{{ site_settings.brand_name }}</span>
           {% endif %}
@@ -59,12 +59,14 @@
           <label class="sr-only" for="newsletter-email">{% if is_en %}Email address{% else %}آدرس ایمیل{% endif %}</label>
           <input id="newsletter-email" type="email" name="email" dir="ltr" placeholder="{% if is_en %}Email address{% else %}آدرس ایمیل{% endif %}" autocomplete="email" inputmode="email" maxlength="254" required>
           <input type="text" name="website" class="newsletter-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
-          <button type="submit">{% if is_en %}Subscribe{% else %}عضویت{% endif %}</button>
+          <button type="submit">
+            {% if is_en %}Subscribe {% icon "arrow-right" 16 %}{% else %}عضویت {% icon "arrow-left" 16 %}{% endif %}
+          </button>
         </form>
         {% if site_settings.instagram_url or site_settings.linkedin_url %}
           <div class="footer-social-links">
-            {% if site_settings.instagram_url %}<a href="{{ site_settings.instagram_url }}" target="_blank" rel="noopener" aria-label="Instagram">{% icon "instagram" 22 %}</a>{% endif %}
-            {% if site_settings.linkedin_url %}<a href="{{ site_settings.linkedin_url }}" target="_blank" rel="noopener" aria-label="LinkedIn">{% icon "linkedin" 22 %}</a>{% endif %}
+            {% if site_settings.instagram_url %}<a href="{{ site_settings.instagram_url }}" target="_blank" rel="noopener" aria-label="Instagram">{% icon "instagram" 28 %}</a>{% endif %}
+            {% if site_settings.linkedin_url %}<a href="{{ site_settings.linkedin_url }}" target="_blank" rel="noopener" aria-label="LinkedIn">{% icon "linkedin" 28 %}</a>{% endif %}
           </div>
         {% endif %}
       </div>
@@ -72,7 +74,10 @@
 
     <div class="footer-bottom">
       <small>© {% now "Y" %} {{ site_settings.brand_name }}. {% if is_en %}All rights reserved.{% else %}تمامی حقوق محفوظ است.{% endif %}</small>
-      <a class="footer-top-link" href="#main-content">{% icon "arrow-up" 16 %} {% if is_en %}Back to top{% else %}بازگشت به بالا{% endif %}</a>
+      <div class="footer-bottom-actions">
+        <a class="footer-language" href="{% url 'website:set_language' %}?lang={% if is_en %}fa{% else %}en{% endif %}" lang="{% if is_en %}fa{% else %}en{% endif %}">{% if is_en %}فارسی{% else %}English{% endif %}</a>
+        <a class="footer-top-link" href="#main-content">{% icon "arrow-up" 16 %} {% if is_en %}Back to top{% else %}بازگشت به بالا{% endif %}</a>
+      </div>
     </div>
   </div>
 </footer>

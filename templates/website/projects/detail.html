@@ -128,7 +128,7 @@
       {% if project.short_description or project.short_description_en %}<p class="pd-lead">{% if is_en %}{{ project.short_description_en|default:project.short_description }}{% else %}{{ project.short_description }}{% endif %}</p>{% endif %}
       <ul class="pd-chips">
         {% if project.code %}<li><span>{% if is_en %}Code{% else %}کد{% endif %}</span><strong>{{ project.code }}</strong></li>{% endif %}
-        <li class="pd-chip-status pd-st-{{ project.status }}"><span>{% if is_en %}Status{% else %}وضعیت{% endif %}</span><strong>{% if is_en %}{% if project.status == "completed" %}Completed{% else %}In progress{% endif %}{% else %}{{ project.get_status_display }}{% endif %}</strong></li>
+        <li class="pd-chip-status pd-st-{{ project.status }}"><strong>{% if is_en %}{% if project.status == "completed" %}Completed{% else %}In progress{% endif %}{% else %}{% if project.status == "completed" %}تکمیل شده{% else %}در حال اجرا{% endif %}{% endif %}</strong></li>
         {% if project.year %}<li><span>{% if is_en %}Year{% else %}سال{% endif %}</span><strong>{{ project.year }}</strong></li>{% endif %}
       </ul>
       <div class="pd-actions">
