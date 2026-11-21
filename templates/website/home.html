@@ -11,6 +11,7 @@
   {% else %}
     <div class="hero-backdrop hero-fallback"></div>
   {% endif %}
+  <div class="hero-readability" aria-hidden="true"></div>
   <div class="container hero-inner">
     <div class="hero-copy">
       <h1>{% if is_en %}{{ hero.title_en|default:hero.title }}{% else %}{{ hero.title }}{% endif %}</h1>

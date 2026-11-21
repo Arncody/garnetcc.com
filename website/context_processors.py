@@ -1,6 +1,28 @@
 from .models import SiteSettings, SiteTheme, SiteTexts, CompanyCatalog, MenuItem
 from .forms import ConsultationForm
-from .theme_tokens import build_theme_css
+from .theme_tokens import PALETTE, build_theme_css, normalize_color
+
+
+THEME_COLOR_FIELDS = (
+    "background", "surface", "primary", "secondary", "accent", "accent_hover",
+    "text", "muted", "white", "dark", "border", "glass", "glass_dark", "overlay",
+    "header_background", "header_text", "header_muted", "header_cta_background",
+    "header_cta_text", "header_cta_border", "menu_line_color",
+    "primary_button_background", "primary_button_text", "primary_button_hover",
+    "glass_button_background", "glass_button_border", "modal_background",
+    "modal_border", "footer_background", "footer_text",
+)
+
+
+def _theme_color_properties(theme):
+    """Publish explicit SiteTheme colors; let the design system supply historical defaults."""
+    properties = {}
+    for field in THEME_COLOR_FIELDS:
+        value = normalize_color(getattr(theme, field))
+        default = normalize_color(SiteTheme._meta.get_field(field).get_default())
+        if value is not None and value != default:
+            properties[field.replace("_", "-")] = value
+    return properties
 
 
 def _menu_items(request, lang):
@@ -70,11 +92,15 @@ def site_settings(request):
     texts = SiteTexts.load().resolve(lang)
     settings_obj = SiteSettings.load()
     theme = SiteTheme.load()
+    colors = _theme_color_properties(theme)
     return {
         "site_settings": settings_obj,
         "rail_home": settings_obj.projects_carousel_enabled,
         "rail_list": settings_obj.projects_carousel_enabled and settings_obj.projects_carousel_on_list,
         "site_theme": theme,
+        "theme_color_properties": colors,
+        "theme_background": colors.get("background", PALETTE["off-white"]),
+        "theme_palette": PALETTE,
         "theme_css": build_theme_css(theme.color_overrides),
         "catalog": CompanyCatalog.objects.filter(is_active=True).first(),
         "lang": lang,

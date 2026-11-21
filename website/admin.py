@@ -16,7 +16,7 @@ from django import forms
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
-from .theme_tokens import GROUPS, ALL_TOKENS, normalize_color, clean_overrides
+from .theme_tokens import GROUPS, ALL_TOKENS, RETIRED_DECORATIONS, normalize_color, clean_overrides
 
 
 class ColorTextInput(forms.TextInput):
@@ -57,12 +57,13 @@ class ColorOverrideWidget(forms.Widget):
             '<div class="garnet-color" data-default="{default}">'
             '<span class="garnet-color-swatch" aria-hidden="true"><i style="background:{shown}"></i></span>'
             '<input type="text" name="{name}" id="{id}" value="{value}" class="garnet-color-text vTextField" dir="ltr" '
-            'maxlength="40" autocomplete="off" spellcheck="false" placeholder="پیش‌فرض: {default}">'
-            '<input type="color" class="garnet-color-picker" value="{picker}" aria-label="انتخاب رنگ" tabindex="-1">'
-            '<button type="button" class="garnet-color-reset" title="پاک کردن و بازگشت به رنگ پیش‌فرض">↺ پیش‌فرض</button>'
+            'maxlength="40" autocomplete="off" spellcheck="false" placeholder="پیش‌فرض: {default}" {disabled}>'
+            '<input type="color" class="garnet-color-picker" value="{picker}" aria-label="انتخاب رنگ" tabindex="-1" {disabled}>'
+            '<button type="button" class="garnet-color-reset" title="پاک کردن و بازگشت به رنگ پیش‌فرض" {disabled}>↺ پیش‌فرض</button>'
             '</div>',
             default=self.default, shown=shown, name=name, id=field_id, value=value,
             picker=_picker_hex(value or self.default),
+            disabled="disabled" if attrs.get("disabled") else "",
         )
 
     def value_from_datadict(self, data, files, name):
@@ -117,6 +118,9 @@ SiteThemeForm = type(SiteThemeFormBase)(
         "__module__": __name__,
         **{token.field_name: forms.CharField(
             label=token.label, required=False, max_length=40,
+            disabled=token.key in RETIRED_DECORATIONS,
+            help_text="مقدار قبلی حفظ می‌شود. این تزئین در پوستهٔ جدید نمایش داده نمی‌شود."
+            if token.key in RETIRED_DECORATIONS else "",
             widget=ColorOverrideWidget(default=token.default),
         )
         for token in ALL_TOKENS},
@@ -130,7 +134,7 @@ class SiteThemeAdmin(admin.ModelAdmin):
     base_fieldsets = (
         ("🎨 رنگ‌های پایه سایت (پالت اصلی)", {"classes": ("collapse",), "fields": (("background", "surface"), ("primary", "secondary"), ("accent", "accent_hover"), ("text", "muted"), ("white", "dark"), ("border",))}),
         ("🪟 شیشه، شفافیت و عمق", {"classes": ("collapse",), "fields": ("glass", "glass_dark", "overlay", "shadow", ("radius", "glass_blur"))}),
-        ("● دکمه‌های اصلی (نارنجی) و شیشه‌ای", {"classes": ("collapse",), "fields": (("primary_button_background", "primary_button_text"), ("primary_button_hover",), ("glass_button_background", "glass_button_border"))}),
+        ("دکمه‌های اصلی و ثانویه", {"classes": ("collapse",), "fields": (("primary_button_background", "primary_button_text"), ("primary_button_hover",), ("glass_button_background", "glass_button_border"))}),
         ("▤ پوشش روی تصویر Hero", {"classes": ("collapse",), "fields": (("hero_overlay",),)}),
         ("🖼️ اندازه لوگو", {"classes": ("collapse",), "fields": (("logo_width_desktop", "logo_width_mobile"),)}),
         ("Aa تایپوگرافی و وزن فونت", {"classes": ("collapse",), "fields": (("body_weight", "heading_weight"), ("hero_weight", "section_weight"), ("card_weight", "nav_weight"), ("button_weight", "label_weight"), ("small_weight",)), "description": "وزن‌های قابل استفاده فونت IranSans: 300، 400، 500، 600 و 700."}),

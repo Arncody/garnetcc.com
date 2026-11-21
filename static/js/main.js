@@ -21,7 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (nav.classList.contains('open') && !nav.contains(event.target) && !navToggle.contains(event.target)) closeNav();
     });
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') closeNav();
+      if (event.key === 'Escape' && nav.classList.contains('open')) {
+        const focusWasInMenu = nav.contains(document.activeElement);
+        closeNav();
+        if (focusWasInMenu) navToggle.focus();
+      }
     });
   }
 
@@ -33,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!target) return;
       event.preventDefault();
       target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+      if (a.classList.contains('skip-link')) target.focus({ preventScroll: true });
       closeNav();
     });
   });
@@ -78,7 +83,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!event.target.closest || !event.target.closest('[data-nav-group]')) closeGroups(null);
   });
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') closeGroups(null);
+    if (event.key !== 'Escape') return;
+    const group = navGroups.find((item) => item.classList.contains('is-open'));
+    if (!group) return;
+    closeGroups(null);
+    if (group.contains(document.activeElement)) group.querySelector('[data-nav-parent]')?.focus();
   });
 
   // موبایل: داخل پنل منو، «پروژه‌ها» مثل آکاردئون باز می‌شود.
@@ -173,8 +182,8 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   const openModal = () => {
     if (isOpen) return;
+    previousFocus = nav?.contains(document.activeElement) ? navToggle : document.activeElement;
     closeNav();
-    previousFocus = document.activeElement;
     previousOverflow = document.body.style.overflow;
     previousHtmlOverflow = document.documentElement.style.overflow;
     setModalState(true);

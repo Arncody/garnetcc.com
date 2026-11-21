@@ -6,8 +6,8 @@
 /* ---------- آیکون‌ها ---------- */
 .ic{display:block;flex:0 0 auto}
 
-/* ---------- هدر: لوگو چپ، منو راست (در هر دو زبان) ---------- */
-.g-bar{direction:ltr;gap:clamp(10px,2vw,28px);min-height:60px;padding:6px clamp(12px,1.8vw,22px);border-radius:22px}
+/* ---------- ساختار هدر و منو ---------- */
+.g-bar{gap:clamp(10px,2vw,28px);min-height:60px;padding:6px clamp(12px,1.8vw,22px);border-radius:22px}
 .g-brand img{height:var(--logo-desktop,48px);max-width:min(220px,40vw)}
 .g-nav{flex:1 1 auto;justify-content:center;margin-inline:0;gap:clamp(14px,2vw,30px);min-width:0}
 html[dir="rtl"] .g-nav,html[dir="rtl"] .g-cta,html[dir="rtl"] .g-panel{direction:rtl}
@@ -42,19 +42,6 @@ html[dir="ltr"] .g-nav,html[dir="ltr"] .g-cta,html[dir="ltr"] .g-panel{direction
 }
 @media(max-width:380px){.g-cta{padding:0 9px;gap:6px;font-size:.64rem}.g-cta .ic{width:14px;height:14px}.g-brand img{max-width:36vw}}
 
-/* ---------- Hero: دکمه‌های استاندارد و متناسب با دستگاه ---------- */
-.hero .hero-actions.hero-quick-actions{display:flex!important;flex-wrap:wrap;justify-content:flex-start;gap:10px!important;margin-top:22px!important;width:auto!important}
-.hero .hero-actions.hero-quick-actions .hero-glass-action{
-  width:auto!important;min-width:0!important;flex:0 0 auto!important;height:auto;min-height:42px!important;padding:0 20px!important;
-  border-radius:12px!important;font-size:.8rem!important;font-weight:600!important;line-height:1!important;white-space:nowrap!important}
-@media(max-width:900px){
-  .hero .hero-actions.hero-quick-actions{gap:8px!important;margin-top:18px!important}
-  .hero .hero-actions.hero-quick-actions .hero-glass-action{min-height:38px!important;padding:0 16px!important;font-size:.74rem!important;border-radius:11px!important}
-}
-@media(max-width:520px){
-  .hero .hero-actions.hero-quick-actions{gap:6px!important}
-  .hero .hero-actions.hero-quick-actions .hero-glass-action{min-height:34px!important;padding:0 12px!important;font-size:.68rem!important;border-radius:10px!important}
-}
 .hero-mini-links{display:none!important}
 
 /* ---------- برچسب‌های ریز نارنجی حذف شده‌اند ---------- */
@@ -201,7 +188,7 @@ html[dir="rtl"] .footer-brand{align-items:flex-end}
 @media(max-width:560px){.footer-grid-reference{grid-template-columns:1fr 1fr;gap:22px 18px;}.footer-grid-reference .footer-newsletter-col{grid-column:1/-1;}.footer-grid-reference .footer-logo-area{grid-column:1/-1;}.newsletter-form{width:100%;}.footer-wordmark{width:var(--logo-mobile,145px);max-width:145px;}.floating-call{width:48px;height:48px;inset-inline-end:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));}}
 /* (removed) a reduced-motion rule here forced transform:none on the track, which froze auto-scroll AND manual dragging */
 
-.site-footer{position:relative;isolation:isolate;background:#000!important;background-image:none!important;border-top:0!important;}
+.site-footer{position:relative;isolation:isolate;background:var(--footer-bg)!important;background-image:none!important;border-top:0!important;}
 
 .footer-logo-inline{margin:0 0 18px!important;}
 
@@ -325,7 +312,7 @@ html[dir="rtl"] .proj-row-btn em svg{transform:scaleX(-1)}
 
 
 /* Garnet polish 2026-10-26: unify home sections and keep project previews clean. */
-:root{--garnet-warm-bg:#F6F3ED;--garnet-charcoal:#202B2D;--garnet-bronze:#B78362;--garnet-line:#DCD6CB}
+:root{--garnet-warm-bg:var(--theme-bg);--garnet-charcoal:var(--theme-primary);--garnet-bronze:var(--theme-secondary);--garnet-line:var(--theme-border)}
 .section.home-projects,.section.about-lux-section,.section.projects-page{background:var(--garnet-warm-bg)!important}
 .section.home-projects{padding-block:clamp(34px,5vw,64px)}
 .home-projects .mini-project.project-preview,.home-projects .mini-project.project-preview:hover,
@@ -334,7 +321,7 @@ html[dir="rtl"] .proj-row-btn em svg{transform:scaleX(-1)}
 .about-glass{box-shadow:none!important;border:1px solid var(--garnet-line)}
 .about-glass::before{background:rgba(255,255,255,.88)!important}
 .about-glass .about-bg{filter:none!important;opacity:.08}
-.site-footer{background:#000!important;background-image:none!important;color:#fff}
+
 .projects-page .proj-list{display:grid;gap:18px}
 .projects-page .proj-row{background:#fff;border:1px solid var(--garnet-line);box-shadow:none;transition:border-color .2s ease,transform .2s ease}
 .projects-page .proj-row:hover{box-shadow:none;border-color:var(--garnet-bronze);transform:translateY(-2px)}
@@ -346,68 +333,19 @@ html[dir="rtl"] .proj-row-btn em svg{transform:scaleX(-1)}
 .projects-block{scroll-margin-top:105px}
 .g-header .g-cta .ic,.g-header .g-cta svg[data-decorative="true"]{display:none!important}
 /* Garnet bug-fix pass 2026-10-26b: consistent project palette and no preview shadows. */
-.section.home-projects,.section.about-lux-section,.section.projects-page{background:#F6F3ED!important}
+.section.home-projects,.section.about-lux-section,.section.projects-page{background:var(--theme-bg)!important}
 .home-projects .mini-project.project-preview,
 .home-projects .mini-project.project-preview:hover,
 .home-projects .proj-rail .mini-project.project-preview,
 .home-projects .proj-rail .mini-project.project-preview:hover{box-shadow:none!important;filter:none!important}
-.home-projects .mini-project.project-preview{background-color:#F6F3ED}
-.site-footer{background:#000!important;background-image:none!important;color:#fff!important}
+.home-projects .mini-project.project-preview{background-color:var(--theme-bg)}
+
 
 
 /* =========================================================
    GARNET UI FIX 2026-11-18 — final overrides
    Loaded after theme-generated CSS in base.html.
    ========================================================= */
-
-/* Header: clear over the hero, then soft white glass after scrolling. */
-.g-header .g-bar {
-  background: transparent !important;
-  background-image: none !important;
-  border: 1px solid transparent !important;
-  box-shadow: none !important;
-  -webkit-backdrop-filter: none !important;
-  backdrop-filter: none !important;
-  transition: background .28s ease, border-color .28s ease, box-shadow .28s ease,
-              -webkit-backdrop-filter .28s ease, backdrop-filter .28s ease;
-}
-.g-header.scrolled .g-bar {
-  background: rgba(255,255,255,.91) !important;
-  border: 1px solid rgba(25,37,43,.12) !important;
-  box-shadow: 0 5px 22px rgba(15,25,30,.10) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(135%) !important;
-  backdrop-filter: blur(16px) saturate(135%) !important;
-}
-.g-header.scrolled .g-nav a,
-.g-header.scrolled .g-nav .g-nav-btn,
-.g-header.scrolled .g-nav a:hover,
-.g-header.scrolled .g-nav a.is-active,
-.g-header.scrolled .g-nav .g-nav-btn:hover,
-.g-header.scrolled .g-brand .brand-text {
-  color: #243238 !important;
-}
-.g-header.scrolled .g-nav a::after,
-.g-header.scrolled .g-nav .g-nav-btn::after { background: #243238 !important; }
-.g-header.scrolled .g-brand img { filter: brightness(0) saturate(100%) !important; }
-.g-header.scrolled .g-toggle {
-  background: rgba(28,42,49,.045) !important;
-  border: 1px solid rgba(28,42,49,.16) !important;
-}
-.g-header.scrolled .g-toggle span { background: #243238 !important; }
-.g-header.scrolled .g-panel {
-  background: rgba(255,255,255,.98) !important;
-  border-color: rgba(25,37,43,.13) !important;
-  box-shadow: 0 14px 34px rgba(15,25,30,.12) !important;
-}
-.g-header.scrolled .g-panel a,
-.g-header.scrolled .g-panel .g-panel-btn { color: #243238 !important; background: rgba(20,35,42,.035) !important; }
-.g-header.scrolled .g-panel a:hover,
-.g-header.scrolled .g-panel .g-panel-btn:hover { background: rgba(20,35,42,.09) !important; }
-.g-header.scrolled .g-panel .g-panel-lang,
-.g-header.scrolled .g-sub { border-color: rgba(25,37,43,.14) !important; }
-.g-header.scrolled .g-sub { background: rgba(255,255,255,.98) !important; box-shadow: 0 14px 34px rgba(15,25,30,.12) !important; }
-.g-header.scrolled .g-nav .g-sub a { color: #243238 !important; }
-.g-header.scrolled .g-nav .g-sub a:hover { background: rgba(20,35,42,.07) !important; color: #17252b !important; }
 
 /* Preview cards: remove thin outlines and blue edge effects, not image content. */
 .mini-project.project-preview,
@@ -426,64 +364,3 @@ html[dir="rtl"] .proj-row-btn em svg{transform:scaleX(-1)}
 /* The blue line in the status chip is also removed; its status dot remains. */
 .mini-project.project-preview .pc-status { border: 0 !important; box-shadow: none !important; }
 .mini-project.project-preview .pc-status i { box-shadow: none !important; }
-
-/* Remove elevation from secondary controls only. */
-.btn:not(.btn-primary):not(.pd-cta),
-.button:not(.btn-primary),
-.btn-glass,
-.btn-minimal,
-.pd-btn-glass,
-.pd-back,
-.pd-related-all,
-.pd-actions .pd-btn-catalog,
-.pc-view,
-.pc-view em,
-.proj-row-btn,
-.more-btn,
-.projects-tabs a,
-.hero .hero-glass-action,
-.all-projects-btn {
-  box-shadow: none !important;
-}
-/* Retain the requested shadows on the three primary actions. */
-.g-header .g-cta { box-shadow: 0 7px 18px rgba(180,83,46,.24) !important; }
-.pd-btn.pd-btn-primary { box-shadow: 0 7px 18px rgba(150,80,45,.25) !important; }
-.pd-aside .pd-cta { box-shadow: 0 7px 18px rgba(150,80,45,.23) !important; }
-
-/* Floating phone: charcoal button and matching pulse. */
-.floating-call {
-  color: #fff !important;
-  background: linear-gradient(145deg,#343d42,#111719) !important;
-  border: 1px solid rgba(255,255,255,.22) !important;
-  box-shadow: 0 7px 20px rgba(10,16,18,.28) !important;
-  -webkit-backdrop-filter: none !important;
-  backdrop-filter: none !important;
-}
-.floating-call::before {
-  background: rgba(39,48,53,.42) !important;
-  animation: garnetCallPulse 2.4s ease-out infinite !important;
-}
-@keyframes garnetCallPulse {
-  0% { transform: scale(.92); opacity: .55; }
-  75%,100% { transform: scale(1.65); opacity: 0; }
-}
-
-/* Responsive header spacing for narrow phones. */
-@media (max-width:1020px) {
-  .g-header { padding-top: max(7px, env(safe-area-inset-top)); }
-  .g-wrap { width: calc(100% - 20px); }
-  .g-bar { min-width: 0; }
-  .g-brand { min-width: 0; max-width: 44%; }
-  .g-brand img { max-width: 100%; height: var(--logo-mobile,40px); }
-  .g-actions { flex: 0 0 auto; }
-}
-@media (max-width:380px) {
-  .g-wrap { width: calc(100% - 14px); }
-  .g-bar { gap: 7px; padding-inline: 8px; }
-  .g-brand { max-width: 39%; }
-  .g-cta { padding-inline: 8px !important; font-size: .62rem !important; }
-  .g-toggle { width: 34px; height: 34px; }
-}
-@media (prefers-reduced-motion:reduce) {
-  .floating-call::before { animation: none !important; display: none !important; }
-}
