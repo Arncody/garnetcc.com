@@ -1,0 +1,207 @@
+[
+  {
+    "id": "GNT-000",
+    "priority": "P0",
+    "title": "Safe archive and secret-data inventory",
+    "status": "done",
+    "modules": [
+      "M10",
+      "M08"
+    ],
+    "acceptance": [
+      "Inventory shared secrets and database files",
+      "Document safe packaging and exposure/rotation decisions"
+    ],
+    "verification_evidence": [
+      "2026-11-21: See prerequisite evidence and limitations in docs/ai/CHANGE_LOG.md."
+    ],
+    "rollback": "Documentation-only task; revert doc commit"
+  },
+  {
+    "id": "GNT-001",
+    "priority": "P0",
+    "title": "Reproducible technical and functional baseline",
+    "status": "done",
+    "modules": [
+      "M01",
+      "M02",
+      "M03",
+      "M04",
+      "M05",
+      "M10"
+    ],
+    "acceptance": [
+      "Run and record Django checks",
+      "Record smoke results and test environment",
+      "Capture actual baseline and limitations"
+    ],
+    "verification_evidence": [
+      "2026-11-21: See prerequisite evidence and limitations in docs/ai/CHANGE_LOG.md."
+    ],
+    "rollback": "Define during analysis; restore Git commit and backup if required",
+    "depends_on": [
+      "GNT-000"
+    ]
+  },
+  {
+    "id": "GNT-002",
+    "priority": "P0",
+    "title": "Technology-neutral behavior and data contracts",
+    "status": "backlog",
+    "modules": [
+      "M01",
+      "M02",
+      "M03",
+      "M04",
+      "M05",
+      "M09"
+    ],
+    "acceptance": [
+      "Document observed behavior for core routes/forms",
+      "Define data, URL and validation contracts"
+    ],
+    "verification_evidence": [],
+    "rollback": "Documentation-only task; revert doc commit"
+  },
+  {
+    "id": "GNT-003",
+    "priority": "P1",
+    "title": "Frontend CSS/JS review with measurements",
+    "status": "done",
+    "modules": [
+      "M01",
+      "M07"
+    ],
+    "acceptance": [
+      "Produce evidence-based findings and prioritized actions",
+      "Record scope, risks and verification evidence"
+    ],
+    "verification_evidence": [
+      "2026-11-21: See prerequisite evidence and limitations in docs/ai/CHANGE_LOG.md."
+    ],
+    "rollback": "Define during analysis; restore Git commit and backup if required",
+    "depends_on": [
+      "GNT-001"
+    ]
+  },
+  {
+    "id": "GNT-004",
+    "priority": "P1",
+    "title": "Profile ORM queries and cache behavior",
+    "status": "backlog",
+    "modules": [
+      "M01",
+      "M02",
+      "M03",
+      "M10"
+    ],
+    "acceptance": [
+      "Produce evidence-based findings and prioritized actions",
+      "Record scope, risks and verification evidence"
+    ],
+    "verification_evidence": [],
+    "rollback": "Define during analysis; restore Git commit and backup if required"
+  },
+  {
+    "id": "GNT-005",
+    "priority": "P1",
+    "title": "Security and protected media review",
+    "status": "backlog",
+    "modules": [
+      "M08",
+      "M10"
+    ],
+    "acceptance": [
+      "Produce evidence-based findings and prioritized actions",
+      "Record scope, risks and verification evidence",
+      "Verify the historical archive and upstream history when available; record exposure and rotation decision without copying secrets"
+    ],
+    "verification_evidence": [],
+    "rollback": "Define during analysis; restore Git commit and backup if required"
+  },
+  {
+    "id": "GNT-006",
+    "priority": "P1",
+    "title": "SEO and bilingual UI validation",
+    "status": "backlog",
+    "modules": [
+      "M03",
+      "M07",
+      "M09"
+    ],
+    "acceptance": [
+      "Produce evidence-based findings and prioritized actions",
+      "Record scope, risks and verification evidence"
+    ],
+    "verification_evidence": [],
+    "rollback": "Define during analysis; restore Git commit and backup if required"
+  },
+  {
+    "id": "GNT-007",
+    "priority": "P2",
+    "title": "Replacement-readiness tradeoff analysis",
+    "status": "backlog",
+    "modules": [
+      "M01",
+      "M06",
+      "M10"
+    ],
+    "acceptance": [
+      "Produce evidence-based findings and prioritized actions",
+      "Record scope, risks and verification evidence"
+    ],
+    "verification_evidence": [],
+    "rollback": "Documentation-only task; revert doc commit"
+  },
+  {
+    "id": "GNT-008",
+    "priority": "P1",
+    "title": "Phase 2 monochrome design system and shared components",
+    "status": "done",
+    "depends_on": [
+      "GNT-000",
+      "GNT-001",
+      "GNT-003"
+    ],
+    "modules": [
+      "M01",
+      "M02",
+      "M03",
+      "M04",
+      "M05",
+      "M07"
+    ],
+    "acceptance": [
+      "Single monochrome palette integrated with SiteTheme and no schema change",
+      "Readable borderless glass header, accessible shared controls, typography and layout, basic footer corrections in FA/EN",
+      "Verify five public page types at five widths, keyboard navigation, consultation and newsletter with local data"
+    ],
+    "verification_evidence": [
+      "2026-11-21: Chromium 50/50 matrix; keyboard navigation/focus, header contrast, consultation, newsletter duplicate handling and SiteTheme compatibility verified locally. Django check and collectstatic passed. See CHANGE_LOG.md for test scope and remaining baseline migration drift."
+    ],
+    "rollback": "Revert the Phase 2 patch to the complete ZIP checkpoint; no database rollback required"
+  },
+  {
+    "id": "GNT-009",
+    "priority": "P2",
+    "title": "Refine the shared header and footer",
+    "status": "done",
+    "depends_on": [
+      "GNT-008"
+    ],
+    "modules": [
+      "M01",
+      "M05",
+      "M07"
+    ],
+    "acceptance": [
+      "Full-width translucent header with legible navigation on light and dark pages",
+      "Reference footer structure with existing brand, destinations, and purchase form, without WhatsApp or consultation CTA",
+      "Verify both languages at 320, 390, 768, 1024 and 1440px, keyboard navigation, and existing form behavior"
+    ],
+    "verification_evidence": [
+      "2026-11-21: 50 Chromium layout checks in FA/EN passed; keyboard menus, footer anchors, header contrast, and both forms verified with local fixture data. See CHANGE_LOG.md."
+    ],
+    "rollback": "Revert the GNT-009 commit to the GNT-008 checkpoint"
+  }
+]

@@ -1,0 +1,78 @@
+{% load site_icons %}
+<footer class="site-footer" id="contact">
+  <div class="container">
+    <div class="footer-intro">
+      <div class="footer-brand">
+        <a href="{% url 'website:home' %}" class="footer-logo-link">
+          {% if site_settings.logo_light %}
+            <img src="{{ site_settings.logo_light.url }}" alt="{{ site_settings.brand_name }}" class="footer-wordmark">
+          {% elif site_settings.logo %}
+            <img src="{{ site_settings.logo.url }}" alt="{{ site_settings.brand_name }}" class="footer-wordmark footer-logo-fallback">
+          {% else %}
+            <span class="footer-brand-name">{{ site_settings.brand_name }}</span>
+          {% endif %}
+        </a>
+        {% if is_en %}
+          {% if site_settings.tagline_en %}<p class="footer-tagline">{{ site_settings.tagline_en }}</p>{% endif %}
+        {% elif site_settings.tagline %}
+          <p class="footer-tagline">{{ site_settings.tagline }}</p>
+        {% endif %}
+      </div>
+      <button type="button" class="btn footer-buy" data-consult-open>
+        {% if is_en %}Request to buy{% else %}درخواست خرید{% endif %}
+      </button>
+    </div>
+
+    <div class="footer-grid-reference">
+      {% url 'website:projects_list' as projects_url %}
+      <nav class="footer-col" aria-labelledby="footer-quick-links">
+        <h2 id="footer-quick-links">{% if is_en %}Quick links{% else %}دسترسی سریع{% endif %}</h2>
+        <a href="{{ projects_url }}#ongoing">{% if is_en %}Ongoing projects{% else %}پروژه‌های در حال اجرا{% endif %}</a>
+        <a href="{{ projects_url }}#completed">{% if is_en %}Completed projects{% else %}پروژه‌های تکمیل‌شده{% endif %}</a>
+        <a href="{% url 'website:blog_list' %}">{% if is_en %}Journal{% else %}مقالات و اخبار{% endif %}</a>
+      </nav>
+
+      <div class="footer-col">
+        <h2>{% if is_en %}About Garnet{% else %}درباره گارنت{% endif %}</h2>
+        <a href="{% url 'website:home' %}#about">{% if is_en %}About the company{% else %}معرفی شرکت{% endif %}</a>
+        {% if catalog %}
+          <a href="{{ catalog.file.url }}" target="_blank" rel="noopener">{% if is_en %}Company catalog{% else %}کاتالوگ شرکت{% endif %}</a>
+        {% endif %}
+      </div>
+
+      <div class="footer-col footer-contact-col">
+        <h2>{% if is_en %}Contact us{% else %}ارتباط با ما{% endif %}</h2>
+        {% if site_settings.phone %}
+          <a href="tel:{{ site_settings.phone }}"><bdi dir="ltr">{{ site_settings.phone }}</bdi></a>
+        {% endif %}
+        {% if site_settings.email %}
+          <a href="mailto:{{ site_settings.email }}"><bdi dir="ltr">{{ site_settings.email }}</bdi></a>
+        {% endif %}
+        {% if site_settings.address %}<p>{{ site_settings.address|linebreaksbr }}</p>{% endif %}
+      </div>
+
+      <div class="footer-col footer-newsletter-col" id="newsletter">
+        <h2>{% if is_en %}Newsletter and social media{% else %}خبرنامه و شبکه‌های اجتماعی{% endif %}</h2>
+        <p>{% if is_en %}Subscribe to receive our updates{% else %}برای دریافت خبرها و تازه‌های گارنت ایمیل خود را ثبت کنید{% endif %}</p>
+        <form class="newsletter-form" action="{% url 'website:newsletter_subscribe' %}" method="post">
+          {% csrf_token %}
+          <label class="sr-only" for="newsletter-email">{% if is_en %}Email address{% else %}آدرس ایمیل{% endif %}</label>
+          <input id="newsletter-email" type="email" name="email" dir="ltr" placeholder="{% if is_en %}Email address{% else %}آدرس ایمیل{% endif %}" autocomplete="email" inputmode="email" maxlength="254" required>
+          <input type="text" name="website" class="newsletter-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <button type="submit">{% if is_en %}Subscribe{% else %}عضویت{% endif %}</button>
+        </form>
+        {% if site_settings.instagram_url or site_settings.linkedin_url %}
+          <div class="footer-social-links">
+            {% if site_settings.instagram_url %}<a href="{{ site_settings.instagram_url }}" target="_blank" rel="noopener" aria-label="Instagram">{% icon "instagram" 22 %}</a>{% endif %}
+            {% if site_settings.linkedin_url %}<a href="{{ site_settings.linkedin_url }}" target="_blank" rel="noopener" aria-label="LinkedIn">{% icon "linkedin" 22 %}</a>{% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <small>© {% now "Y" %} {{ site_settings.brand_name }}. {% if is_en %}All rights reserved.{% else %}تمامی حقوق محفوظ است.{% endif %}</small>
+      <a class="footer-top-link" href="#main-content">{% icon "arrow-up" 16 %} {% if is_en %}Back to top{% else %}بازگشت به بالا{% endif %}</a>
+    </div>
+  </div>
+</footer>

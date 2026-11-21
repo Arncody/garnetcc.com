@@ -16,6 +16,7 @@ import re
 
 PALETTE = {
     "charcoal": "#141414",
+    "footer-charcoal": "#171717",
     "graphite": "#383838",
     "gray": "#858585",
     "stone": "#E8E7E4",
@@ -112,7 +113,7 @@ GROUPS = [
     ]),
     Group("header", "▣ هدر (نوار بالای سایت) و منوی دسکتاپ", "نوار شیشه‌ای بالای سایت، لینک‌های منو و دکمه مشاوره.", [
         Token("header_bg", "پس‌زمینه نوار هدر", WHITE,
-              [".g-header .g-bar{background:{v}!important}", ".g-header.scrolled .g-bar{background:{v}!important}"]),
+              ".g-header{--header-strip-base:{v}!important}"),
         Token("header_border", "خط دور نوار هدر", "rgba(255,255,255,.34)", ".g-header .g-bar{border-color:{v}!important}"),
         Token("header_link", "رنگ لینک‌های منو", CHARCOAL,
               ".g-header .g-nav>a,.g-header .g-nav .g-nav-btn,.g-header .g-nav .g-nav-parent{color:{v}!important}"),
@@ -232,19 +233,19 @@ GROUPS = [
         Token("article_meta", "تاریخ انتشار", GRAPHITE, ".article-meta,.article-meta span{color:{v}!important}"),
     ]),
     Group("footer", "⬛ فوتر (پایین سایت)", "رنگ زمینه، تیترها، لینک‌ها، آیکون‌ها و فرم خبرنامه.", [
-        Token("footer_bg", "پس‌زمینه فوتر", CHARCOAL, ".site-footer{background:{v}!important;background-image:none!important}"),
+        Token("footer_bg", "پس‌زمینه فوتر", PALETTE["footer-charcoal"], ".site-footer{background:{v}!important;background-image:none!important}"),
         Token("footer_text", "متن‌های فوتر", "#FFFFFF", ".site-footer{color:{v}!important}"),
-        Token("footer_heading", "تیترهای ستون‌های فوتر", "#FFFFFF", ".site-footer .footer-col h4{color:{v}!important}"),
+        Token("footer_heading", "تیترهای ستون‌های فوتر", "#FFFFFF", ".site-footer .footer-col h2{color:{v}!important}"),
         Token("footer_link", "لینک‌ها و متن ستون‌ها", "rgba(255,255,255,.66)",
-              ".site-footer .footer-grid-reference .footer-col>a,.site-footer .footer-grid-reference .footer-col>p,.site-footer .footer-text-button{color:{v}!important}"),
+              ".site-footer .footer-grid-reference .footer-col>a,.site-footer .footer-grid-reference .footer-col>p{color:{v}!important}"),
         Token("footer_link_hover", "لینک‌ها هنگام Hover", "#FFFFFF",
-              ".site-footer .footer-grid-reference .footer-col>a:hover,.site-footer .footer-text-button:hover{color:{v}!important}"),
+              ".site-footer .footer-grid-reference .footer-col>a:hover{color:{v}!important}"),
         Token("footer_contact_icon", "آیکون تلفن و ایمیل", WHITE, ".site-footer .footer-contact-icon{color:{v}!important}"),
         Token("footer_social", "آیکون‌های اینستاگرام و لینکدین", "#FFFFFF", ".site-footer .footer-social-links a{color:{v}!important}"),
         Token("footer_news_bg", "فرم خبرنامه — پس‌زمینه", "#FFFFFF", ".site-footer .newsletter-form{background:{v}!important}"),
         Token("footer_news_text", "فرم خبرنامه — رنگ متن ایمیل", CHARCOAL, ".site-footer .newsletter-form input[type=email]{color:{v}!important}"),
         Token("footer_news_btn", "فرم خبرنامه — دکمه ثبت", CHARCOAL, ".site-footer .newsletter-form button{background:{v}!important}"),
-        Token("footer_bottom_text", "نوار پایین فوتر (کپی‌رایت و بازگشت به بالا)", "rgba(255,255,255,.66)", ".site-footer .footer-bottom,.site-footer .footer-bottom span,.site-footer .footer-bottom a{color:{v}!important}"),
+        Token("footer_bottom_text", "نوار پایین فوتر (کپی‌رایت و بازگشت به بالا)", "rgba(255,255,255,.66)", ".site-footer .footer-bottom,.site-footer .footer-bottom small,.site-footer .footer-bottom a{color:{v}!important}"),
         Token("footer_bottom_line", "خط بالای نوار پایین فوتر", "rgba(255,255,255,.09)", ".site-footer .footer-bottom{border-top-color:{v}!important}"),
     ]),
     Group("modal", "📝 پاپ‌آپ فرم درخواست مشاوره", "پنجره‌ی باز شونده‌ی فرم مشاوره.", [
