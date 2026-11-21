@@ -251,5 +251,28 @@
       "2026-11-21: 70 Chromium page cases and 12 mobile touch cases passed, including no-JS menu, simulated legacy overrides, uniform glass samples, padded logo alignment and local form submissions."
     ],
     "rollback": "Revert GNT-011 to the GNT-010 checkpoint; no database rollback required"
+  },
+  {
+    "id": "GNT-012",
+    "priority": "P1",
+    "title": "Align brand and request controls and tune home projects",
+    "status": "done",
+    "depends_on": [
+      "GNT-011"
+    ],
+    "modules": [
+      "M01",
+      "M02",
+      "M07"
+    ],
+    "acceptance": [
+      "Header logo left and request controls right across FA/EN, including long admin text",
+      "Visible footer wordmark above the RTL slogan edge and slightly narrower home project cards in rail and grid",
+      "Verify editable bilingual texts and theme colors, responsive layout, menus and forms"
+    ],
+    "verification_evidence": [
+      "2026-11-21: Local verification: Chromium 90 page checks across FA/EN and 9 widths, plus 14 carousel-off checks. Verified physical header controls, responsive widths, keyboard and touch menus, visible aligned wordmark with and without JS, Django admin writes for bilingual text and theme colors, both form submissions and saved rows. Migration 0017 applied from 0016. Django check, collectstatic, JS syntax and Git whitespace checks passed."
+    ],
+    "rollback": "Revert GNT-012 code and migrate website to 0016 only if the new editable text values do not need to be retained"
   }
 ]

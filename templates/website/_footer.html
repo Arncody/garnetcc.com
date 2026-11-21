@@ -1,16 +1,16 @@
-{% load site_icons %}
+{% load site_icons brand_assets %}
 <footer class="site-footer" id="contact">
   <div class="container">
     <div class="footer-intro">
       <div class="footer-brand">
         <a href="{% url 'website:home' %}" class="footer-logo-link">
-          {% if site_settings.logo_light %}
-            <img src="{{ site_settings.logo_light.url }}" alt="{{ site_settings.brand_name }}" class="footer-wordmark">
-          {% elif site_settings.logo %}
-            <img src="{{ site_settings.logo.url }}" alt="{{ site_settings.brand_name }}" class="footer-wordmark">
-          {% else %}
-            <span class="footer-brand-name">{{ site_settings.brand_name }}</span>
-          {% endif %}
+          {% with footer_logo=site_settings.logo_light|default:site_settings.logo %}
+            {% if footer_logo %}
+              <img src="{{ footer_logo.url }}" alt="{{ site_settings.brand_name }}" class="footer-wordmark" style="--footer-mark-shift:{% footer_wordmark_offset footer_logo is_en %}">
+            {% else %}
+              <span class="footer-brand-name">{{ site_settings.brand_name }}</span>
+            {% endif %}
+          {% endwith %}
         </a>
         {% if is_en %}
           {% if site_settings.tagline_en %}<p class="footer-tagline">{{ site_settings.tagline_en }}</p>{% endif %}
@@ -19,7 +19,7 @@
         {% endif %}
       </div>
       <button type="button" class="btn footer-buy" data-consult-open>
-        {% if is_en %}Request to buy{% else %}درخواست خرید{% endif %}
+        {{ T.footer_purchase_button }}
       </button>
     </div>
 

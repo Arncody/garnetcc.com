@@ -43,3 +43,11 @@
 - Align the white wordmark to the inline start of the footer grid. Compensate for transparent padding in same-origin logo assets without changing their files.
 - Verified 70 local Chromium page combinations, 12 touch scenarios in FA/EN with JavaScript enabled or disabled, desktop keyboard navigation, and both form submissions. Under fixture CSS simulating the old white wrapper and dot, the scrolled strip measured the same pixel value across six horizontal samples. The transparent padded logo reached the grid boundary at the sampled desktop sizes. Minimum tested nav contrast over black was 4.92:1.
 - Django check, collectstatic, JS syntax, GDCS and Git whitespace checks passed. These tests use local fixture settings and media. No schema migration.
+
+## 2026-11-21 — GNT-012 · Brand alignment and home project widths
+
+- Put the logo on the left and purchase controls on the right in both languages. Keep navigation in the current language direction, preserve the glass strip and anchor the mobile menu on the right.
+- Align the visible footer wordmark above the tagline, on the right in Persian. Calculate the horizontal alpha padding in the template and cache the result. Set the homepage card widths in both carousel modes, including the existing swipeable responsive fallback. Cards measured 232px at 390px and 290px at 1440px.
+- Add editable bilingual heading and button labels and independent footer purchase colors through the existing admin. Migration `0017` adds six fields with the previous public labels as defaults. Migration dry-run still reports the five unrelated baseline field differences recorded under GNT-001.
+- Chromium passed 90 page/language/viewport combinations and 14 carousel-off combinations. Touch menu operation, desktop keyboard navigation and focus, footer wordmark alignment with and without JavaScript, and purchase and newsletter submissions were verified in both languages. Admin form saves and browser-rendered settings were checked with fixture content and colors. Production assets and settings remain unverified.
+- Django system checks, production-mode collectstatic, JavaScript syntax, GDCS and Git whitespace checks passed. Migration from 0016 applied on the local fixture database.

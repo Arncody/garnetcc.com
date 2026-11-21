@@ -180,42 +180,6 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('scroll', updateHeader, { passive: true });
   window.addEventListener('pageshow', updateHeader);
 
-  // Align the visible mark when the uploaded PNG includes transparent padding.
-  const footerLogo = document.querySelector('.footer-wordmark');
-  if (footerLogo) {
-    const alignFooterLogo = () => {
-      const { naturalWidth, naturalHeight } = footerLogo;
-      if (!naturalWidth || !naturalHeight) return;
-      const scale = Math.min(1, 256 / Math.max(naturalWidth, naturalHeight));
-      const canvas = document.createElement('canvas');
-      const width = canvas.width = Math.max(1, Math.round(naturalWidth * scale));
-      const height = canvas.height = Math.max(1, Math.round(naturalHeight * scale));
-      const context = canvas.getContext('2d');
-      if (!context) return;
-
-      context.drawImage(footerLogo, 0, 0, width, height);
-      let pixels;
-      try {
-        pixels = context.getImageData(0, 0, width, height).data;
-      } catch (error) {
-        if (error.name === 'SecurityError') return;
-        throw error;
-      }
-
-      const rtl = document.documentElement.dir === 'rtl';
-      for (let offset = 0; offset < width; offset += 1) {
-        const x = rtl ? width - 1 - offset : offset;
-        for (let y = 0; y < height; y += 1) {
-          if (pixels[(y * width + x) * 4 + 3] <= 16) continue;
-          footerLogo.style.setProperty('--footer-mark-shift', `${(rtl ? 1 : -1) * offset / width * 100}%`);
-          return;
-        }
-      }
-    };
-    if (footerLogo.complete) alignFooterLogo();
-    else footerLogo.addEventListener('load', alignFooterLogo, { once: true });
-  }
-
   document.querySelectorAll('.site-toast').forEach((toast) => {
     window.setTimeout(() => {
       toast.style.transition = 'opacity .25s ease, transform .25s ease';

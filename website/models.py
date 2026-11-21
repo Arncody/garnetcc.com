@@ -636,6 +636,9 @@ class BlogPost(models.Model):
 
 
 SITE_TEXT_DEFAULTS = {
+    "home_projects_title": ("گارنت، در یک نگاه.", "A clear view of Garnet."),
+    "project_view_button": ("مشاهده پروژه", "View project"),
+    "footer_purchase_button": ("درخواست خرید", "Request to buy"),
     "all_articles_link": ("همه مقالات", "All articles"),
     "all_projects_btn": ("مشاهده همه پروژه‌ها", "View all projects"),
     "project_catalog_button_text": ("کاتالوگ پروژه", "Project catalog"),
@@ -685,6 +688,13 @@ class NewsletterSubscriber(models.Model):
 class SiteTexts(SingletonModel):
     """متن‌های قابل ویرایش عنوان‌ها، کادر مشاوره و فرم درخواست؛ هر متن در فارسی و انگلیسی.
     اگر فیلدی خالی بماند، متن پیش‌فرض سایت نمایش داده می‌شود."""
+
+    home_projects_title = models.CharField("عنوان بخش پروژه‌های صفحه اصلی", max_length=120, blank=True, default="گارنت، در یک نگاه.")
+    home_projects_title_en = models.CharField("عنوان بخش پروژه‌های صفحه اصلی (EN)", max_length=120, blank=True, default="A clear view of Garnet.")
+    project_view_button = models.CharField("متن دکمه مشاهده پروژه", max_length=80, blank=True, default="مشاهده پروژه")
+    project_view_button_en = models.CharField("متن دکمه مشاهده پروژه (EN)", max_length=80, blank=True, default="View project")
+    footer_purchase_button = models.CharField("متن دکمه درخواست خرید فوتر", max_length=120, blank=True, default="درخواست خرید")
+    footer_purchase_button_en = models.CharField("متن دکمه درخواست خرید فوتر (EN)", max_length=120, blank=True, default="Request to buy")
 
     all_articles_link = models.CharField("لینک «همه مقالات»", max_length=250, blank=True, default="همه مقالات")
     all_articles_link_en = models.CharField("لینک «همه مقالات» (EN)", max_length=250, blank=True, default="All articles")

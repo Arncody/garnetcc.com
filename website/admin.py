@@ -251,6 +251,11 @@ class BlogPostAdmin(admin.ModelAdmin):
 class SiteTextsAdmin(admin.ModelAdmin):
     """ویرایش عنوان‌های صفحه اصلی، کادر مشاوره و تمام متن‌های فرم درخواست (فارسی + انگلیسی)."""
     fieldsets = (
+        ("پروژه‌های صفحه اصلی و دکمه خرید فوتر", {"fields": (
+            ("home_projects_title", "home_projects_title_en"),
+            ("project_view_button", "project_view_button_en"),
+            ("footer_purchase_button", "footer_purchase_button_en"),
+        )}),
         ("🔘 دکمه‌ی آیکونی «مشاهده همه پروژه‌ها» (صفحه اصلی)", {"fields": (("all_projects_btn","all_projects_btn_en"),), "description": "دکمه فقط آیکون دارد؛ این متن برای راهنمای شناور (tooltip) و دسترس‌پذیری استفاده می‌شود."}),
         ("📘 دکمه کاتالوگ در صفحه داخلی پروژه", {"fields": (("project_catalog_button_text", "project_catalog_button_text_en"),), "description": "عنوان دکمه دانلود کاتالوگ اختصاصی هر پروژه؛ فایل PDF هر پروژه در فرم همان پروژه بارگذاری می‌شود."}),
         ("📰 بخش بلاگ (صفحه اصلی)", {"fields": (("journal_title","journal_title_en"),("all_articles_link","all_articles_link_en"),)}),

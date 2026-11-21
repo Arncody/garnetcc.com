@@ -30,7 +30,7 @@
 <section class="section section-overview home-projects" id="projects">
   <div class="container">
     <div class="compact-heading">
-      <h2>{% if is_en %}A clear view of Garnet.{% else %}گارنت، در یک نگاه.{% endif %}</h2>
+      <h2>{{ T.home_projects_title }}</h2>
       <a class="all-projects-btn" href="{% url 'website:projects_list' %}" aria-label="{{ T.all_projects_btn }}" title="{{ T.all_projects_btn }}">{% if is_en %}{% icon "arrow-right" 18 %}{% else %}{% icon "arrow-left" 18 %}{% endif %}</a>
     </div>
     {% if is_en %}{% include "website/_projects_rail.html" with projects=home_projects rail=rail_home grid_class="home-cards" empty_text="Projects will appear here." %}{% else %}{% include "website/_projects_rail.html" with projects=home_projects rail=rail_home grid_class="home-cards" empty_text="پروژه‌ها در این بخش نمایش داده می‌شوند." %}{% endif %}

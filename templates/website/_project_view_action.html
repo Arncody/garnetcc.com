@@ -1,5 +1,5 @@
 {% load site_icons %}
 <span class="{{ action_class }} project-view-action">
-  <span>{% if is_en %}View project{% else %}مشاهده پروژه{% endif %}</span>
+  <span>{{ T.project_view_button }}</span>
   {% if is_en %}{% icon "arrow-right" 16 %}{% else %}{% icon "arrow-left" 16 %}{% endif %}
 </span>
