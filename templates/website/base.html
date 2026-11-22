@@ -23,6 +23,7 @@
  --hero-overlay:{{ site_theme.hero_overlay }};
  --logo-desktop:{{ site_theme.logo_width_desktop }}px;--logo-mobile:{{ site_theme.logo_width_mobile }}px;
  --theme-blur:{{ site_theme.glass_blur }}px;--body-weight:{{ site_theme.body_weight }};--heading-weight:{{ site_theme.heading_weight }};
+ --home-project-radius:{{ site_theme.home_project_radius }}px;
  --nav-weight:{{ site_theme.nav_weight }};--hero-weight:{{ site_theme.hero_weight }};--section-weight:{{ site_theme.section_weight }};--card-weight:{{ site_theme.card_weight }};--button-weight:{{ site_theme.button_weight }};--label-weight:{{ site_theme.label_weight }};--small-weight:{{ site_theme.small_weight }};
 }
 body{background:var(--theme-bg);color:var(--theme-text);font-weight:var(--body-weight)}
@@ -42,6 +43,7 @@ small,.small{font-weight:var(--small-weight)}
 </style>{% endif %}
 <link rel="stylesheet" href="{% static 'css/garnet-ui.css' %}?v=GNT-012">
 <link rel="stylesheet" href="{% static 'css/design-system.css' %}?v=GNT-012">
+<link rel="stylesheet" href="{% static 'css/garnet-presentation.css' %}?v=GNT-013">
 {% if site_theme.custom_css %}<style id="garnet-custom-css">{{ site_theme.custom_css|safe }}</style>{% endif %}
 </head>
 <body class="site-shell{% if request.resolver_match.view_name == 'website:home' %} site-home{% endif %}">

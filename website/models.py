@@ -129,6 +129,10 @@ class SiteSettings(SingletonModel):
         "لینک لینکدین", blank=True, default="",
         help_text="در فوتر سایت کنار اینستاگرام نمایش داده می‌شود؛ اگر خالی بماند، نمایش داده نمی‌شود.",
     )
+    show_journal_in_header = models.BooleanField(
+        "نمایش مقالات و اخبار در منوی هدر", default=False,
+        help_text="برای نمایش، آیتم مقالات در «آیتم‌های منوی اصلی» نیز باید فعال باشد. صفحه مقالات و پیوندهای فوتر مستقل هستند.",
+    )
     projects_carousel_enabled = models.BooleanField(
         "چرخش افقی خودکار پروژه‌ها", default=True,
         help_text="اگر خاموش شود، پروژه‌ها به‌صورت ردیف/شبکه‌ی ثابت نمایش داده می‌شوند.",
@@ -230,6 +234,11 @@ class SiteTheme(SingletonModel):
     overlay = models.CharField("لایه روی تصاویر", max_length=40, default="rgba(7,29,43,.66)")
     shadow = models.CharField("سایه", max_length=120, default="0 24px 80px rgba(3,18,27,.20)")
     radius = models.PositiveIntegerField("گردی گوشه‌ها (px)", default=22)
+    home_project_radius = models.PositiveSmallIntegerField(
+        "گردی کارت پروژه در صفحه اصلی (px)", default=0,
+        validators=[MaxValueValidator(24)], help_text="صفر یعنی گوشه صاف. فقط کارت‌های پروژه در صفحه اصلی را تغییر می‌دهد.",
+    )
+    compact_footer = models.BooleanField("فوتر جمع‌وجور", default=True)
     glass_blur = models.PositiveIntegerField("میزان Blur شیشه (px)", default=22)
     body_weight = models.PositiveIntegerField("وزن متن عادی", default=400)
     heading_weight = models.PositiveIntegerField("وزن تیترهای عمومی", default=500)
@@ -636,6 +645,7 @@ class BlogPost(models.Model):
 
 
 SITE_TEXT_DEFAULTS = {
+    "home_about_link": ("درباره گارنت", "About Garnet"),
     "home_projects_title": ("گارنت، در یک نگاه.", "A clear view of Garnet."),
     "project_view_button": ("مشاهده پروژه", "View project"),
     "footer_purchase_button": ("درخواست خرید", "Request to buy"),
@@ -689,6 +699,8 @@ class SiteTexts(SingletonModel):
     """متن‌های قابل ویرایش عنوان‌ها، کادر مشاوره و فرم درخواست؛ هر متن در فارسی و انگلیسی.
     اگر فیلدی خالی بماند، متن پیش‌فرض سایت نمایش داده می‌شود."""
 
+    home_about_link = models.CharField("متن دکمه درباره گارنت", max_length=100, blank=True, default="درباره گارنت")
+    home_about_link_en = models.CharField("متن دکمه درباره گارنت (EN)", max_length=100, blank=True, default="About Garnet")
     home_projects_title = models.CharField("عنوان بخش پروژه‌های صفحه اصلی", max_length=120, blank=True, default="گارنت، در یک نگاه.")
     home_projects_title_en = models.CharField("عنوان بخش پروژه‌های صفحه اصلی (EN)", max_length=120, blank=True, default="A clear view of Garnet.")
     project_view_button = models.CharField("متن دکمه مشاهده پروژه", max_length=80, blank=True, default="مشاهده پروژه")

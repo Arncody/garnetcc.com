@@ -3,6 +3,6 @@
   "project": "GARNET",
   "baseline": "Complete GDCS ZIP; Django and Chromium checks on local fixture data",
   "active_task": null,
-  "last_update": "2026-11-21",
-  "note": "GNT-012 completed after local verification. Production verification and historical exposure tracking under GNT-005 remain open."
+  "last_update": "2026-11-22",
+  "note": "GNT-013 completed after local verification on the supplied GNT-012 source. Production verification and historical exposure tracking under GNT-005 remain open."
 }

@@ -11,7 +11,7 @@
 - `website/theme_tokens.py`: theme tokens/visual settings.
 - `website/media_views.py`, `website/storage.py`: media delivery/storage behavior.
 - `website/sitemaps.py`: sitemap generation.
-- `website/migrations/0001..0017`: schema history.
+- `website/migrations/0001..0018`: schema history.
 - `templates/website/`: base, home, projects, blog, partial cards/rails.
 - `static/css/`: style.css, garnet-ui.css, admin styles and others.
 - `static/js/main.js`: frontend behavior; additional admin scripts.

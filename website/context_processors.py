@@ -1,3 +1,7 @@
+from urllib.parse import urlsplit
+
+from django.urls import reverse
+
 from .models import SiteSettings, SiteTheme, SiteTexts, CompanyCatalog, MenuItem
 from .forms import ConsultationForm
 from .theme_tokens import PALETTE, build_theme_css, normalize_color
@@ -25,12 +29,31 @@ def _theme_color_properties(theme):
     return properties
 
 
-def _menu_items(request, lang):
+def _menu_items(request, lang, show_journal):
     """منوی اصلی از پنل ادمین (به‌همراه زیرمنوها)؛ آیتم فعال بر اساس مسیر فعلی مشخص می‌شود."""
     path = request.path or "/"
+    journal_path = reverse("website:blog_list").rstrip("/")
+    home_path = reverse("website:home").strip("/")
+    site_host = urlsplit(f"//{request.get_host()}").hostname.removeprefix("www.")
+
+    def is_hidden_journal(url):
+        if show_journal:
+            return False
+        try:
+            parsed = urlsplit(url)
+            host = (parsed.hostname or "").removeprefix("www.")
+        except ValueError:
+            return False
+        target = parsed.path.strip("/")
+        return host in {"", site_host} and (
+            "/" + target == journal_path or (target == home_path and parsed.fragment == "blog")
+        )
+
     items = []
     for item in MenuItem.objects.filter(is_active=True).prefetch_related("children"):
         url = (item.url or "").strip()
+        if not item.open_consult and is_hidden_journal(url):
+            continue
         base = url.split("#", 1)[0]
         has_hash = "#" in url
         if item.open_consult or has_hash or not base:
@@ -46,7 +69,7 @@ def _menu_items(request, lang):
         if not item.open_consult:
             for sub in item.children.all():
                 sub_url = (sub.url or "").strip()
-                if not sub.is_active:
+                if not sub.is_active or is_hidden_journal(sub_url):
                     continue
                 if is_projects_item:
                     label_probe = f"{sub.title} {sub.title_en}".lower()
@@ -107,5 +130,5 @@ def site_settings(request):
         "is_en": lang == "en",
         "T": texts,
         "consultation_form": ConsultationForm(language=lang, texts=texts),
-        "menu_items": _menu_items(request, lang),
+        "menu_items": _menu_items(request, lang, settings_obj.show_journal_in_header),
     }

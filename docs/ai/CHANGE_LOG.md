@@ -51,3 +51,12 @@
 - Add editable bilingual heading and button labels and independent footer purchase colors through the existing admin. Migration `0017` adds six fields with the previous public labels as defaults. Migration dry-run still reports the five unrelated baseline field differences recorded under GNT-001.
 - Chromium passed 90 page/language/viewport combinations and 14 carousel-off combinations. Touch menu operation, desktop keyboard navigation and focus, footer wordmark alignment with and without JavaScript, and purchase and newsletter submissions were verified in both languages. Admin form saves and browser-rendered settings were checked with fixture content and colors. Production assets and settings remain unverified.
 - Django system checks, production-mode collectstatic, JavaScript syntax, GDCS and Git whitespace checks passed. Migration from 0016 applied on the local fixture database.
+
+## 2026-11-22 — GNT-013 · Homepage presentation and compact footer
+
+- Render a viewport-height, centered hero followed immediately by About. Use one theme color at the seam. Read video, poster, hero text and links from the existing Hero section. Keep the poster in reduced-motion and failure states.
+- Show an editable all-projects label with a directional arrow. Use square default corners and a separate radius control for homepage previews. Keep the carousel and static fallback.
+- Hide the Journal link from desktop and mobile headers by default through SiteSettings. Keep editable menu order and labels, submenus, and existing Journal entry points outside the header.
+- Compact the four footer groups and keep both forms, social links, and the language switch. In FA fixture tests the footer measured 667px instead of 1108px at 390px and 408px instead of 507px at 1440px.
+- Verified 110 Chromium page, language and viewport combinations, including short landscape. Checked touch and keyboard navigation, video playback and reduced motion, eight browser combinations with actual admin changes, and purchase and newsletter submissions in both languages. Checked matching seam pixels in the default palette. Captured before and after images with shared fixtures.
+- Migration `0018` adds five settings fields and was applied and reversed on disposable SQLite fixtures. Django checks, collectstatic, JS syntax, GDCS and Git whitespace checks passed. The five unrelated model-state differences recorded under GNT-001 remain present. Production media, theme and database were outside verification.

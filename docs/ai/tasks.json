@@ -274,5 +274,29 @@
       "2026-11-21: Local verification: Chromium 90 page checks across FA/EN and 9 widths, plus 14 carousel-off checks. Verified physical header controls, responsive widths, keyboard and touch menus, visible aligned wordmark with and without JS, Django admin writes for bilingual text and theme colors, both form submissions and saved rows. Migration 0017 applied from 0016. Django check, collectstatic, JS syntax and Git whitespace checks passed."
     ],
     "rollback": "Revert GNT-012 code and migrate website to 0016 only if the new editable text values do not need to be retained"
+  },
+  {
+    "id": "GNT-013",
+    "priority": "P1",
+    "title": "Full-height homepage, compact footer and editable presentation",
+    "status": "done",
+    "modules": [
+      "M01",
+      "M02",
+      "M07"
+    ],
+    "depends_on": [
+      "GNT-012"
+    ],
+    "acceptance": [
+      "Full-height hero and seamless transition into About",
+      "Square homepage portfolio previews and visible projects link",
+      "Editable menu visibility, section texts and presentation colors",
+      "Compact responsive footer and verified navigation and forms"
+    ],
+    "verification_evidence": [
+      "2026-11-22: Verified on supplied GNT-012 source with 110 Chromium page/language/viewport combinations, eight browser checks after actual admin form changes, mobile touch and desktop keyboard navigation, matching seam pixels, video and reduced-motion behavior, and both form submissions in FA/EN. Compared compact footer against identical preview fixtures. Verified migration 0018 and reversal, Django system checks, production-mode collectstatic, JS syntax and Git whitespace."
+    ],
+    "rollback": "Back up settings. While GNT-013 code is present, migrate website to 0017, then revert the code. Reversing removes five new settings fields."
   }
 ]

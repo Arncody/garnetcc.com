@@ -17,5 +17,6 @@
 | GNT-010 | P1 | Header, home, project and footer corrections · requires GNT-009 | done |
 | GNT-011 | P1 | Transparent header, mobile disclosure and component alignment · requires GNT-010 | done |
 | GNT-012 | P1 | Brand alignment, home project widths and bilingual display controls · requires GNT-011 | done |
+| GNT-013 | P1 | Full-height homepage, compact footer and editable presentation · requires GNT-012 | done |
 
 Only one task active. Changes to this list are not automatically complete tasks.

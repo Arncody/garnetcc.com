@@ -132,6 +132,7 @@ SiteThemeForm = type(SiteThemeFormBase)(
 class SiteThemeAdmin(admin.ModelAdmin):
     form = SiteThemeForm
     base_fieldsets = (
+        ("چیدمان صفحه اصلی و فوتر", {"fields": ("home_project_radius", "compact_footer")}),
         ("🎨 رنگ‌های پایه سایت (پالت اصلی)", {"classes": ("collapse",), "fields": (("background", "surface"), ("primary", "secondary"), ("accent", "accent_hover"), ("text", "muted"), ("white", "dark"), ("border",))}),
         ("🪟 شیشه، شفافیت و عمق", {"classes": ("collapse",), "fields": ("glass", "glass_dark", "overlay", "shadow", ("radius", "glass_blur"))}),
         ("دکمه‌های اصلی و ثانویه", {"classes": ("collapse",), "fields": (("primary_button_background", "primary_button_text"), ("primary_button_hover",), ("glass_button_background", "glass_button_border"))}),
@@ -175,6 +176,7 @@ class SiteSettingsAdmin(admin.ModelAdmin):
     fieldsets=(
         ("برند / Brand",{"fields":("brand_name","legal_name","logo","logo_light","favicon",("tagline","tagline_en"))}),
         ("تماس / Contact",{"fields":("phone","email","address","instagram_url","linkedin_url")}),
+        ("منوی هدر / Header menu",{"fields":("show_journal_in_header",)}),
         ("چرخش پروژه‌ها / Projects carousel",{"fields":("projects_carousel_enabled","projects_carousel_speed")}),
         ("رزرو / Booking",{"fields":("booking_url","working_hours_weekday","working_hours_weekend")}),
         ("SEO",{"fields":("meta_title","meta_description")}),
@@ -256,7 +258,7 @@ class SiteTextsAdmin(admin.ModelAdmin):
             ("project_view_button", "project_view_button_en"),
             ("footer_purchase_button", "footer_purchase_button_en"),
         )}),
-        ("🔘 دکمه‌ی آیکونی «مشاهده همه پروژه‌ها» (صفحه اصلی)", {"fields": (("all_projects_btn","all_projects_btn_en"),), "description": "دکمه فقط آیکون دارد؛ این متن برای راهنمای شناور (tooltip) و دسترس‌پذیری استفاده می‌شود."}),
+        ("دکمه‌های بخش درباره و همه پروژه‌ها", {"fields": (("home_about_link", "home_about_link_en"), ("all_projects_btn", "all_projects_btn_en"))}),
         ("📘 دکمه کاتالوگ در صفحه داخلی پروژه", {"fields": (("project_catalog_button_text", "project_catalog_button_text_en"),), "description": "عنوان دکمه دانلود کاتالوگ اختصاصی هر پروژه؛ فایل PDF هر پروژه در فرم همان پروژه بارگذاری می‌شود."}),
         ("📰 بخش بلاگ (صفحه اصلی)", {"fields": (("journal_title","journal_title_en"),("all_articles_link","all_articles_link_en"),)}),
         ("📚 صفحه «همه مقالات»", {"fields": (("blog_page_title","blog_page_title_en"),)}),

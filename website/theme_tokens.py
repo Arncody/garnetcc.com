@@ -89,8 +89,8 @@ GROUPS = [
         Token("page_bg", "پس‌زمینه کل سایت", OFF_WHITE, "body.site-shell{background:{v}!important}"),
         Token("sec_home_projects_bg", "بخش «گارنت، در یک نگاه» (کل پروژه‌ها) در صفحه اصلی", OFF_WHITE,
               ".section.home-projects{background:{v}!important}"),
-        Token("sec_about_bg", "بخش «درباره گارنت» در صفحه اصلی (پشت کادر)", OFF_WHITE,
-              ".section.about-lux-section{background:{v}!important}"),
+        Token("sec_about_bg", "رنگ مشترک انتهای ویدیو و پس‌زمینه «درباره گارنت»", "#101111",
+              "body.site-home{--home-seam:{v}}"),
         Token("sec_home_blog_bg", "بخش مقالات در صفحه اصلی", OFF_WHITE,
               ".section.home-blog{background:{v}!important}"),
         Token("page_projects_bg", "صفحه «پروژه‌ها» (لیست پروژه‌ها)", OFF_WHITE,
@@ -151,8 +151,10 @@ GROUPS = [
     Group("hero", "🎬 بخش اصلی (Hero) صفحه اصلی", "تیتر، توضیح و دکمه‌های روی تصویر/ویدیوی اول صفحه.", [
         Token("hero_title", "تیتر اصلی", "#FFFFFF", ".hero h1{color:{v}!important}"),
         Token("hero_text", "متن زیر تیتر", "rgba(255,255,255,.78)", ".hero .hero-copy>p{color:{v}!important}"),
-        Token("hero_btn_text", "متن دکمه‌های شیشه‌ای Hero", CHARCOAL, ".hero .hero-action-link{color:{v}!important}"),
-        Token("hero_btn_hover", "دکمه‌های Hero هنگام Hover", STONE, ".hero .hero-action-link:hover{background:{v}!important}"),
+        Token("hero_btn_text", "متن دکمه‌های شیشه‌ای Hero", WHITE, ".hero .hero-action-link{color:{v}!important}"),
+        Token("home_glass_bg", "پس‌زمینه دکمه‌های روی ویدیو", "rgba(255,255,255,.12)", ".g-home-hero{--home-glass-bg:{v}}"),
+        Token("home_glass_border", "لبه دکمه‌های روی ویدیو", "rgba(255,255,255,.52)", ".g-home-hero{--home-glass-border:{v}}"),
+        Token("hero_btn_hover", "دکمه‌های Hero هنگام Hover", "rgba(255,255,255,.24)", ".hero .hero-action-link:hover{background:{v}!important}"),
     ]),
     Group("preview_cards", "🏗️ کارت‌های پیش‌نمایش پروژه و مقاله (صفحه اصلی، جزئیات پروژه، لیست مقالات)",
           "کارت‌هایی که روی تصویر نوشته دارند؛ شامل وضعیت، عنوان، موقعیت و دکمه‌ی مشاهده.", [
@@ -172,23 +174,23 @@ GROUPS = [
               ".mini-project.project-preview .pc-view,.mini-project.project-preview .pc-view span,.mini-project.project-preview .pc-view em,.mini-project.project-preview .pc-view svg{color:{v}!important;stroke:{v}!important}"),
         Token("card_btn_circle", "دایره‌ی فلش در دکمه «مشاهده»", "#FFFFFF", ".mini-project.project-preview .pc-view em{background:{v}!important}"),
     ]),
-    Group("rail_buttons", "⏩ دکمه‌های ردیف پروژه‌ها", "دکمه‌ی گرد «مشاهده همه پروژه‌ها» و فلش‌های چپ/راست ردیف چرخان.", [
-        Token("all_btn_bg", "دکمه‌ی آیکونی «مشاهده همه پروژه‌ها» — پس‌زمینه", CHARCOAL,
+    Group("rail_buttons", "⏩ دکمه‌های ردیف پروژه‌ها", "دکمه «مشاهده همه پروژه‌ها» و فلش‌های چپ/راست ردیف چرخان.", [
+        Token("all_btn_bg", "دکمه «مشاهده همه پروژه‌ها» — پس‌زمینه", "transparent",
               ".all-projects-btn{background:{v}!important;background-image:none!important}"),
-        Token("all_btn_icon", "دکمه‌ی آیکونی «مشاهده همه پروژه‌ها» — آیکون", "#FFFFFF", ".all-projects-btn{color:{v}!important}"),
+        Token("all_btn_icon", "دکمه «مشاهده همه پروژه‌ها» — متن و آیکون", CHARCOAL, ".all-projects-btn{color:{v}!important}"),
         Token("rail_nav_bg", "فلش‌های چپ/راست ردیف — پس‌زمینه", WHITE, ".rail-nav{background:{v}!important}"),
         Token("rail_nav_icon", "فلش‌های چپ/راست ردیف — آیکون", CHARCOAL, ".rail-nav{color:{v}!important}"),
     ]),
-    Group("about", "🏛️ بخش «درباره گارنت» (کادر شیشه‌ای)", "کادر، متن و دکمه‌های درباره گارنت در صفحه اصلی.", [
-        Token("about_card_bg", "پس‌زمینه کادر", "rgba(255,255,255,.88)",
-              [".about-glass,.about-glass:not(:has(.about-bg)){background:{v}!important}", ".about-glass::before{display:none!important}"]),
-        Token("about_card_border", "لبه کادر", "rgba(255,255,255,.75)", ".about-glass{border-color:{v}!important}"),
-        Token("about_title", "عنوان", "#092634", ".about-panel h2{color:{v}!important}"),
-        Token("about_text", "متن", "#27414F", ".about-panel .about-text,.about-panel .about-text p{color:{v}!important}"),
-        Token("about_btn_main_bg", "دکمه «مشاهده پروژه‌ها» — پس‌زمینه", CHARCOAL, ".about-btn.about-btn-copper{background:{v}!important;background-image:none!important}"),
-        Token("about_btn_main_text", "دکمه «مشاهده پروژه‌ها» — متن", "#FFFFFF", ".about-btn.about-btn-copper{color:{v}!important}"),
-        Token("about_btn_light_bg", "دکمه «درخواست مشاوره» — پس‌زمینه", "rgba(255,255,255,.75)", ".about-btn.about-btn-light{background:{v}!important}"),
-        Token("about_btn_light_text", "دکمه «درخواست مشاوره» — متن", "#092634", ".about-btn.about-btn-light{color:{v}!important}"),
+    Group("about", "🏛️ بخش «درباره گارنت»", "تیتر، متن و دکمه بخش درباره گارنت در صفحه اصلی.", [
+        Token("about_title", "عنوان", "#F7F7F5", ".g-home-manifesto h2{color:{v}!important}"),
+        Token("about_text", "متن", "#B7B9B7", ".g-home-manifesto-summary{color:{v}!important}"),
+        Token("about_kicker", "متن کوتاه بالای عنوان", "#B5B2AB", ".g-home-manifesto-kicker{color:{v}!important}"),
+        Token("about_btn_light_bg", "دکمه درباره — پس‌زمینه", "transparent", ".g-home-manifesto-link{background:{v}}"),
+        Token("about_btn_light_text", "دکمه درباره — متن", WHITE, ".g-home-manifesto-link{color:{v}!important}"),
+        Token("about_card_border", "دکمه درباره — رنگ لبه", "#6A6E6B", ".g-home-manifesto-link{border-color:{v}!important}"),
+        Token("about_card_bg", "پس‌زمینه کادر نسخه قبلی", "rgba(255,255,255,.88)", ()),
+        Token("about_btn_main_bg", "پس‌زمینه دکمه پروژه‌های نسخه قبلی", CHARCOAL, ()),
+        Token("about_btn_main_text", "متن دکمه پروژه‌های نسخه قبلی", WHITE, ()),
     ]),
     Group("projects_page", "📋 صفحه «پروژه‌ها» (لیست پروژه‌ها)", "انتخاب‌گرها، تیتر بخش‌ها و ردیف‌های لیست پروژه.", [
         Token("tabs_bg", "کپسول‌های «در حال اجرا / تمام شده» — پس‌زمینه", "#FFFFFF", ".projects-tabs a{background:{v}!important}"),
@@ -293,6 +295,7 @@ RETIRED_DECORATIONS = frozenset({
     "header_border", "toggle_border", "card_btn_circle", "shadow_buttons", "shadow_navigation", "pd_btn_shadow", "pd_btn_pulse",
     "card_status_ongoing_dot", "card_status_completed_dot",
     "row_status_ongoing_dot", "row_status_completed_dot",
+    "about_card_bg", "about_btn_main_bg", "about_btn_main_text",
 })
 
 ALL_TOKENS = [t for g in GROUPS for t in g.tokens]
