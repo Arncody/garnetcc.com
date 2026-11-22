@@ -55,19 +55,6 @@
   </div>
 </section>
 
-<section class="section section-light home-blog" id="blog">
-  <div class="container">
-    <div class="compact-heading">
-      <h2>{{ T.journal_title }}</h2>
-      <a class="section-link" href="{% url 'website:blog_list' %}">{{ T.all_articles_link }} {% if is_en %}{% icon "arrow-right" 16 %}{% else %}{% icon "arrow-left" 16 %}{% endif %}</a>
-    </div>
-    <div class="home-cards">
-      {% for post in latest_blog %}{% include "website/_post_card.html" with post=post %}
-      {% empty %}<p class="muted">{% if is_en %}The Garnet Journal is coming soon.{% else %}بلاگ گارنت به‌زودی فعال می‌شود.{% endif %}</p>{% endfor %}
-    </div>
-  </div>
-</section>
-
 {% endblock %}
 
 {% block extra_scripts %}

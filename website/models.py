@@ -10,7 +10,6 @@ from django.core.exceptions import ValidationError
 from PIL import Image, UnidentifiedImageError
 from django.db import models
 from django.urls import reverse
-from django.utils import timezone
 
 phone_validator = RegexValidator(
     regex=r"^0(9\d{9}|\d{2,3}\d{7,8})$",
@@ -129,6 +128,7 @@ class SiteSettings(SingletonModel):
         "لینک لینکدین", blank=True, default="",
         help_text="در فوتر سایت کنار اینستاگرام نمایش داده می‌شود؛ اگر خالی بماند، نمایش داده نمی‌شود.",
     )
+    # Retain the saved setting for rollback of the archived blog.
     show_journal_in_header = models.BooleanField(
         "نمایش مقالات و اخبار در منوی هدر", default=False,
         help_text="برای نمایش، آیتم مقالات در «آیتم‌های منوی اصلی» نیز باید فعال باشد. صفحه مقالات و پیوندهای فوتر مستقل هستند.",
@@ -599,63 +599,13 @@ class CompanyCatalog(models.Model):
         return self.title
 
 
-class BlogPost(models.Model):
-    """مقالات دوزبانه برای SEO و محتوای تخصصی برند."""
-    title = models.CharField("عنوان", max_length=220)
-    title_en = models.CharField("عنوان (EN)", max_length=220, blank=True)
-    slug = models.SlugField("Slug", max_length=240, unique=True)
-    excerpt = models.TextField("خلاصه", max_length=500, blank=True)
-    excerpt_en = models.TextField("خلاصه (EN)", max_length=500, blank=True)
-    content = models.TextField("متن مقاله")
-    content_en = models.TextField("متن مقاله (EN)", blank=True)
-    cover = models.ImageField("تصویر کاور", upload_to="blog/", validators=IMAGE_VALIDATORS, blank=True)
-    seo_title = models.CharField("عنوان SEO", max_length=70, blank=True)
-    seo_title_en = models.CharField("عنوان SEO (EN)", max_length=70, blank=True)
-    seo_description = models.CharField("توضیحات SEO", max_length=160, blank=True)
-    seo_description_en = models.CharField("توضیحات SEO (EN)", max_length=160, blank=True)
-    category = models.CharField("دسته‌بندی", max_length=100, default="معماری")
-    category_en = models.CharField("دسته‌بندی (EN)", max_length=100, default="Architecture", blank=True)
-    is_published = models.BooleanField("منتشر شود", default=False)
-    is_featured = models.BooleanField("مقاله ویژه", default=False)
-    published_at = models.DateTimeField("تاریخ و زمان انتشار", blank=True, null=True, help_text="اگر خالی بماند، هنگام انتشار مقاله، زمان همان لحظه ثبت می‌شود.")
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        verbose_name = "مقاله وبلاگ"
-        verbose_name_plural = "مقالات وبلاگ"
-        ordering = ["-published_at", "-created_at"]
-
-    def __str__(self):
-        return self.title
-
-    def get_absolute_url(self):
-        return reverse("website:blog_detail", kwargs={"slug": self.slug})
-
-    def save(self, *args, **kwargs):
-        # با منتشر شدن مقاله، زمان انتشار به‌صورت خودکار ثبت می‌شود.
-        if self.is_published and not self.published_at:
-            self.published_at = timezone.now()
-        super().save(*args, **kwargs)
-
-    @property
-    def display_date(self):
-        """زمان نمایشی مقاله: تاریخ انتشار، و در نبود آن تاریخ ثبت."""
-        return self.published_at or self.created_at
-
-
 SITE_TEXT_DEFAULTS = {
     "home_about_link": ("درباره گارنت", "About Garnet"),
     "home_projects_title": ("گارنت، در یک نگاه.", "A clear view of Garnet."),
     "project_view_button": ("مشاهده پروژه", "View project"),
     "footer_purchase_button": ("درخواست خرید", "Request to buy"),
-    "all_articles_link": ("همه مقالات", "All articles"),
     "all_projects_btn": ("مشاهده همه پروژه‌ها", "View all projects"),
     "project_catalog_button_text": ("کاتالوگ پروژه", "Project catalog"),
-    "journal_eyebrow": ("بلاگ گارنت", "GARNET JOURNAL"),
-    "journal_title": ("ایده‌هایی پشت معماری.", "Ideas behind the architecture."),
-    "blog_page_eyebrow": ("بلاگ گارنت", "GARNET JOURNAL"),
-    "blog_page_title": ("معماری، متریال و ایده‌ها.", "Architecture, materials and ideas."),
     "cta_eyebrow": ("مشاوره خصوصی", "PRIVATE CONSULTATION"),
     "cta_text": ("برای آدرس بعدی شما، یک گفت‌وگوی دقیق و خصوصی.", "A focused conversation for your next address."),
     "cta_button": ("درخواست مشاوره", "Request consultation"),

@@ -4,8 +4,9 @@ import csv
 from django.http import HttpResponse
 from .models import (
     SiteSettings, HeroSection, HeroStat, Project, ProjectImage,
-    PhilosophyFeature, SiteSection, ConsultationRequest, CompanyCatalog, BlogPost, SiteTheme, SiteTexts, MenuItem, MenuSubItem, NewsletterSubscriber
+    PhilosophyFeature, SiteSection, ConsultationRequest, CompanyCatalog, SiteTheme, SiteTexts, MenuItem, MenuSubItem, NewsletterSubscriber
 )
+from .navigation import is_retired_blog_link
 
 admin.site.site_header = "پنل مدیریت گارنت | Garnet CMS"
 admin.site.site_title = "Garnet Admin"
@@ -174,9 +175,8 @@ class SiteThemeAdmin(admin.ModelAdmin):
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):
     fieldsets=(
-        ("برند / Brand",{"fields":("brand_name","legal_name","logo","logo_light","favicon",("tagline","tagline_en"))}),
+        ("برند / Brand",{"fields":("brand_name","legal_name","logo","logo_light","favicon")}),
         ("تماس / Contact",{"fields":("phone","email","address","instagram_url","linkedin_url")}),
-        ("منوی هدر / Header menu",{"fields":("show_journal_in_header",)}),
         ("چرخش پروژه‌ها / Projects carousel",{"fields":("projects_carousel_enabled","projects_carousel_speed")}),
         ("رزرو / Booking",{"fields":("booking_url","working_hours_weekday","working_hours_weekend")}),
         ("SEO",{"fields":("meta_title","meta_description")}),
@@ -234,21 +234,6 @@ class CompanyCatalogAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(BlogPost)
-class BlogPostAdmin(admin.ModelAdmin):
-    list_display = ("title", "title_en", "category", "is_published", "is_featured", "published_at")
-    list_editable = ("is_published", "is_featured")
-    list_filter = ("is_published", "is_featured", "category")
-    search_fields = ("title", "title_en", "excerpt", "excerpt_en", "content", "content_en", "seo_title", "seo_title_en")
-    prepopulated_fields = {"slug": ("title",)}
-    fieldsets = (
-        ("فارسی", {"fields": ("title", "slug", "excerpt", "content", "category")}),
-        ("English", {"fields": ("title_en", "excerpt_en", "content_en", "category_en")}),
-        ("تصویر و انتشار", {"fields": ("cover", "is_published", "is_featured", "published_at"), "description": "زمان انتشار در سایت (تاریخ و ساعت) زیر عنوان مقاله نمایش داده می‌شود."}),
-        ("SEO", {"fields": ("seo_title", "seo_title_en", "seo_description", "seo_description_en")}),
-    )
-
-
 @admin.register(SiteTexts)
 class SiteTextsAdmin(admin.ModelAdmin):
     """ویرایش عنوان‌های صفحه اصلی، کادر مشاوره و تمام متن‌های فرم درخواست (فارسی + انگلیسی)."""
@@ -260,8 +245,6 @@ class SiteTextsAdmin(admin.ModelAdmin):
         )}),
         ("دکمه‌های بخش درباره و همه پروژه‌ها", {"fields": (("home_about_link", "home_about_link_en"), ("all_projects_btn", "all_projects_btn_en"))}),
         ("📘 دکمه کاتالوگ در صفحه داخلی پروژه", {"fields": (("project_catalog_button_text", "project_catalog_button_text_en"),), "description": "عنوان دکمه دانلود کاتالوگ اختصاصی هر پروژه؛ فایل PDF هر پروژه در فرم همان پروژه بارگذاری می‌شود."}),
-        ("📰 بخش بلاگ (صفحه اصلی)", {"fields": (("journal_title","journal_title_en"),("all_articles_link","all_articles_link_en"),)}),
-        ("📚 صفحه «همه مقالات»", {"fields": (("blog_page_title","blog_page_title_en"),)}),
         ("📞 عنوان دکمه‌های درخواست مشاوره", {"fields": (("consultation_button_text", "consultation_button_text_en"), ("cta_button", "cta_button_en"))}),
         ("📝 پاپ‌آپ فرم درخواست مشاوره", {"fields": (("modal_title","modal_title_en"),("modal_subtitle","modal_subtitle_en"),("submit_text","submit_text_en"),)}),
         ("🏷️ عنوان فیلدهای فرم", {"fields": (("label_name","label_name_en"),("label_gender","label_gender_en"),("label_phone","label_phone_en"),("label_subject","label_subject_en"),("label_message","label_message_en"),)}),
@@ -276,12 +259,20 @@ class SiteTextsAdmin(admin.ModelAdmin):
         return False
 
 
+def _retired_menu_link_ids(queryset, host):
+    return [pk for pk, url in queryset.values_list("pk", "url") if is_retired_blog_link(url, host)]
+
+
 class MenuSubItemInline(admin.TabularInline):
     model = MenuSubItem
     extra = 0
     fields = ("title", "title_en", "url", "order", "is_active")
     verbose_name = "زیرمنو"
     verbose_name_plural = "زیرمنوها (با کلیک روی آیتم، این گزینه‌ها باز می‌شوند)"
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        return queryset.exclude(pk__in=_retired_menu_link_ids(queryset, request.get_host()))
 
 
 @admin.register(MenuItem)
@@ -296,6 +287,11 @@ class MenuItemAdmin(admin.ModelAdmin):
     fieldsets = (
         ("آیتم منو", {"fields": (("title", "title_en"), "url", "open_consult", ("order", "is_active"))}),
     )
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        retired = _retired_menu_link_ids(queryset.filter(open_consult=False), request.get_host())
+        return queryset.exclude(pk__in=retired)
 
 
 def export_active_newsletter_emails(modeladmin, request, queryset):

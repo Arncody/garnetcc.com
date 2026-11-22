@@ -4,5 +4,5 @@
   "baseline": "Complete GDCS ZIP; Django and Chromium checks on local fixture data",
   "active_task": null,
   "last_update": "2026-11-22",
-  "note": "GNT-013 completed after local verification on the supplied GNT-012 source. Production verification and historical exposure tracking under GNT-005 remain open."
+  "note": "GNT-014 completed after local verification on GNT-013. The blog table was archived by a reversible migration. Production verification and historical exposure tracking under GNT-005 remain open."
 }

@@ -11,7 +11,7 @@ from django.http import HttpResponseRedirect
 from django.utils.translation import gettext_lazy as _
 from django.utils.http import url_has_allowed_host_and_scheme
 
-from .models import HeroSection, Project, SiteSection, PhilosophyFeature, CompanyCatalog, BlogPost, SiteTexts, NewsletterSubscriber
+from .models import HeroSection, Project, SiteSection, PhilosophyFeature, CompanyCatalog, SiteTexts, NewsletterSubscriber
 from .forms import ConsultationForm, NewsletterSubscriptionForm
 
 # محدودیت درخواست فرم مشاوره برای هر IP (ضد اسپم ساده، بدون نیاز به Redis)
@@ -82,8 +82,6 @@ def _common_context():
         "cta_section": SiteSection.objects.filter(key=SiteSection.KEY_CTA, is_active=True).first(),
         "philosophy_features": PhilosophyFeature.objects.filter(is_active=True),
         "catalog": CompanyCatalog.objects.filter(is_active=True).first(),
-        "featured_blog": BlogPost.objects.filter(is_published=True, is_featured=True).first(),
-        "latest_blog": BlogPost.objects.filter(is_published=True)[:3],
     }
 
 
@@ -200,16 +198,6 @@ def projects_list(request):
         "ongoing_projects": base.filter(status=Project.STATUS_ONGOING),
         "completed_projects": base.filter(status=Project.STATUS_COMPLETED),
     })
-
-
-def blog_list(request):
-    posts = BlogPost.objects.filter(is_published=True)
-    return render(request, "website/blog/list.html", {"posts": posts})
-
-
-def blog_detail(request, slug):
-    post = get_object_or_404(BlogPost, slug=slug, is_published=True)
-    return render(request, "website/blog/detail.html", {"post": post})
 
 
 def favicon_ico(request):

@@ -7,7 +7,7 @@
 - Current application: Django monolith with server-side templates and static CSS/JS.
 - Future frontend/backend technology is NOT decided. Preserve platform-neutral behavior, data and URL contracts.
 - Current task: **none** — select a backlog item.
-- Latest design task: **GNT-013** — homepage presentation, editable header visibility and compact responsive footer, verified locally.
+- Latest task: **GNT-014** — transparent controls, compact footer and blog retirement, verified locally.
 
 ## Control authority
 - `state.json` and `tasks.json` are **canonical for task status**; this file is a succinct human-readable snapshot.

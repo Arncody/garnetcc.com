@@ -95,9 +95,11 @@ def protected_media(request, path):
         full = safe_join(settings.MEDIA_ROOT, path)
     except Exception:
         raise Http404
+    rel = os.path.relpath(full, settings.MEDIA_ROOT).replace(os.sep, "/")
+    if rel.startswith("blog/"):
+        raise Http404
     if not os.path.isfile(full):
         raise Http404
-    rel = path.replace("\\", "/").lstrip("/")
     ext = os.path.splitext(full)[1].lower()
     public = rel.startswith(PUBLIC_PREFIXES)
     protected = ext in IMAGE_EXT or ext in VIDEO_EXT

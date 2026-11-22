@@ -4,6 +4,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const nav = document.getElementById('main-nav');
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  const footerGroups = document.querySelectorAll('.footer-layout-compact .footer-col');
+  if (footerGroups.length) {
+    const compactViewport = window.matchMedia('(max-width: 52rem), (max-height: 40rem)');
+    const syncFooter = () => footerGroups.forEach((group) => {
+      group.open = !compactViewport.matches;
+    });
+    syncFooter();
+    compactViewport.addEventListener?.('change', syncFooter);
+  }
+
+
   const mobileGroups = [...document.querySelectorAll('[data-panel-group]')];
   function setMobileGroup(group, open) {
     group.classList.toggle('is-open', open);
@@ -480,7 +491,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         resume(1800);
       }, { passive: false });
-      /* Prev / next buttons + arrow keys: smooth step of exactly one card. */
+      /* Arrow keys move one card at a time. */
       var animId = 0;
       function stepSize() { return originals.length ? setWidth / originals.length : 0; }
       function glide(direction) {
@@ -499,15 +510,6 @@ document.addEventListener('DOMContentLoaded', () => {
           else resume(2500);
         }
         window.requestAnimationFrame(frame);
-      }
-      var wrapper = rail.parentElement;
-      if (wrapper) {
-        Array.prototype.forEach.call(wrapper.querySelectorAll('[data-rail-nav]'), function (btn) {
-          btn.addEventListener('click', function (e) {
-            e.preventDefault();
-            glide(parseInt(btn.getAttribute('data-rail-nav'), 10) || 1);
-          });
-        });
       }
       rail.addEventListener('keydown', function (e) {
         if (e.key === 'ArrowRight') { e.preventDefault(); glide(1); }

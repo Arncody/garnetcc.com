@@ -27,7 +27,7 @@
  --nav-weight:{{ site_theme.nav_weight }};--hero-weight:{{ site_theme.hero_weight }};--section-weight:{{ site_theme.section_weight }};--card-weight:{{ site_theme.card_weight }};--button-weight:{{ site_theme.button_weight }};--label-weight:{{ site_theme.label_weight }};--small-weight:{{ site_theme.small_weight }};
 }
 body{background:var(--theme-bg);color:var(--theme-text);font-weight:var(--body-weight)}
-h1,h2,h3,h4,h5,h6{font-weight:var(--heading-weight)}.hero h1{font-weight:var(--hero-weight)}.section h2,.section-head h2,.compact-heading h2{font-weight:var(--section-weight)}.project-content h3,.service-card h3,.journal-card h3,.mini-project h3{font-weight:var(--card-weight)}
+h1,h2,h3,h4,h5,h6{font-weight:var(--heading-weight)}.hero h1{font-weight:var(--hero-weight)}.section h2,.section-head h2,.compact-heading h2{font-weight:var(--section-weight)}.project-content h3,.service-card h3,.mini-project h3{font-weight:var(--card-weight)}
 .main-nav a{font-weight:var(--nav-weight)}
 .btn,.button,.submit-row input[type=submit]{font-weight:var(--button-weight)}
 label,.eyebrow{font-weight:var(--label-weight)}
@@ -43,7 +43,7 @@ small,.small{font-weight:var(--small-weight)}
 </style>{% endif %}
 <link rel="stylesheet" href="{% static 'css/garnet-ui.css' %}?v=GNT-012">
 <link rel="stylesheet" href="{% static 'css/design-system.css' %}?v=GNT-012">
-<link rel="stylesheet" href="{% static 'css/garnet-presentation.css' %}?v=GNT-013">
+<link rel="stylesheet" href="{% static 'css/garnet-presentation.css' %}?v=GNT-014">
 {% if site_theme.custom_css %}<style id="garnet-custom-css">{{ site_theme.custom_css|safe }}</style>{% endif %}
 </head>
 <body class="site-shell{% if request.resolver_match.view_name == 'website:home' %} site-home{% endif %}">
@@ -107,6 +107,6 @@ small,.small{font-weight:var(--small-weight)}
 {% if request.path != '/' %}<a class="mobile-back" href="javascript:history.back()" aria-label="{% if is_en %}Back{% else %}بازگشت{% endif %}"><span aria-hidden="true">{% if is_en %}{% icon "arrow-left" 16 %}{% else %}{% icon "arrow-right" 16 %}{% endif %}</span><b>{% if is_en %}Back{% else %}بازگشت{% endif %}</b></a>{% endif %}
 {% include "website/_footer.html" %}
 <a class="floating-call" href="tel:{{ site_settings.phone }}" aria-label="{% if is_en %}Call Garnet{% else %}تماس با گارنت{% endif %}">{% icon "phone" 22 %}</a>
-<script src="{% static 'js/main.js' %}?v=GNT-012" defer></script>
+<script src="{% static 'js/main.js' %}?v=GNT-014" defer></script>
 {% block extra_scripts %}{% endblock %}
 </body></html>

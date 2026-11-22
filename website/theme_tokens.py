@@ -91,16 +91,10 @@ GROUPS = [
               ".section.home-projects{background:{v}!important}"),
         Token("sec_about_bg", "رنگ مشترک انتهای ویدیو و پس‌زمینه «درباره گارنت»", "#101111",
               "body.site-home{--home-seam:{v}}"),
-        Token("sec_home_blog_bg", "بخش مقالات در صفحه اصلی", OFF_WHITE,
-              ".section.home-blog{background:{v}!important}"),
         Token("page_projects_bg", "صفحه «پروژه‌ها» (لیست پروژه‌ها)", OFF_WHITE,
               ".section.projects-page{background:{v}!important}"),
         Token("page_project_detail_bg", "صفحه داخلی هر پروژه (بخش متن و اطلاعات)", OFF_WHITE,
               ".section.pd-body{background:{v}!important}"),
-        Token("page_blog_list_bg", "صفحه «مقالات و اخبار» (لیست مقالات)", OFF_WHITE,
-              ".section.blog-list-page{background:{v}!important}"),
-        Token("page_blog_detail_bg", "صفحه داخلی هر مقاله", OFF_WHITE,
-              ".section.blog-detail-page{background:{v}!important}"),
     ]),
     Group("texts", "🔤 رنگ تیترها و متن‌های عمومی", "تیتر بخش‌ها، لینک‌ها و متن‌های صفحه‌ها.", [
         Token("text_body", "متن عمومی سایت", CHARCOAL, "body.site-shell{color:{v}!important}"),
@@ -229,19 +223,14 @@ GROUPS = [
         Token("pd_btn_pulse", "رنگ هاله ضربانی دکمه درخواست خرید / مشاوره", "rgba(204,108,66,.42)", ".pd-btn.pd-btn-primary::after,.pd-cta::after{border-color:{v}!important}"),
         Token("pd_chip_bg", "کپسول‌های کد / وضعیت / سال", "rgba(20,26,30,.28)", ".pd-chips li{background:{v}!important}"),
     ]),
-    Group("blog_pages", "📰 صفحات مقالات و اخبار", "متن و تیترهای صفحه داخلی مقاله.", [
-        Token("article_title", "تیتر مقاله", CHARCOAL, ".article-shell h1{color:{v}!important}"),
-        Token("article_text", "متن مقاله", GRAPHITE, ".article-content,.article-content p{color:{v}!important}"),
-        Token("article_meta", "تاریخ انتشار", GRAPHITE, ".article-meta,.article-meta span{color:{v}!important}"),
-    ]),
     Group("footer", "⬛ فوتر (پایین سایت)", "رنگ زمینه، تیترها، لینک‌ها، آیکون‌ها و فرم خبرنامه.", [
         Token("footer_bg", "پس‌زمینه فوتر", PALETTE["footer-charcoal"], ".site-footer{background:{v}!important;background-image:none!important}"),
         Token("footer_text", "متن‌های فوتر", "#FFFFFF", ".site-footer{color:{v}!important}"),
         Token("footer_heading", "تیترهای ستون‌های فوتر", "#FFFFFF", ".site-footer .footer-col h2{color:{v}!important}"),
         Token("footer_link", "لینک‌ها و متن ستون‌ها", "rgba(255,255,255,.66)",
-              ".site-footer .footer-grid-reference .footer-col>a,.site-footer .footer-grid-reference .footer-col>p{color:{v}!important}"),
+              ".site-footer .footer-grid-reference .footer-col-body>a,.site-footer .footer-grid-reference .footer-col-body>p{color:{v}!important}"),
         Token("footer_link_hover", "لینک‌ها هنگام Hover", "#FFFFFF",
-              ".site-footer .footer-grid-reference .footer-col>a:hover{color:{v}!important}"),
+              ".site-footer .footer-grid-reference .footer-col-body>a:hover{color:{v}!important}"),
         Token("footer_contact_icon", "آیکون تلفن و ایمیل", WHITE, ".site-footer .footer-contact-icon{color:{v}!important}"),
         Token("footer_buy_bg", "دکمه درخواست خرید فوتر — پس‌زمینه", WHITE, ".site-footer .footer-buy{--footer-buy-bg:{v}}"),
         Token("footer_buy_text", "دکمه درخواست خرید فوتر — رنگ متن", CHARCOAL, ".site-footer .footer-buy{--footer-buy-text:{v}}"),
@@ -296,6 +285,7 @@ RETIRED_DECORATIONS = frozenset({
     "card_status_ongoing_dot", "card_status_completed_dot",
     "row_status_ongoing_dot", "row_status_completed_dot",
     "about_card_bg", "about_btn_main_bg", "about_btn_main_text",
+    "header_cta_bg", "header_cta_hover", "header_cta_text", "all_btn_bg", "rail_nav_bg", "rail_nav_icon",
 })
 
 ALL_TOKENS = [t for g in GROUPS for t in g.tokens]

@@ -298,5 +298,30 @@
       "2026-11-22: Verified on supplied GNT-012 source with 110 Chromium page/language/viewport combinations, eight browser checks after actual admin form changes, mobile touch and desktop keyboard navigation, matching seam pixels, video and reduced-motion behavior, and both form submissions in FA/EN. Compared compact footer against identical preview fixtures. Verified migration 0018 and reversal, Django system checks, production-mode collectstatic, JS syntax and Git whitespace."
     ],
     "rollback": "Back up settings. While GNT-013 code is present, migrate website to 0017, then revert the code. Reversing removes five new settings fields."
+  },
+  {
+    "id": "GNT-014",
+    "priority": "P1",
+    "title": "Transparent controls, compact footer and blog retirement",
+    "status": "done",
+    "depends_on": [
+      "GNT-013"
+    ],
+    "modules": [
+      "M01",
+      "M02",
+      "M07",
+      "M10"
+    ],
+    "acceptance": [
+      "Transparent header and projects controls across scroll states",
+      "Remove rail buttons while preserving drag and keyboard",
+      "Compact responsive footer with no tagline",
+      "Retire blog routes, views and admin and archive existing articles"
+    ],
+    "verification_evidence": [
+      "2026-11-22: Chromium passed 72 responsive page and language combinations, including landscape phones and short desktops. Verified legacy dark theme override handling, compact footer geometry and interaction, carousel keyboard and drag, both forms, removed blog routes/media and admin links, sitemap and SQLite preservation across 0019 forward/reverse. Django check, collectstatic, JS syntax and Git whitespace passed."
+    ],
+    "rollback": "With GNT-014 code installed, reverse website to 0018 before restoring the earlier files. Article rows remain available in the archive until reversal."
   }
 ]
