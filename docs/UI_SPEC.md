@@ -38,3 +38,9 @@ Apply `website.0019_archive_blog` with `python manage.py migrate --noinput` afte
 ## Responsive and media
 
 Review 320, 390, 768, 1024 and 1440px in both directions. Keep essential Hero subjects inside a central safe area. Suggested sources are 2560×1600 for Hero, 1600×1100 for project covers, and 1600×1200 or 1920×1280 for gallery images.
+
+## Portfolio and About content
+
+The project index groups active projects under the existing `#ongoing` and `#completed` links. The detail page shows the project's cover, facts, optional progress, descriptions and gallery. Projects use their stored images and URLs. The About page at `/about/` uses its own introduction, story, philosophy, principles, quote and call to action. All three pages inherit the shared site header and footer.
+
+Use Site Sections for bilingual text, opening images and optional sections. Set project story headlines, percentages, status notes, catalog files and gallery images in Projects. Use Philosophy Features for the About principles, Site Texts for bilingual group headings and buttons, and SiteTheme → «صفحات پروژه‌ها و درباره گارنت» for the palette of the three page bodies. The opening and philosophy sections use conceptual images from the supplied mockup when no replacement has been uploaded. Existing project records have no default progress. Migration `0020_editorial_pages` seeds copy into new section keys while honoring existing records.

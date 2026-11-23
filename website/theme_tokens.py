@@ -186,7 +186,7 @@ GROUPS = [
         Token("about_btn_main_bg", "پس‌زمینه دکمه پروژه‌های نسخه قبلی", CHARCOAL, ()),
         Token("about_btn_main_text", "متن دکمه پروژه‌های نسخه قبلی", WHITE, ()),
     ]),
-    Group("projects_page", "📋 صفحه «پروژه‌ها» (لیست پروژه‌ها)", "انتخاب‌گرها، تیتر بخش‌ها و ردیف‌های لیست پروژه.", [
+    Group("projects_page", "صفحهٔ پروژه‌ها — طرح قبلی", "برای طرح فعلی از گروه «صفحات پروژه‌ها و درباره گارنت» استفاده کنید.", [
         Token("tabs_bg", "کپسول‌های «در حال اجرا / تمام شده» — پس‌زمینه", "#FFFFFF", ".projects-tabs a{background:{v}!important}"),
         Token("tabs_text", "کپسول‌های «در حال اجرا / تمام شده» — متن", "#0B2A3A", ".projects-tabs a{color:{v}!important}"),
         Token("tabs_count_bg", "شمارنده کپسول‌ها", "#0B2A3A", ".projects-tabs b{background:{v}!important}"),
@@ -209,7 +209,7 @@ GROUPS = [
               ".proj-row .proj-row-status.ps-completed i{background:{v}!important;box-shadow:0 0 9px {v}!important}"),
         Token("row_badge_bg", "ردیف پروژه — نشان ویژه روی تصویر", CHARCOAL, ".proj-row .proj-row-badge{background:{v}!important}"),
     ]),
-    Group("project_detail", "🏠 صفحه داخلی پروژه", "کادر اطلاعات، متن و دکمه‌های داخل هر پروژه.", [
+    Group("project_detail", "جزئیات پروژه — طرح قبلی", "برای طرح فعلی از گروه «صفحات پروژه‌ها و درباره گارنت» استفاده کنید.", [
         Token("pd_story_title", "عنوان متن پروژه", "#1A1C1C", ".pd-story h2{color:{v}!important}"),
         Token("pd_text", "متن معرفی پروژه", "#425661", ".pd-text p{color:{v}!important}"),
         Token("pd_aside_bg", "کادر «اطلاعات پروژه» — پس‌زمینه", "#FFFFFF", ".pd-aside{background:{v}!important}"),
@@ -222,6 +222,14 @@ GROUPS = [
         Token("pd_btn_shadow", "رنگ سایه دکمه درخواست خرید / مشاوره", "rgba(150,80,45,.38)", ".pd-btn.pd-btn-primary,.pd-cta{box-shadow:0 12px 32px {v}!important}"),
         Token("pd_btn_pulse", "رنگ هاله ضربانی دکمه درخواست خرید / مشاوره", "rgba(204,108,66,.42)", ".pd-btn.pd-btn-primary::after,.pd-cta::after{border-color:{v}!important}"),
         Token("pd_chip_bg", "کپسول‌های کد / وضعیت / سال", "rgba(20,26,30,.28)", ".pd-chips li{background:{v}!important}"),
+    ]),
+    Group("editorial_pages", "صفحات پروژه‌ها و درباره گارنت",
+          "رنگ‌های محتوای سه صفحه. هدر و فوتر از کنترل‌های مشترک خود استفاده می‌کنند.", [
+        Token("editorial_canvas", "رنگ زمینه و انتهای تصویر آغاز صفحه", "#101411", ".editorial-page{--ed-theme-canvas:{v}}"),
+        Token("editorial_volume", "رنگ عمق بخش‌ها و زمینه کارت‌ها", "#263028", ".editorial-page{--ed-theme-volume:{v}}"),
+        Token("editorial_ink", "رنگ تیترها و دکمه‌های متنی", "#F4F3EF", ".editorial-page{--ed-theme-ink:{v}}"),
+        Token("editorial_muted", "رنگ توضیحات", "#C1C8BF", ".editorial-page{--ed-theme-muted:{v}}"),
+        Token("editorial_accent", "رنگ تأکیدی و نوار پیشرفت", "#C6BCA9", ".editorial-page{--ed-theme-accent:{v}}"),
     ]),
     Group("footer", "⬛ فوتر (پایین سایت)", "رنگ زمینه، تیترها، لینک‌ها، آیکون‌ها و فرم خبرنامه.", [
         Token("footer_bg", "پس‌زمینه فوتر", PALETTE["footer-charcoal"], ".site-footer{background:{v}!important;background-image:none!important}"),
@@ -286,7 +294,8 @@ RETIRED_DECORATIONS = frozenset({
     "row_status_ongoing_dot", "row_status_completed_dot",
     "about_card_bg", "about_btn_main_bg", "about_btn_main_text",
     "header_cta_bg", "header_cta_hover", "header_cta_text", "all_btn_bg", "rail_nav_bg", "rail_nav_icon",
-})
+    "page_projects_bg", "page_project_detail_bg",
+} | {token.key for group in GROUPS if group.key in {"projects_page", "project_detail"} for token in group.tokens})
 
 ALL_TOKENS = [t for g in GROUPS for t in g.tokens]
 TOKENS_BY_KEY = {t.key: t for t in ALL_TOKENS}

@@ -1,0 +1,9 @@
+{% extends "website/base.html" %}{% load static %}
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'css/garnet-editorial.css' %}?v=GNT-015">
+{% endblock %}
+{% block content %}
+  <div class="editorial-page {% block editorial_page_class %}{% endblock %}">
+    {% block editorial_content %}{% endblock %}
+  </div>
+{% endblock %}

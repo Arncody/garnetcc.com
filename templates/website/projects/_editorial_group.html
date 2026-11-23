@@ -1,0 +1,15 @@
+<section class="ed-band{% if group_id == 'completed' %} ed-band-alt{% endif %}" id="{{ group_id }}" aria-labelledby="{{ group_id }}-title">
+  <div class="container">
+    <h2 class="ed-heading" id="{{ group_id }}-title">{{ group_title }}</h2>
+    <div class="ed-project-grid">
+      {% for project in projects %}
+        {% include "website/projects/_editorial_card.html" with project=project %}
+      {% empty %}
+        <p class="ed-body">
+          {% if group_id == 'completed' %}{% if is_en %}No completed projects yet.{% else %}فعلاً پروژهٔ تکمیل‌شده‌ای ثبت نشده است.{% endif %}
+          {% else %}{% if is_en %}No ongoing projects yet.{% else %}فعلاً پروژهٔ در حال اجرایی ثبت نشده است.{% endif %}{% endif %}
+        </p>
+      {% endfor %}
+    </div>
+  </div>
+</section>

@@ -323,5 +323,31 @@
       "2026-11-22: Chromium passed 72 responsive page and language combinations, including landscape phones and short desktops. Verified legacy dark theme override handling, compact footer geometry and interaction, carousel keyboard and drag, both forms, removed blog routes/media and admin links, sitemap and SQLite preservation across 0019 forward/reverse. Django check, collectstatic, JS syntax and Git whitespace passed."
     ],
     "rollback": "With GNT-014 code installed, reverse website to 0018 before restoring the earlier files. Article rows remain available in the archive until reversal."
+  },
+  {
+    "id": "GNT-015",
+    "priority": "P1",
+    "title": "Reference-driven project pages and standalone About",
+    "status": "done",
+    "depends_on": [
+      "GNT-014"
+    ],
+    "modules": [
+      "M01",
+      "M02",
+      "M06",
+      "M07",
+      "M10"
+    ],
+    "acceptance": [
+      "Render reference layouts with the shared header and footer",
+      "Connect the standalone About page from existing links",
+      "Edit copy, imagery, project progress and palette via Django admin",
+      "Verify real project routes, both languages, gallery, existing forms and responsive layout"
+    ],
+    "verification_evidence": [
+      "2026-11-23: 100 Chromium page/language/viewport checks, actual Django admin writes and 24 page checks with edited content, gallery and navigation tests, both forms persisted, sitemap and absent route checks, fresh and reversible SQLite migration 0020, Django check and collectstatic, JS syntax and Git whitespace."
+    ],
+    "rollback": "Revert files and keep the earlier project data. If reverting the migration, back up the newly editable fields and then migrate website to 0019 before replacing the files."
   }
 ]

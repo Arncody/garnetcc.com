@@ -1,218 +1,129 @@
-{% extends "website/base.html" %}
+{% extends "website/editorial_base.html" %}{% load l10n static site_icons %}
 {% block title %}{% if is_en %}{{ project.title_en|default:project.title }}{% else %}{{ project.title }}{% endif %} | {{ site_settings.brand_name }}{% endblock %}
 {% block meta_description %}{% if is_en %}{{ project.short_description_en|default:project.short_description }}{% else %}{{ project.short_description }}{% endif %}{% endblock %}
-{% block extra_head %}
-<style id="garnet-project-recommendations-v3">
-/* Square project recommendations: image first, title underneath. */
-.pd-body .pd-related.pd-related-square{
-  width:min(100% - 40px,1120px)!important;
-  margin:54px auto 34px!important;
-}
-.pd-related-square .pd-related-head{
-  display:flex!important;align-items:center!important;justify-content:space-between!important;
-  gap:18px!important;margin:0 0 22px!important;
-}
-.pd-related-square .pd-related-kicker{
-  color:var(--theme-muted,#60727d)!important;font-size:.72rem!important;
-  font-weight:700!important;letter-spacing:.08em!important;
-}
-.pd-related-square .pd-related-all{
-  display:inline-flex!important;align-items:center!important;gap:10px!important;
-  min-height:46px!important;padding:5px 15px 5px 7px!important;
-  border:1px solid rgba(9,38,52,.13)!important;border-radius:999px!important;
-  background:#fff!important;color:var(--theme-primary,#092634)!important;
-  text-decoration:none!important;font-size:.78rem!important;font-weight:700!important;
-  box-shadow:0 8px 24px rgba(9,38,52,.08)!important;transition:transform .2s ease,box-shadow .2s ease!important;
-}
-.pd-related-square .pd-related-all:hover{transform:translateY(-2px)!important;box-shadow:0 12px 28px rgba(9,38,52,.13)!important}
-.pd-related-square .pd-related-all-mark{
-  position:relative!important;display:grid!important;place-items:center!important;
-  width:34px!important;height:34px!important;border-radius:50%!important;
-  color:#fff!important;background:linear-gradient(145deg,#173c4c,#092634)!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.28)!important;
-}
-.pd-related-square .pd-related-all-mark b{font-family:Georgia,serif!important;font-size:19px!important;line-height:1!important}
-.pd-related-square .pd-related-all-mark i{
-  position:absolute!important;right:-2px!important;bottom:-2px!important;
-  display:grid!important;place-items:center!important;width:15px!important;height:15px!important;
-  border-radius:50%!important;background:#d9774e!important;color:white!important;
-  border:2px solid #fff!important;font-size:9px!important;font-style:normal!important;
-}
-.pd-related-square .pd-related-all-arrow{font-size:1rem!important;opacity:.7!important}
-.pd-related-square .pd-related-list{
-  display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
-  gap:22px!important;width:100%!important;margin:0!important;padding:0!important;
-  overflow:visible!important;
-}
-.pd-related-square .pd-related-item{
-  display:flex!important;flex-direction:column!important;align-items:stretch!important;
-  gap:10px!important;width:100%!important;min-width:0!important;height:auto!important;
-  padding:0!important;margin:0!important;border:0!important;border-radius:0!important;
-  background:transparent!important;box-shadow:none!important;text-decoration:none!important;
-  overflow:visible!important;transform:none!important;
-}
-.pd-related-square .pd-related-image{
-  position:relative!important;display:block!important;width:100%!important;
-  aspect-ratio:1/1!important;overflow:hidden!important;border-radius:14px!important;
-  background:#e9e7e2!important;box-shadow:0 12px 30px rgba(7,29,43,.12)!important;
-}
-.pd-related-square .pd-related-image img,
-.pd-related-square .pd-related-placeholder{
-  display:block!important;width:100%!important;height:100%!important;
-  min-width:0!important;object-fit:cover!important;border-radius:0!important;
-}
-.pd-related-square .pd-related-image-mark{
-  position:absolute!important;left:11px!important;bottom:11px!important;
-  display:grid!important;place-items:center!important;width:30px!important;height:30px!important;
-  border:1px solid rgba(255,255,255,.65)!important;border-radius:50%!important;
-  color:#fff!important;background:rgba(7,29,43,.46)!important;
-  backdrop-filter:blur(8px)!important;font-size:14px!important;
-  opacity:0!important;transform:translateY(4px)!important;
-  transition:opacity .2s ease,transform .2s ease!important;
-}
-.pd-related-square .pd-related-item:hover .pd-related-image-mark{
-  opacity:1!important;transform:translateY(0)!important;
-}
-.pd-related-square .pd-related-info{
-  display:flex!important;flex-direction:column!important;align-items:center!important;
-  gap:3px!important;width:100%!important;min-width:0!important;text-align:center!important;
-  overflow:visible!important;
-}
-.pd-related-square .pd-related-info strong{
-  display:block!important;width:100%!important;overflow:hidden!important;
-  text-overflow:ellipsis!important;white-space:nowrap!important;
-  color:var(--theme-text,#1a1c1c)!important;font-size:.9rem!important;
-  line-height:1.7!important;font-weight:700!important;
-}
-.pd-related-square .pd-related-info small{
-  display:block!important;color:var(--theme-muted,#60727d)!important;
-  font-size:.7rem!important;line-height:1.6!important;
-}
-@media(max-width:760px){
-  .pd-body .pd-related.pd-related-square{width:calc(100% - 32px)!important;margin:36px auto 26px!important}
-  .pd-related-square .pd-related-head{margin-bottom:15px!important;gap:10px!important}
-  .pd-related-square .pd-related-kicker{font-size:.62rem!important}
-  .pd-related-square .pd-related-all{min-height:40px!important;padding:4px 11px 4px 5px!important;gap:7px!important;font-size:.69rem!important}
-  .pd-related-square .pd-related-all-mark{width:29px!important;height:29px!important}
-  .pd-related-square .pd-related-all-mark b{font-size:16px!important}
-  .pd-related-square .pd-related-list{
-    grid-template-columns:repeat(3,minmax(0,1fr))!important;
-    gap:8px!important;
-  }
-  .pd-related-square .pd-related-image{border-radius:11px!important}
-  .pd-related-square .pd-related-info strong{font-size:.78rem!important}
-  .pd-related-square .pd-related-info small{font-size:.63rem!important}
-}
-@media(max-width:360px){
-  .pd-related-square .pd-related-list{gap:6px!important}
-  .pd-related-square .pd-related-info strong{font-size:.66rem!important}
-  .pd-related-square .pd-related-info small{font-size:.56rem!important}
-}
-@media(prefers-reduced-motion:reduce){
-  .pd-related-square .pd-related-all,.pd-related-square .pd-related-image-mark{transition:none!important}
-}
-</style>
+{% block editorial_page_class %}editorial-detail{% endblock %}
+{% block editorial_content %}
+<section class="ed-band ed-detail-intro" aria-labelledby="project-title">
+  <div class="container ed-detail-grid">
+    <div class="ed-detail-copy">
+      <a class="ed-text-link" href="{% url 'website:projects_list' %}">{% if is_en %}Projects{% else %}پروژه‌ها{% endif %}</a>
+      {% if project.badge_text or project.badge_text_en %}
+        <p class="ed-kicker">{% if is_en %}{{ project.badge_text_en|default:project.badge_text }}{% else %}{{ project.badge_text }}{% endif %}</p>
+      {% endif %}
+      <h1 id="project-title">{% if is_en %}{{ project.title_en|default:project.title }}{% else %}{{ project.title }}{% endif %}</h1>
+      {% if project.short_description or project.short_description_en %}
+        <p class="ed-body">{% if is_en %}{{ project.short_description_en|default:project.short_description }}{% else %}{{ project.short_description }}{% endif %}</p>
+      {% endif %}
+      <dl class="ed-facts">
+        {% if project.code %}<div><dt>{% if is_en %}Project code{% else %}کد پروژه{% endif %}</dt><dd><bdi>{{ project.code }}</bdi></dd></div>{% endif %}
+        {% if project.location or project.location_en %}<div><dt>{% if is_en %}Location{% else %}موقعیت{% endif %}</dt><dd>{% if is_en %}{{ project.location_en|default:project.location }}{% else %}{{ project.location }}{% endif %}</dd></div>{% endif %}
+        <div><dt>{% if is_en %}Status{% else %}وضعیت پروژه{% endif %}</dt><dd>{% if project.status == 'completed' %}{% if is_en %}Completed{% else %}تکمیل‌شده{% endif %}{% else %}{% if is_en %}In progress{% else %}در حال اجرا{% endif %}{% endif %}</dd></div>
+        {% if project.year %}<div><dt>{% if is_en %}Year{% else %}سال{% endif %}</dt><dd><bdi>{{ project.year|unlocalize }}</bdi></dd></div>{% endif %}
+      </dl>
 
-
-{% endblock %}
-
-{% block content %}
-{% with cover=project.cover_image %}
-<section class="pd-hero" id="project-top">
-  {% if cover %}<div class="hero-backdrop pd-backdrop" style="background-image:url('{{ cover.url }}')" role="img" aria-label="{{ project.title }}"></div>{% else %}<div class="hero-backdrop hero-fallback"></div>{% endif %}
-  <div class="hero-readability" aria-hidden="true"></div>
-  <div class="container pd-hero-inner">
-    <div class="pd-copy">
-      {% if project.location or project.location_en %}<span class="pd-loc">{% if is_en %}{{ project.location_en|default:project.location }}{% else %}{{ project.location }}{% endif %}</span>{% endif %}
-      <h1>{% if is_en %}{{ project.title_en|default:project.title }}{% else %}{{ project.title }}{% endif %}</h1>
-      {% if project.short_description or project.short_description_en %}<p class="pd-lead">{% if is_en %}{{ project.short_description_en|default:project.short_description }}{% else %}{{ project.short_description }}{% endif %}</p>{% endif %}
-      <ul class="pd-chips">
-        {% if project.code %}<li><span>{% if is_en %}Code{% else %}کد{% endif %}</span><strong>{{ project.code }}</strong></li>{% endif %}
-        <li class="pd-chip-status pd-st-{{ project.status }}"><strong>{% if is_en %}{% if project.status == "completed" %}Completed{% else %}In progress{% endif %}{% else %}{% if project.status == "completed" %}تکمیل شده{% else %}در حال اجرا{% endif %}{% endif %}</strong></li>
-        {% if project.year %}<li><span>{% if is_en %}Year{% else %}سال{% endif %}</span><strong>{{ project.year }}</strong></li>{% endif %}
-      </ul>
-      <div class="pd-actions">
-        {% if project.purchase_request_enabled %}<button type="button" class="pd-btn pd-btn-primary" data-consult-open><span class="pd-btn-label">{% if is_en %}Request to buy{% else %}درخواست خرید{% endif %}</span><span class="pd-btn-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 15a2 2 0 0 1-2 2H9l-4 3v-3H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/><path d="M8.5 9.5h7M8.5 12.5h4"/></svg></span></button>{% endif %}
-        {% if project.catalog_file %}<a href="{{ project.catalog_file.url }}" class="pd-btn pd-btn-glass pd-btn-catalog" target="_blank" rel="noopener"><span class="pd-btn-label">{% if is_en %}{{ T.project_catalog_button_text_en|default:"Project catalog" }}{% else %}{{ T.project_catalog_button_text|default:"کاتالوگ پروژه" }}{% endif %}</span><span class="pd-btn-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.8h8l4 4V20H6z"/><path d="M14 4v4h4M9 13h6M9 16h6"/></svg></span></a>{% endif %}
+      {% if project.progress_percent is not None or project.status_note or project.status_note_en %}
+      <div class="ed-progress">
+        {% if project.progress_percent is not None %}
+          <div><label for="project-progress">{% if is_en %}Construction progress{% else %}پیشرفت اجرایی{% endif %}</label> <bdi>{{ project.progress_percent|unlocalize }}%</bdi></div>
+          <progress id="project-progress" max="100" value="{{ project.progress_percent|unlocalize }}"></progress>
+        {% endif %}
+        {% if project.status_note or project.status_note_en %}<p>{% if is_en %}{{ project.status_note_en|default:project.status_note }}{% else %}{{ project.status_note }}{% endif %}</p>{% endif %}
       </div>
+      {% endif %}
+
+      {% if project.purchase_request_enabled or gallery or project.catalog_file %}
+      <div class="ed-actions">
+        {% if project.purchase_request_enabled %}<button type="button" class="ed-btn ed-btn-solid" data-consult-open>{{ T.project_buy_label }} {% icon "arrow-up-right" 17 %}</button>{% endif %}
+        {% if gallery %}<a class="ed-btn" href="#project-gallery">{{ T.project_gallery_title }} <span class="ed-down">{% icon "arrow-up" 16 %}</span></a>{% endif %}
+        {% if project.catalog_file %}<a class="ed-btn" href="{{ project.catalog_file.url }}" target="_blank" rel="noopener">{{ T.project_catalog_button_text }} {% icon "download" 17 %}</a>{% endif %}
+      </div>
+      {% endif %}
+    </div>
+    {% with cover=project.cover_image %}
+    {% if cover %}
+    <figure class="ed-detail-cover">
+      <img src="{{ cover.url }}" alt="{% if is_en %}{{ project.title_en|default:project.title }}{% else %}{{ project.title }}{% endif %}" fetchpriority="high">
+      {% if project.code %}<figcaption><bdi>{{ project.code }}</bdi></figcaption>{% endif %}
+    </figure>
+    {% endif %}
+    {% endwith %}
+  </div>
+</section>
+
+{% with intro=project.full_description|default:project.short_description intro_en=project.full_description_en|default:project.short_description_en %}
+{% if intro or intro_en or project.feature_list or project.feature_list_en or project.story_title or project.story_title_en %}
+<section class="ed-band ed-band-alt" aria-labelledby="project-story">
+  <div class="container ed-split">
+    <h2 class="ed-heading" id="project-story">{% if is_en %}{{ project.story_title_en|default:project.story_title|default:T.project_story_title }}{% else %}{{ project.story_title|default:T.project_story_title }}{% endif %}</h2>
+    <div class="ed-body">
+      {% if is_en %}{{ intro_en|default:intro|linebreaks }}{% else %}{{ intro|linebreaks }}{% endif %}
+      {% if is_en %}{% with items=project.features_en %}{% if items %}<ul class="ed-list">{% for item in items %}<li>{{ item }}</li>{% endfor %}</ul>{% endif %}{% endwith %}
+      {% elif project.features %}<ul class="ed-list">{% for item in project.features %}<li>{{ item }}</li>{% endfor %}</ul>{% endif %}
+      {% if project.purchase_request_enabled %}
+        {% if is_en and project.cta_text_en %}<button type="button" class="ed-btn" data-consult-open>{{ project.cta_text_en }}</button>
+        {% elif not is_en and project.cta_text %}<button type="button" class="ed-btn" data-consult-open>{{ project.cta_text }}</button>{% endif %}
+      {% endif %}
     </div>
   </div>
 </section>
+{% endif %}
 {% endwith %}
 
-<section class="section section-light pd-body">
-  <div class="container pd-grid">
-    <div class="pd-story">
-      <h2>{% if is_en %}{{ project.title_en|default:project.title }}{% else %}{{ project.title }}{% endif %}</h2>
-      {% if project.status_note or project.status_note_en %}<p class="pd-note">{% if is_en %}{{ project.status_note_en|default:project.status_note }}{% else %}{{ project.status_note }}{% endif %}</p>{% endif %}
-      <div class="pd-text">{% if is_en %}{{ project.full_description_en|default:project.full_description|linebreaks }}{% else %}{{ project.full_description|default:project.short_description|linebreaks }}{% endif %}</div>
-    </div>
-    <aside class="pd-aside">
-      {% if is_en %}{% with feats=project.features_en %}{% if feats %}<h3>Project information</h3><ul class="pd-features">{% for f in feats %}<li>{{ f }}</li>{% endfor %}</ul>{% endif %}{% endwith %}
-      {% else %}{% with feats=project.features %}{% if feats %}<h3>اطلاعات پروژه</h3><ul class="pd-features">{% for f in feats %}<li>{{ f }}</li>{% endfor %}</ul>{% endif %}{% endwith %}{% endif %}
-      <button type="button" class="btn btn-primary btn-sm pd-cta" data-consult-open>{% if is_en %}{{ project.cta_text_en|default:"Request consultation" }}{% else %}{{ project.cta_text|default:"درخواست مشاوره" }}{% endif %}</button>
-    </aside>
-  </div>
-
-  {% if gallery %}
-  <div class="container pd-gallery-wrap" id="project-gallery">
-    <div class="compact-heading"><div><h2>{% if is_en %}Project gallery{% else %}گالری تصاویر پروژه{% endif %}</h2></div></div>
-    <div class="pd-gallery">
+{% if gallery %}
+<section class="ed-band" id="project-gallery" aria-labelledby="gallery-title">
+  <div class="container">
+    <h2 class="ed-heading" id="gallery-title">{{ T.project_gallery_title }}</h2>
+    <div class="ed-gallery">
       {% for image in gallery %}
+      {% if image.image %}
+      {% if is_en %}{% firstof image.caption_en image.caption project.title_en project.title as image_label %}
+      {% else %}{% firstof image.caption project.title as image_label %}{% endif %}
       <figure>
-        <button type="button" class="pd-zoom" data-full="{{ image.image.url }}" data-caption="{% if is_en %}{{ image.caption_en|default:image.caption }}{% else %}{{ image.caption }}{% endif %}" aria-label="{% if is_en %}Enlarge image{% else %}بزرگ‌نمایی تصویر{% endif %}">
-          <img src="{{ image.image.url }}" alt="{% if is_en %}{{ image.caption_en|default:image.caption|default:project.title }}{% else %}{{ image.caption|default:project.title }}{% endif %}" loading="lazy" draggable="false">
+        <button class="ed-gallery-image" type="button" data-editorial-image aria-label="{% if is_en %}Enlarge{% else %}بزرگ‌نمایی{% endif %} — {{ image_label }}" disabled>
+          <img src="{{ image.image.url }}" alt="{{ image_label }}" loading="lazy" decoding="async">
+          {% icon "arrow-up-right" 19 %}
         </button>
-        {% if image.caption or image.caption_en %}<figcaption>{% if is_en %}{{ image.caption_en|default:image.caption }}{% else %}{{ image.caption }}{% endif %}</figcaption>{% endif %}
+        {% if image.caption or image.caption_en or image.description or image.description_en %}
+        <figcaption>
+          <span>{% if is_en %}{{ image.caption_en|default:image.caption }}{% else %}{{ image.caption }}{% endif %}</span>
+          {% if is_en %}{{ image.description_en|default:image.description }}{% else %}{{ image.description }}{% endif %}
+        </figcaption>
+        {% endif %}
       </figure>
+      {% endif %}
       {% endfor %}
     </div>
   </div>
-  {% endif %}
-
-  {% if related_projects %}
-  <div class="container pd-related pd-related-square">
-    <div class="pd-related-head">
-      
-      <a class="pd-related-all" href="{% url 'website:projects_list' %}">
-        
-        <span>{% if is_en %}All projects{% else %}نمایش همه پروژه‌ها{% endif %}</span>
-        
-      </a>
-    </div>
-    <div class="pd-related-list">
-      {% for item in related_projects|slice:":3" %}
-      <a class="pd-related-item" href="{{ item.get_absolute_url }}" aria-label="{% if is_en %}{{ item.title_en|default:item.title }}{% else %}{{ item.title }}{% endif %}">
-        <span class="pd-related-image">
-          {% if item.cover_image %}<img src="{{ item.cover_image.url }}" alt="{% if is_en %}{{ item.title_en|default:item.title }}{% else %}{{ item.title }}{% endif %}" loading="lazy">{% else %}<span class="pd-related-placeholder" aria-hidden="true"></span>{% endif %}
-          <span class="pd-related-image-mark" aria-hidden="true">↗</span>
-        </span>
-        <span class="pd-related-info">
-          <strong>{% if is_en %}{{ item.title_en|default:item.title }}{% else %}{{ item.title }}{% endif %}</strong>
-          <small>{% if is_en %}{% if item.status == "completed" %}Completed{% else %}In progress{% endif %}{% else %}{{ item.get_status_display }}{% endif %}</small>
-        </span>
-      </a>
-      {% endfor %}
-    </div>
-  </div>
-  {% endif %}
 </section>
 
-<dialog class="pd-lightbox" id="pdLightbox" aria-label="{% if is_en %}Image viewer{% else %}نمایش تصویر{% endif %}">
-  <button type="button" class="pd-lightbox-close" aria-label="{% if is_en %}Close{% else %}بستن{% endif %}">×</button>
-  <img alt="" src="">
-  <p></p>
+<dialog class="ed-lightbox" id="editorial-lightbox" aria-label="{{ T.project_gallery_title }}">
+  <div class="ed-lightbox-content">
+    <div class="ed-lightbox-actions">
+      <button type="button" class="ed-btn" data-gallery-prev hidden>{% if is_en %}Previous{% else %}قبلی{% endif %}</button>
+      <button type="button" class="ed-btn" data-gallery-next hidden>{% if is_en %}Next{% else %}بعدی{% endif %}</button>
+      <form method="dialog"><button type="submit" class="ed-btn" autofocus>{% if is_en %}Close{% else %}بستن{% endif %}</button></form>
+    </div>
+    <img alt="">
+    <p aria-live="polite"></p>
+  </div>
 </dialog>
+{% endif %}
+
+{% if related_section %}
+<section class="ed-band ed-band-alt ed-related">
+  <div class="container">
+    <h2 class="ed-heading">{% if is_en %}{{ related_section.title_en|default:related_section.title }}{% else %}{{ related_section.title }}{% endif %}</h2>
+    <div class="ed-body">{% if is_en %}{{ related_section.content_en|default:related_section.content|linebreaks }}{% else %}{{ related_section.content|linebreaks }}{% endif %}</div>
+    <a class="ed-btn ed-btn-solid" href="{% url 'website:projects_list' %}">{{ T.all_projects_btn }} {% icon "arrow-up-right" 17 %}</a>
+    {% if related_projects %}
+      <div class="ed-project-grid ed-project-grid-related">
+        {% for item in related_projects %}{% include "website/projects/_editorial_card.html" with project=item %}{% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
 {% endblock %}
 {% block extra_scripts %}
-<script>
-(function(){
-  var box=document.getElementById('pdLightbox'); if(!box||!box.showModal) return;
-  var img=box.querySelector('img'), cap=box.querySelector('p');
-  document.querySelectorAll('.pd-zoom').forEach(function(b){
-    b.addEventListener('click',function(){img.src=b.dataset.full;cap.textContent=b.dataset.caption||'';box.showModal();});
-  });
-  box.addEventListener('click',function(e){ if(e.target===box||e.target.classList.contains('pd-lightbox-close')) box.close(); });
-})();
-</script>
+  {% if gallery %}<script src="{% static 'js/editorial-gallery.js' %}?v=GNT-015" defer></script>{% endif %}
 {% endblock %}

@@ -371,6 +371,12 @@ class Project(models.Model):
     location_en = models.CharField("موقعیت مکانی (EN)", max_length=200, blank=True)
     location = models.CharField("موقعیت مکانی", max_length=200, blank=True)
     year = models.PositiveIntegerField("سال", blank=True, null=True)
+    progress_percent = models.PositiveSmallIntegerField(
+        "درصد پیشرفت اجرایی", blank=True, null=True, validators=[MaxValueValidator(100)],
+        help_text="عدد ۰ تا ۱۰۰. اگر مقدار مشخص نیست، فیلد را خالی بگذارید.",
+    )
+    story_title = models.CharField("تیتر معرفی پروژه", max_length=150, blank=True)
+    story_title_en = models.CharField("تیتر معرفی پروژه (EN)", max_length=150, blank=True)
     short_description = models.CharField("توضیح کوتاه", max_length=300, blank=True)
     short_description_en = models.CharField("توضیح کوتاه (EN)", max_length=300, blank=True)
     full_description = models.TextField("متن کامل معرفی پروژه", blank=True)
@@ -511,7 +517,25 @@ class SiteSection(models.Model):
     KEY_ABOUT = "about"
     KEY_WHY_GARNET = "why_garnet"
     KEY_CTA = "cta"
+    KEY_PROJECTS_HERO = "projects_hero"
+    KEY_PROJECTS_NOTE = "projects_note"
+    KEY_PROJECT_DETAIL_CTA = "project_detail_cta"
+    KEY_ABOUT_HERO = "about_hero"
+    KEY_ABOUT_STORY = "about_story"
+    KEY_ABOUT_PHILOSOPHY = "about_philosophy"
+    KEY_ABOUT_PRINCIPLES = "about_principles"
+    KEY_ABOUT_QUOTE = "about_quote"
+    KEY_ABOUT_CTA = "about_cta"
     KEY_CHOICES = [
+        (KEY_PROJECTS_HERO, "پروژه‌ها — تصویر و معرفی آغاز صفحه"),
+        (KEY_PROJECTS_NOTE, "پروژه‌ها — متن پایانی"),
+        (KEY_PROJECT_DETAIL_CTA, "جزئیات پروژه — بخش پروژه‌های دیگر"),
+        (KEY_ABOUT_HERO, "درباره گارنت — تصویر و تیتر آغاز صفحه"),
+        (KEY_ABOUT_STORY, "درباره گارنت — داستان برند"),
+        (KEY_ABOUT_PHILOSOPHY, "درباره گارنت — فلسفه و تصویر"),
+        (KEY_ABOUT_PRINCIPLES, "درباره گارنت — مقدمه اصول"),
+        (KEY_ABOUT_QUOTE, "درباره گارنت — نقل‌قول"),
+        (KEY_ABOUT_CTA, "درباره گارنت — بخش پایانی"),
         (KEY_ABOUT, "معرفی شرکت (About)"),
         (KEY_WHY_GARNET, "فلسفه طراحی و اصالت ساخت"),
         (KEY_CTA, "دعوت به اقدام (CTA)"),
@@ -600,6 +624,12 @@ class CompanyCatalog(models.Model):
 
 
 SITE_TEXT_DEFAULTS = {
+    "projects_ongoing_title": ("پروژه‌های در حال اجرا", "Ongoing projects"),
+    "projects_completed_title": ("پروژه‌های تکمیل‌شده", "Completed projects"),
+    "project_story_title": ("معرفی پروژه", "About this project"),
+    "project_gallery_title": ("گالری پروژه", "Project gallery"),
+    "about_story_link": ("داستان گارنت", "Garnet’s story"),
+    "project_buy_label": ("درخواست خرید", "Request to buy"),
     "home_about_link": ("درباره گارنت", "About Garnet"),
     "home_projects_title": ("گارنت، در یک نگاه.", "A clear view of Garnet."),
     "project_view_button": ("مشاهده پروژه", "View project"),
@@ -649,6 +679,18 @@ class SiteTexts(SingletonModel):
     """متن‌های قابل ویرایش عنوان‌ها، کادر مشاوره و فرم درخواست؛ هر متن در فارسی و انگلیسی.
     اگر فیلدی خالی بماند، متن پیش‌فرض سایت نمایش داده می‌شود."""
 
+    projects_ongoing_title = models.CharField("پروژه‌های در حال اجرا", max_length=100, blank=True, default="پروژه‌های در حال اجرا")
+    projects_ongoing_title_en = models.CharField("پروژه‌های در حال اجرا (EN)", max_length=100, blank=True, default="Ongoing projects")
+    projects_completed_title = models.CharField("پروژه‌های تکمیل‌شده", max_length=100, blank=True, default="پروژه‌های تکمیل‌شده")
+    projects_completed_title_en = models.CharField("پروژه‌های تکمیل‌شده (EN)", max_length=100, blank=True, default="Completed projects")
+    project_story_title = models.CharField("عنوان عمومی معرفی پروژه", max_length=100, blank=True, default="معرفی پروژه")
+    project_story_title_en = models.CharField("عنوان عمومی معرفی پروژه (EN)", max_length=100, blank=True, default="About this project")
+    project_gallery_title = models.CharField("عنوان گالری پروژه", max_length=100, blank=True, default="گالری پروژه")
+    project_gallery_title_en = models.CharField("عنوان گالری پروژه (EN)", max_length=100, blank=True, default="Project gallery")
+    about_story_link = models.CharField("متن دکمه داستان گارنت", max_length=100, blank=True, default="داستان گارنت")
+    about_story_link_en = models.CharField("متن دکمه داستان گارنت (EN)", max_length=100, blank=True, default="Garnet’s story")
+    project_buy_label = models.CharField("دکمه درخواست خرید جزئیات پروژه", max_length=100, blank=True, default="درخواست خرید")
+    project_buy_label_en = models.CharField("دکمه درخواست خرید جزئیات پروژه (EN)", max_length=100, blank=True, default="Request to buy")
     home_about_link = models.CharField("متن دکمه درباره گارنت", max_length=100, blank=True, default="درباره گارنت")
     home_about_link_en = models.CharField("متن دکمه درباره گارنت (EN)", max_length=100, blank=True, default="About Garnet")
     home_projects_title = models.CharField("عنوان بخش پروژه‌های صفحه اصلی", max_length=120, blank=True, default="گارنت، در یک نگاه.")

@@ -1,32 +1,27 @@
-{% extends "website/base.html" %}
-{% block title %}{% if is_en %}Projects{% else %}پروژه‌ها{% endif %} | {{ site_settings.brand_name }}{% endblock %}
-{% block content %}
-<section class="section section-light page-compact projects-page">
-  <div class="container">
-    <div class="compact-heading">
-      <div><h1>{% if is_en %}Projects{% else %}پروژه‌ها{% endif %}</h1></div>
-    </div>
-
-    <nav class="projects-tabs" aria-label="{% if is_en %}Project groups{% else %}دسته‌بندی پروژه‌ها{% endif %}">
-      <a href="#ongoing">{% if is_en %}In progress{% else %}در حال اجرا{% endif %}<b>{{ ongoing_projects|length }}</b></a>
-      <a href="#completed">{% if is_en %}Completed{% else %}تکمیل شده {% endif %}<b>{{ completed_projects|length }}</b></a>
+{% extends "website/editorial_base.html" %}{% load static site_icons %}
+{% block title %}{% if hero_section %}{% if is_en %}{{ hero_section.title_en|default:hero_section.title }}{% else %}{{ hero_section.title }}{% endif %}{% elif is_en %}Projects{% else %}پروژه‌ها{% endif %} | {{ site_settings.brand_name }}{% endblock %}
+{% block editorial_page_class %}editorial-portfolio{% endblock %}
+{% block editorial_content %}
+<section class="ed-cinematic ed-cinematic-portfolio" aria-labelledby="portfolio-title">
+  <img class="ed-cinematic-image" src="{% if hero_section.image %}{{ hero_section.image.url }}{% else %}{% static 'images/editorial/architecture-hero.webp' %}{% endif %}" alt="" fetchpriority="high">
+  <div class="container ed-cinematic-content">
+    {% if hero_section.subtitle or hero_section.subtitle_en %}<p class="ed-kicker"><bdi>{% if is_en %}{{ hero_section.subtitle_en|default:hero_section.subtitle }}{% else %}{{ hero_section.subtitle }}{% endif %}</bdi></p>{% endif %}
+    <h1 id="portfolio-title">{% if hero_section %}{% if is_en %}{{ hero_section.title_en|default:hero_section.title }}{% else %}{{ hero_section.title }}{% endif %}{% elif is_en %}Projects{% else %}پروژه‌ها{% endif %}</h1>
+    {% if hero_section %}<div class="ed-body">{% if is_en %}{{ hero_section.content_en|default:hero_section.content|linebreaks }}{% else %}{{ hero_section.content|linebreaks }}{% endif %}</div>{% endif %}
+    <nav class="ed-actions" aria-label="{% if is_en %}Project status{% else %}وضعیت پروژه‌ها{% endif %}">
+      <a class="ed-btn" href="#ongoing">{{ T.projects_ongoing_title }} <span class="ed-down">{% icon "arrow-up" 16 %}</span></a>
+      <a class="ed-btn" href="#completed">{{ T.projects_completed_title }} <span class="ed-down">{% icon "arrow-up" 16 %}</span></a>
     </nav>
-
-    <div class="projects-block" id="ongoing">
-      <div class="projects-block-head"><h2>{% if is_en %}In progress{% else %}پروژه‌های در حال اجرا{% endif %}</h2></div>
-      <div class="proj-list">
-        {% for project in ongoing_projects %}{% include "website/_project_row.html" with project=project %}
-        {% empty %}<p class="empty-state">{% if is_en %}No projects in progress yet.{% else %}فعلاً پروژه در حال اجرایی ثبت نشده است.{% endif %}</p>{% endfor %}
-      </div>
-    </div>
-
-    <div class="projects-block" id="completed">
-      <div class="projects-block-head"><h2>{% if is_en %}Completed projects{% else %}پروژه‌های تکمیل شده {% endif %}</h2></div>
-      <div class="proj-list">
-        {% for project in completed_projects %}{% include "website/_project_row.html" with project=project %}
-        {% empty %}<p class="empty-state">{% if is_en %}No completed projects yet.{% else %}فعلاً پروژه اتمام‌شده‌ای ثبت نشده است.{% endif %}</p>{% endfor %}
-      </div>
-    </div>
   </div>
 </section>
+{% include "website/projects/_editorial_group.html" with group_id="ongoing" group_title=T.projects_ongoing_title projects=ongoing_projects %}
+{% include "website/projects/_editorial_group.html" with group_id="completed" group_title=T.projects_completed_title projects=completed_projects %}
+{% if note_section %}
+<section class="ed-band ed-band-alt" aria-label="{% if is_en %}{{ note_section.title_en|default:note_section.title }}{% else %}{{ note_section.title }}{% endif %}">
+  <div class="container ed-note">
+    <div class="ed-note-text">{% if is_en %}{{ note_section.content_en|default:note_section.content|linebreaks }}{% else %}{{ note_section.content|linebreaks }}{% endif %}</div>
+    <a class="ed-text-link" href="{% url 'website:about' %}">{{ T.home_about_link }} {% icon "arrow-up-right" 18 %}</a>
+  </div>
+</section>
+{% endif %}
 {% endblock %}

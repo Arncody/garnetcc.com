@@ -31,7 +31,7 @@
       <details class="footer-col"{% if not site_theme.compact_footer %} open{% endif %}>
         <summary><h2>{% if is_en %}About Garnet{% else %}درباره گارنت{% endif %}</h2></summary>
         <div class="footer-col-body">
-          <a href="{% url 'website:home' %}#about">{% if is_en %}About the company{% else %}معرفی شرکت{% endif %}</a>
+          <a href="{% url 'website:about' %}">{% if is_en %}About the company{% else %}معرفی شرکت{% endif %}</a>
           {% if catalog %}
             <a href="{{ catalog.file.url }}" target="_blank" rel="noopener">{% if is_en %}Company catalog{% else %}کاتالوگ شرکت{% endif %}</a>
           {% endif %}

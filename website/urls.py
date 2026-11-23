@@ -9,6 +9,7 @@ app_name = "website"
 
 urlpatterns = [
     path("", views.home, name="home"),
+    path("about/", views.about, name="about"),
     path("projects/", views.projects_list, name="projects_list"),
     path("projects/<str:slug>/", views.project_detail, name="project_detail"),
     path("language/", views.set_language, name="set_language"),

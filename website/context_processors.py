@@ -1,6 +1,8 @@
+from django.urls import reverse
+
 from .models import SiteSettings, SiteTheme, SiteTexts, CompanyCatalog, MenuItem
 from .forms import ConsultationForm
-from .navigation import is_retired_blog_link
+from .navigation import is_legacy_about_link, is_retired_blog_link
 from .theme_tokens import PALETTE, build_theme_css, normalize_color
 
 
@@ -29,11 +31,17 @@ def _theme_color_properties(theme):
 def _menu_items(request, lang):
     """منوی اصلی از پنل ادمین (به‌همراه زیرمنوها)؛ آیتم فعال بر اساس مسیر فعلی مشخص می‌شود."""
     path = request.path or "/"
+    host = request.get_host()
+    home_path = reverse("website:home")
+    about_path = reverse("website:about")
     items = []
     for item in MenuItem.objects.filter(is_active=True).prefetch_related("children"):
         url = (item.url or "").strip()
-        if not item.open_consult and is_retired_blog_link(url, request.get_host()):
-            continue
+        if not item.open_consult:
+            if is_retired_blog_link(url, host):
+                continue
+            if is_legacy_about_link(url, host, home_path):
+                url = about_path
         base = url.split("#", 1)[0]
         has_hash = "#" in url
         if item.open_consult or has_hash or not base:
@@ -49,8 +57,10 @@ def _menu_items(request, lang):
         if not item.open_consult:
             for sub in item.children.all():
                 sub_url = (sub.url or "").strip()
-                if not sub.is_active or is_retired_blog_link(sub_url, request.get_host()):
+                if not sub.is_active or is_retired_blog_link(sub_url, host):
                     continue
+                if is_legacy_about_link(sub_url, host, home_path):
+                    sub_url = about_path
                 if is_projects_item:
                     label_probe = f"{sub.title} {sub.title_en}".lower()
                     if any(word in label_probe for word in ("در حال اجرا", "ongoing", "progress")):
@@ -99,7 +109,6 @@ def site_settings(request):
     return {
         "site_settings": settings_obj,
         "rail_home": settings_obj.projects_carousel_enabled,
-        "rail_list": settings_obj.projects_carousel_enabled and settings_obj.projects_carousel_on_list,
         "site_theme": theme,
         "theme_color_properties": colors,
         "theme_background": colors.get("background", PALETTE["off-white"]),

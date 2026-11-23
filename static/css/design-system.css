@@ -176,20 +176,20 @@ html[dir="rtl"] { --hero-direction: to left; }
   gap: var(--space-4);
   color: inherit;
 }
-.site-shell:has(.hero, .pd-hero) .g-header[data-header-strip]:not(.scrolled) {
+.site-shell:has(.hero, .pd-hero, .editorial-page) .g-header[data-header-strip]:not(.scrolled) {
   --header-strip-text: var(--white);
 }
-.site-shell:has(.hero, .pd-hero) .g-header:not(.scrolled) .g-brand img {
+.site-shell:has(.hero, .pd-hero, .editorial-page) .g-header:not(.scrolled) .g-brand img {
   filter: brightness(0) invert(1);
 }
-.site-shell:has(.hero, .pd-hero) .g-header:not(.scrolled) :is(.g-nav > a, .g-nav-parent, .g-nav-btn, .brand-text) {
+.site-shell:has(.hero, .pd-hero, .editorial-page) .g-header:not(.scrolled) :is(.g-nav > a, .g-nav-parent, .g-nav-btn, .brand-text) {
   color: var(--white);
   text-shadow: 0 1px 3px rgba(0, 0, 0, .75);
 }
-.site-shell:has(.hero, .pd-hero) .g-header:not(.scrolled) :is(.g-nav > a, .g-nav-parent, .g-nav-btn)::after {
+.site-shell:has(.hero, .pd-hero, .editorial-page) .g-header:not(.scrolled) :is(.g-nav > a, .g-nav-parent, .g-nav-btn)::after {
   background: currentColor;
 }
-.site-shell:has(.hero, .pd-hero) .g-header:not(.scrolled) .g-header-content :focus-visible {
+.site-shell:has(.hero, .pd-hero, .editorial-page) .g-header:not(.scrolled) .g-header-content :focus-visible {
   outline-color: var(--white) !important;
 }
 
@@ -215,7 +215,7 @@ html[dir="rtl"] { --hero-direction: to left; }
 }
 .g-header .g-toggle::-webkit-details-marker { display: none; }
 .g-header .g-toggle::marker { content: ""; }
-.site-shell:has(.hero, .pd-hero) .g-header:not(.scrolled) .g-toggle { color: var(--white); }
+.site-shell:has(.hero, .pd-hero, .editorial-page) .g-header:not(.scrolled) .g-toggle { color: var(--white); }
 .site-shell .g-header .g-mobile-menu[open] .g-toggle {
   background: color-mix(in srgb, var(--off-white) 94%, var(--header-toggle-tint, var(--white)));
   color: var(--charcoal);

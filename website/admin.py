@@ -206,7 +206,7 @@ class ProjectImageInline(admin.TabularInline):
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
     list_display=("title","title_en","status","location","year","is_featured","is_active","purchase_request_enabled","order"); list_editable=("is_featured","is_active","purchase_request_enabled","order"); list_filter=("status","is_active","is_featured","purchase_request_enabled"); search_fields=("title","title_en","code","location","location_en"); prepopulated_fields={"slug":("title",)}; ordering=("order",); inlines=[ProjectImageInline]
-    fieldsets=(("فارسی",{"fields":("title","code","slug","status","status_note","location","year","short_description","full_description","feature_list","badge_text","cta_text")}), ("English",{"fields":("title_en","status_note_en","location_en","short_description_en","full_description_en","feature_list_en","badge_text_en","cta_text_en")}), ("تصویر، کاتالوگ و نمایش",{"fields":("main_image","catalog_file","purchase_request_enabled","is_featured","is_active","order"),"description":"برای نمایش دکمه کاتالوگ، فایل PDF همین پروژه را بارگذاری کنید. عنوان عمومی دکمه از بخش «متن‌های سایت» قابل تغییر است. دکمه درخواست خرید نیز برای هر پروژه جداگانه قابل فعال/غیرفعال‌کردن است."}), ("سیستمی",{"fields":("created_at",)})); readonly_fields=("created_at",)
+    fieldsets=(("فارسی",{"fields":("title","code","slug","status","status_note","location","year","short_description","full_description","feature_list","badge_text","cta_text")}), ("English",{"fields":("title_en","status_note_en","location_en","short_description_en","full_description_en","feature_list_en","badge_text_en","cta_text_en")}), ("معرفی و پیشرفت", {"fields": (("story_title", "story_title_en"), "progress_percent"), "description": "مرحله فعلی از توضیح وضعیت اجرایی، و درصد از همین بخش خوانده می‌شود."}), ("تصویر، کاتالوگ و نمایش",{"fields":("main_image","catalog_file","purchase_request_enabled","is_featured","is_active","order"),"description":"برای نمایش دکمه کاتالوگ، فایل PDF همین پروژه را بارگذاری کنید. عنوان عمومی دکمه از بخش «متن‌های سایت» قابل تغییر است. دکمه درخواست خرید نیز برای هر پروژه جداگانه قابل فعال/غیرفعال‌کردن است."}), ("سیستمی",{"fields":("created_at",)})); readonly_fields=("created_at",)
 
 @admin.register(PhilosophyFeature)
 class PhilosophyFeatureAdmin(admin.ModelAdmin):
@@ -215,7 +215,7 @@ class PhilosophyFeatureAdmin(admin.ModelAdmin):
 
 @admin.register(SiteSection)
 class SiteSectionAdmin(admin.ModelAdmin):
-    list_display=("key","title","title_en","is_active","order"); list_editable=("is_active","order"); list_filter=("is_active",); search_fields=("title","title_en","content","content_en")
+    list_display=("key","title","title_en","is_active","order"); list_editable=("is_active","order"); list_filter=("key","is_active"); search_fields=("title","title_en","content","content_en")
     fieldsets=(("شناسه",{"fields":("key",)}),("فارسی",{"fields":("title","subtitle","content","quote_text","quote_author")}), ("English",{"fields":("title_en","subtitle_en","content_en","quote_text_en","quote_author_en")}), ("تصویر / نمایش",{"fields":("image","is_active","order")}))
 
 @admin.register(ConsultationRequest)
@@ -242,6 +242,14 @@ class SiteTextsAdmin(admin.ModelAdmin):
             ("home_projects_title", "home_projects_title_en"),
             ("project_view_button", "project_view_button_en"),
             ("footer_purchase_button", "footer_purchase_button_en"),
+        )}),
+        ("برچسب‌های صفحات پروژه و درباره گارنت", {"fields": (
+            ("projects_ongoing_title", "projects_ongoing_title_en"),
+            ("projects_completed_title", "projects_completed_title_en"),
+            ("project_story_title", "project_story_title_en"),
+            ("project_gallery_title", "project_gallery_title_en"),
+            ("about_story_link", "about_story_link_en"),
+            ("project_buy_label", "project_buy_label_en"),
         )}),
         ("دکمه‌های بخش درباره و همه پروژه‌ها", {"fields": (("home_about_link", "home_about_link_en"), ("all_projects_btn", "all_projects_btn_en"))}),
         ("📘 دکمه کاتالوگ در صفحه داخلی پروژه", {"fields": (("project_catalog_button_text", "project_catalog_button_text_en"),), "description": "عنوان دکمه دانلود کاتالوگ اختصاصی هر پروژه؛ فایل PDF هر پروژه در فرم همان پروژه بارگذاری می‌شود."}),

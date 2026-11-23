@@ -1,0 +1,108 @@
+{% extends "website/editorial_base.html" %}{% load static site_icons %}
+{% block title %}{{ T.home_about_link }} | {{ site_settings.brand_name }}{% endblock %}
+{% block meta_description %}{% if sections.about_hero %}{% if is_en %}{{ sections.about_hero.content_en|default:sections.about_hero.content|truncatechars:160 }}{% else %}{{ sections.about_hero.content|truncatechars:160 }}{% endif %}{% else %}{{ site_settings.meta_description }}{% endif %}{% endblock %}
+{% block editorial_page_class %}editorial-about{% endblock %}
+{% block editorial_content %}
+{% with intro=sections.about_hero %}
+<section class="ed-cinematic" aria-labelledby="about-title">
+  <img class="ed-cinematic-image" src="{% if intro.image %}{{ intro.image.url }}{% else %}{% static 'images/editorial/architecture-hero.webp' %}{% endif %}" alt="" fetchpriority="high">
+  <div class="container ed-cinematic-content">
+    {% if intro.subtitle or intro.subtitle_en %}<p class="ed-kicker"><bdi>{% if is_en %}{{ intro.subtitle_en|default:intro.subtitle }}{% else %}{{ intro.subtitle }}{% endif %}</bdi></p>{% endif %}
+    <h1 id="about-title">{% if intro %}{% if is_en %}{{ intro.title_en|default:intro.title }}{% else %}{{ intro.title }}{% endif %}{% else %}{{ T.home_about_link }}{% endif %}</h1>
+    {% if intro %}<div class="ed-body">{% if is_en %}{{ intro.content_en|default:intro.content|linebreaks }}{% else %}{{ intro.content|linebreaks }}{% endif %}</div>{% endif %}
+    {% if sections.about_story %}
+    <div class="ed-actions"><a class="ed-btn" href="#story">{{ T.about_story_link }} <span class="ed-down">{% icon "arrow-up" 16 %}</span></a></div>
+    {% endif %}
+  </div>
+</section>
+{% endwith %}
+
+{% with story=sections.about_story %}
+{% if story %}
+<section class="ed-band" id="story" aria-labelledby="brand-story">
+  <div class="container ed-split">
+    <div>
+      {% if story.subtitle or story.subtitle_en %}<p class="ed-kicker">{% if is_en %}{{ story.subtitle_en|default:story.subtitle }}{% else %}{{ story.subtitle }}{% endif %}</p>{% endif %}
+      <h2 class="ed-heading" id="brand-story">{% if is_en %}{{ story.title_en|default:story.title }}{% else %}{{ story.title }}{% endif %}</h2>
+    </div>
+    <div class="ed-body">
+      {% if is_en %}{{ story.content_en|default:story.content|linebreaks }}{% else %}{{ story.content|linebreaks }}{% endif %}
+      {% if story.image %}<img class="ed-story-image" src="{{ story.image.url }}" alt="" loading="lazy">{% endif %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endwith %}
+
+{% with philosophy=sections.about_philosophy %}
+{% if philosophy %}
+<section class="ed-band ed-band-alt" id="philosophy" aria-labelledby="brand-philosophy">
+  <div class="container ed-philosophy">
+    <figure class="ed-detail-cover">
+      <img src="{% if philosophy.image %}{{ philosophy.image.url }}{% else %}{% static 'images/editorial/architecture-study.webp' %}{% endif %}" alt="" loading="lazy" decoding="async">
+    </figure>
+    <div>
+      {% if philosophy.subtitle or philosophy.subtitle_en %}<p class="ed-kicker">{% if is_en %}{{ philosophy.subtitle_en|default:philosophy.subtitle }}{% else %}{{ philosophy.subtitle }}{% endif %}</p>{% endif %}
+      <h2 class="ed-heading" id="brand-philosophy">{% if is_en %}{{ philosophy.title_en|default:philosophy.title }}{% else %}{{ philosophy.title }}{% endif %}</h2>
+      <div class="ed-body">{% if is_en %}{{ philosophy.content_en|default:philosophy.content|linebreaks }}{% else %}{{ philosophy.content|linebreaks }}{% endif %}</div>
+      <a class="ed-text-link" href="{% url 'website:projects_list' %}">{{ T.all_projects_btn }} {% icon "arrow-up-right" 18 %}</a>
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endwith %}
+
+{% with heading=sections.about_principles %}
+{% if heading %}
+<section class="ed-band" aria-labelledby="brand-principles">
+  <div class="container">
+    <div class="ed-principles-intro">
+      <div>
+        {% if heading.subtitle or heading.subtitle_en %}<p class="ed-kicker">{% if is_en %}{{ heading.subtitle_en|default:heading.subtitle }}{% else %}{{ heading.subtitle }}{% endif %}</p>{% endif %}
+        <h2 class="ed-heading" id="brand-principles">{% if is_en %}{{ heading.title_en|default:heading.title }}{% else %}{{ heading.title }}{% endif %}</h2>
+      </div>
+      <div class="ed-body">{% if is_en %}{{ heading.content_en|default:heading.content|linebreaks }}{% else %}{{ heading.content|linebreaks }}{% endif %}</div>
+    </div>
+    {% if principles %}
+    <div class="ed-principles">
+      {% for principle in principles %}
+      <article class="ed-principle">
+        {% if principle.icon_glyph %}<span class="ed-kicker" aria-hidden="true">{{ principle.icon_glyph }}</span>{% endif %}
+        <h3>{% if is_en %}{{ principle.title_en|default:principle.title }}{% else %}{{ principle.title }}{% endif %}</h3>
+        <p>{% if is_en %}{{ principle.description_en|default:principle.description }}{% else %}{{ principle.description }}{% endif %}</p>
+      </article>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
+{% endwith %}
+
+{% with quote=sections.about_quote %}
+{% if quote %}
+<section class="ed-band ed-band-alt">
+  <figure class="container ed-quote">
+    <p class="ed-kicker">{% if is_en %}{{ quote.title_en|default:quote.title }}{% else %}{{ quote.title }}{% endif %}</p>
+    <blockquote>
+      {% if is_en %}“{% firstof quote.quote_text_en quote.quote_text quote.content_en quote.content %}”
+      {% else %}«{% firstof quote.quote_text quote.content %}»{% endif %}
+    </blockquote>
+    {% if quote.quote_author or quote.quote_author_en %}<figcaption>{% if is_en %}{{ quote.quote_author_en|default:quote.quote_author }}{% else %}{{ quote.quote_author }}{% endif %}</figcaption>{% endif %}
+  </figure>
+</section>
+{% endif %}
+{% endwith %}
+
+{% with cta=sections.about_cta %}
+{% if cta %}
+<section class="ed-band ed-related">
+  <div class="container">
+    <h2 class="ed-heading">{% if is_en %}{{ cta.title_en|default:cta.title }}{% else %}{{ cta.title }}{% endif %}</h2>
+    <div class="ed-body">{% if is_en %}{{ cta.content_en|default:cta.content|linebreaks }}{% else %}{{ cta.content|linebreaks }}{% endif %}</div>
+    <a class="ed-btn ed-btn-solid" href="{% url 'website:projects_list' %}">{{ T.all_projects_btn }} {% icon "arrow-up-right" 17 %}</a>
+  </div>
+</section>
+{% endif %}
+{% endwith %}
+{% endblock %}

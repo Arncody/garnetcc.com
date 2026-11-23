@@ -166,19 +166,34 @@ def set_language(request):
     return HttpResponseRedirect("/")
 
 
+def _editorial_sections(*keys):
+    return SiteSection.objects.filter(key__in=keys, is_active=True).in_bulk(field_name="key")
+
+
 def project_detail(request, slug):
-    project = get_object_or_404(Project, slug=slug, is_active=True)
-    context = _common_context()
-    context["project"] = project
-    context["gallery"] = project.images.all()
-    # پیشنهادها بر اساس وضعیت پروژه جاری انتخاب می‌شوند:
-    # دو پروژه از همان وضعیت + یک پروژه از وضعیت مقابل.
-    # ترتیب مدل (برجسته، ترتیب دستی، سال) حفظ می‌شود.
-    candidates = Project.objects.filter(is_active=True).exclude(pk=project.pk).prefetch_related("images")
-    same_status = list(candidates.filter(status=project.status)[:2])
-    other_status = list(candidates.exclude(status=project.status)[:1])
-    context["related_projects"] = same_status + other_status
-    return render(request, "website/projects/detail.html", context)
+    active = Project.objects.filter(is_active=True).prefetch_related("images")
+    project = get_object_or_404(active, slug=slug)
+    candidates = active.exclude(pk=project.pk)
+    related_projects = list(candidates.filter(status=project.status)[:2])
+    related_projects += list(candidates.exclude(status=project.status)[:1])
+    section = SiteSection.KEY_PROJECT_DETAIL_CTA
+    return render(request, "website/projects/detail.html", {
+        "project": project,
+        "gallery": project.images.all(),
+        "related_projects": related_projects,
+        "related_section": _editorial_sections(section).get(section),
+    })
+
+
+def about(request):
+    sections = _editorial_sections(
+        SiteSection.KEY_ABOUT_HERO, SiteSection.KEY_ABOUT_STORY, SiteSection.KEY_ABOUT_PHILOSOPHY,
+        SiteSection.KEY_ABOUT_PRINCIPLES, SiteSection.KEY_ABOUT_QUOTE, SiteSection.KEY_ABOUT_CTA,
+    )
+    return render(request, "website/about.html", {
+        "sections": sections,
+        "principles": PhilosophyFeature.objects.filter(is_active=True),
+    })
 
 
 def robots_txt(request):
@@ -193,10 +208,13 @@ def robots_txt(request):
 
 
 def projects_list(request):
-    base = Project.objects.filter(is_active=True).prefetch_related("images")
+    projects = Project.objects.filter(is_active=True).prefetch_related("images")
+    sections = _editorial_sections(SiteSection.KEY_PROJECTS_HERO, SiteSection.KEY_PROJECTS_NOTE)
     return render(request, "website/projects/list.html", {
-        "ongoing_projects": base.filter(status=Project.STATUS_ONGOING),
-        "completed_projects": base.filter(status=Project.STATUS_COMPLETED),
+        "hero_section": sections.get(SiteSection.KEY_PROJECTS_HERO),
+        "note_section": sections.get(SiteSection.KEY_PROJECTS_NOTE),
+        "ongoing_projects": [project for project in projects if project.status == Project.STATUS_ONGOING],
+        "completed_projects": [project for project in projects if project.status == Project.STATUS_COMPLETED],
     })
 
 

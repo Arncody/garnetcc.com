@@ -36,7 +36,7 @@
         {% elif about_section.subtitle %}<p class="g-home-manifesto-kicker">{{ about_section.subtitle }}</p>{% endif %}
         <h2 id="home-about-title">{% if is_en %}{{ about_section.title_en|default:about_section.title }}{% else %}{{ about_section.title }}{% endif %}</h2>
         <div class="g-home-manifesto-summary">{% if is_en %}{{ about_section.content_en|default:about_section.content|linebreaks }}{% else %}{{ about_section.content|linebreaks }}{% endif %}</div>
-        <a class="g-home-manifesto-link" href="#contact">
+        <a class="g-home-manifesto-link" href="{% url 'website:about' %}">
           <span>{{ T.home_about_link }}</span>
           {% if is_en %}{% icon "arrow-right" 18 %}{% else %}{% icon "arrow-left" 18 %}{% endif %}
         </a>
