@@ -13,7 +13,7 @@
 <link rel="apple-touch-icon" href="{{ site_settings.favicon.url }}">{% else %}<link rel="icon" href="{% url 'website:favicon' %}">{% endif %}
 <meta property="og:site_name" content="{{ site_settings.brand_name }}"><meta property="og:type" content="website"><meta property="og:url" content="{{ request.build_absolute_uri }}">{% if site_settings.logo %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ site_settings.logo.url }}">{% endif %}
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"{{ site_settings.brand_name|escapejs }}","legalName":"{{ site_settings.legal_name|escapejs }}","url":"{{ request.scheme }}://{{ request.get_host }}/"{% if site_settings.logo %},"logo":"{{ request.scheme }}://{{ request.get_host }}{{ site_settings.logo.url }}"{% endif %}{% if site_settings.instagram_url or site_settings.linkedin_url %},"sameAs":[{% if site_settings.instagram_url %}"{{ site_settings.instagram_url|escapejs }}"{% endif %}{% if site_settings.instagram_url and site_settings.linkedin_url %},{% endif %}{% if site_settings.linkedin_url %}"{{ site_settings.linkedin_url|escapejs }}"{% endif %}]{% endif %}}</script>
-<link rel="stylesheet" href="{% static 'css/fonts.css' %}"><link rel="stylesheet" href="{% static 'css/style.css' %}?v=GNT-012">
+<link rel="stylesheet" href="{% static 'css/fonts.css' %}"><link rel="stylesheet" href="{% static 'css/style.css' %}?v=GNT-016">
 <style id="garnet-theme">
 :root{
  {% for key, value in theme_palette.items %}--{{ key }}:{{ value }};{% endfor %}
@@ -41,8 +41,8 @@ small,.small{font-weight:var(--small-weight)}
 {% if theme_css %}<style id="garnet-colors">
 {{ theme_css|safe }}
 </style>{% endif %}
-<link rel="stylesheet" href="{% static 'css/garnet-ui.css' %}?v=GNT-012">
-<link rel="stylesheet" href="{% static 'css/design-system.css' %}?v=GNT-015">
+<link rel="stylesheet" href="{% static 'css/garnet-ui.css' %}?v=GNT-016">
+<link rel="stylesheet" href="{% static 'css/design-system.css' %}?v=GNT-016">
 <link rel="stylesheet" href="{% static 'css/garnet-presentation.css' %}?v=GNT-014">
 {% if site_theme.custom_css %}<style id="garnet-custom-css">{{ site_theme.custom_css|safe }}</style>{% endif %}
 </head>
@@ -67,6 +67,7 @@ small,.small{font-weight:var(--small-weight)}
         </div>{% else %}<a href="{{ item.url }}"{% if item.active %} class="is-active" aria-current="page"{% endif %}>{{ item.label }}</a>{% endif %}{% endfor %}
       </nav>
       <div class="g-actions">
+        <a class="g-search-control" href="{% url 'website:projects_list' %}#project-search" aria-label="{{ T.project_search_label }}" title="{{ T.project_search_label }}">{% icon "search" 21 %}</a>
         <button type="button" class="g-cta" title="{{ T.consultation_button_text }}" data-consult-open><span dir="auto">{{ T.consultation_button_text }}</span></button>
         <details class="g-mobile-menu" id="mobile-menu">
           <summary class="g-toggle" id="nav-toggle" aria-label="{% if is_en %}Menu{% else %}منو{% endif %}" aria-controls="main-nav">{% icon "menu" 24 %}</summary>
@@ -104,7 +105,6 @@ small,.small{font-weight:var(--small-weight)}
   </div>
 </div>
 {% endwith %}
-{% if request.path != '/' %}<a class="mobile-back" href="javascript:history.back()" aria-label="{% if is_en %}Back{% else %}بازگشت{% endif %}"><span aria-hidden="true">{% if is_en %}{% icon "arrow-left" 16 %}{% else %}{% icon "arrow-right" 16 %}{% endif %}</span><b>{% if is_en %}Back{% else %}بازگشت{% endif %}</b></a>{% endif %}
 {% include "website/_footer.html" %}
 <a class="floating-call" href="tel:{{ site_settings.phone }}" aria-label="{% if is_en %}Call Garnet{% else %}تماس با گارنت{% endif %}">{% icon "phone" 22 %}</a>
 <script src="{% static 'js/main.js' %}?v=GNT-014" defer></script>

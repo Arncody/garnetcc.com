@@ -2,8 +2,11 @@
 website/views.py
 وظیفه: نمایش صفحه اصلی (تک‌صفحه‌ای)، صفحه جزئیات پروژه و پردازش امن فرم مشاوره.
 """
+from unicodedata import category, normalize
+
 from django.conf import settings
 from django.core.cache import cache
+from django.db.models import prefetch_related_objects
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
@@ -207,10 +210,34 @@ def robots_txt(request):
     return HttpResponse("\n".join(lines), content_type="text/plain")
 
 
+_PROJECT_SEARCH_CHARACTERS = str.maketrans(
+    {"ي": "ی", "ى": "ی", "ك": "ک", "\u200c": None, "\u200d": None, "ـ": None}
+    | dict(zip("٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹", "01234567890123456789"))
+)
+
+
+def _project_search_text(text):
+    text = normalize("NFKD", text).casefold().translate(_PROJECT_SEARCH_CHARACTERS)
+    return "".join(" " if category(char).startswith("P") else char for char in text if category(char) != "Mn")
+
+
 def projects_list(request):
-    projects = Project.objects.filter(is_active=True).prefetch_related("images")
+    query = request.GET.get("q", "")[:100].strip()
+    terms = _project_search_text(query).split()
+    projects = list(Project.objects.filter(is_active=True))
+    if terms:
+        def matches(project):
+            searchable = _project_search_text(" ".join((
+                project.title, project.title_en, project.code, project.location, project.location_en,
+            )))
+            return all(term in searchable for term in terms)
+
+        projects = [project for project in projects if matches(project)]
+    prefetch_related_objects(projects, "images")
     sections = _editorial_sections(SiteSection.KEY_PROJECTS_HERO, SiteSection.KEY_PROJECTS_NOTE)
     return render(request, "website/projects/list.html", {
+        "project_query": query if terms else "",
+        "project_count": len(projects),
         "hero_section": sections.get(SiteSection.KEY_PROJECTS_HERO),
         "note_section": sections.get(SiteSection.KEY_PROJECTS_NOTE),
         "ongoing_projects": [project for project in projects if project.status == Project.STATUS_ONGOING],

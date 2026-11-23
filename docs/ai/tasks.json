@@ -349,5 +349,30 @@
       "2026-11-23: 100 Chromium page/language/viewport checks, actual Django admin writes and 24 page checks with edited content, gallery and navigation tests, both forms persisted, sitemap and absent route checks, fresh and reversible SQLite migration 0020, Django check and collectstatic, JS syntax and Git whitespace."
     ],
     "rollback": "Revert files and keep the earlier project data. If reverting the migration, back up the newly editable fields and then migrate website to 0019 before replacing the files."
+  },
+  {
+    "id": "GNT-016",
+    "priority": "P1",
+    "title": "Responsive project browsing, search and catalogue visibility",
+    "status": "done",
+    "depends_on": [
+      "GNT-015"
+    ],
+    "modules": [
+      "M01",
+      "M02",
+      "M07",
+      "M10"
+    ],
+    "acceptance": [
+      "Search active projects in both languages by name, code or location",
+      "Per-project catalogue visibility from admin with existing PDF retained",
+      "Responsive progress and content sizes with no redundant back controls",
+      "Square footer purchase action and working shared navigation and forms"
+    ],
+    "verification_evidence": [
+      "2026-11-23: Verified 120 browser checks plus bilingual search with and without JavaScript, eight long-text checks, actual admin PDF visibility toggles, progress boundaries, common navigation and form persistence. Django and static collection passed. SQLite migration 0021 apply/reverse/reapply preserved existing project and catalogue data."
+    ],
+    "rollback": "Back up the new settings and reverse migration 0021 to website 0020 while GNT-016 code is installed, then restore GNT-015 files."
   }
 ]

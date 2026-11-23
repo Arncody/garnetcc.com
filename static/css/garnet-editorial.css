@@ -6,7 +6,7 @@
   --ed-muted: var(--ed-theme-muted, #c1c8bf);
   --ed-accent: var(--ed-theme-accent, #c6bca9);
   --ed-rule: color-mix(in srgb, var(--ed-ink) 20%, transparent);
-  --ed-wide-gap: clamp(2.25rem, 6.7vw, 7.2rem);
+  --ed-wide-gap: clamp(1.5rem, 5vw, 5.5rem);
   background: var(--ed-canvas);
   color: var(--ed-ink);
   overflow-wrap: anywhere;
@@ -19,12 +19,13 @@
 }
 .editorial-page h1 {
   margin-block-end: 1.2rem;
-  font-size: clamp(2.6rem, 6.2vw, 5.5rem);
+  font-size: clamp(2.05rem, 5.25vw, 4.75rem);
+  text-wrap: balance;
   line-height: 1.28;
 }
 .ed-heading {
   margin-block-end: clamp(1.375rem, 3vw, 2.5rem);
-  font-size: clamp(1.65rem, 4vw, 3.25rem);
+  font-size: clamp(1.45rem, 3.4vw, 2.9rem);
   line-height: 1.45;
 }
 .ed-kicker {
@@ -46,11 +47,11 @@
   isolation: isolate;
   display: grid;
   align-items: end;
-  min-block-size: clamp(34rem, 88svh, 64rem);
+  min-block-size: clamp(26rem, 84svh, 59rem);
   background: var(--ed-canvas);
   padding-block: calc(6.25rem + env(safe-area-inset-top)) clamp(3.5rem, 10vh, 8.25rem);
 }
-.ed-cinematic-portfolio { min-block-size: clamp(32rem, 75svh, 59rem); }
+.ed-cinematic-portfolio { min-block-size: clamp(23rem, 72svh, 53rem); }
 .ed-cinematic-image,
 .ed-cinematic::before { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; }
 .ed-cinematic-image {
@@ -73,13 +74,61 @@
 
 .ed-band {
   position: relative;
-  padding-block: clamp(3.5rem, 8vw, 8.25rem);
+  padding-block: clamp(2.75rem, 6vw, 6.5rem);
   background: radial-gradient(ellipse 70% 66% at 72% 45%, var(--ed-volume), transparent 90%);
 }
 .ed-band-alt {
   background: radial-gradient(ellipse 70% 66% at 23% 52%, var(--ed-volume), transparent 90%);
 }
 .ed-band + .ed-band { border-block-start: 1px solid var(--ed-rule); }
+
+/* Search occupies a single compact row before the project groups. */
+.ed-search-area {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem 1.5rem;
+  padding-block: clamp(.9rem, 2.5vw, 1.8rem) .5rem;
+}
+.ed-project-search {
+  display: flex;
+  inline-size: min(100%, 24rem);
+  min-inline-size: 0;
+  border: 1px solid var(--ed-rule);
+  background: color-mix(in srgb, var(--ed-volume) 34%, var(--ed-canvas));
+  color-scheme: dark;
+}
+.ed-project-search:focus-within { border-color: var(--ed-accent); }
+.ed-project-search :is(input, button) {
+  min-block-size: 44px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ed-ink);
+}
+.ed-project-search input {
+  flex: 1;
+  min-inline-size: 0;
+  padding: .5rem .75rem;
+  font: inherit;
+  font-size: 1rem;
+}
+.ed-project-search input::placeholder { color: var(--ed-muted); opacity: 1; }
+.ed-project-search button {
+  display: grid;
+  place-items: center;
+  flex: 0 0 44px;
+  padding: 0;
+  border-inline-start: 1px solid var(--ed-rule);
+  cursor: pointer;
+}
+.ed-project-search button:hover { background: color-mix(in srgb, var(--ed-ink) 10%, transparent); }
+.site-shell .ed-project-search :focus-visible { outline-color: var(--ed-ink) !important; outline-offset: -3px; }
+.ed-search-summary { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem 1rem; font-size: .875rem; }
+.ed-search-summary p { margin: 0; color: var(--ed-muted); }
+.ed-search-summary a { display: inline-flex; align-items: center; min-block-size: 44px; color: var(--ed-accent); text-decoration: underline; }
+.ed-search-area + .ed-band { padding-block-start: clamp(1.5rem, 3.5vw, 3.5rem); }
 
 .ed-actions,
 .ed-note,
@@ -129,7 +178,7 @@
 .ed-philosophy,
 .ed-principles,
 .ed-gallery { display: grid; }
-.ed-project-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1.75rem, 4vw, 4.25rem); }
+.ed-project-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1.25rem, 3vw, 3.25rem); }
 .ed-project-grid-related { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-block-start: 2.25rem; }
 .ed-project { min-inline-size: 0; }
 .ed-project > a { display: block; color: inherit; text-decoration: none; }
@@ -176,7 +225,7 @@
   border: 1px solid var(--ed-rule);
 }
 
-.ed-detail-intro { padding-block-start: clamp(7rem, 13vw, 11.5rem); }
+.ed-detail-intro { padding-block-start: clamp(6.5rem, 9vw, 10rem); }
 .ed-detail-grid, .ed-philosophy {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: center;
@@ -184,10 +233,10 @@
 }
 .ed-detail-copy:only-child { grid-column: 1 / -1; max-inline-size: 52rem; }
 .ed-detail-copy > :is(.ed-kicker, h1) { margin-block-start: 1rem; }
-.ed-detail-cover { position: relative; margin: 0; aspect-ratio: 5 / 5.6; overflow: hidden; }
+.ed-detail-cover { position: relative; margin: 0; aspect-ratio: 5 / 5.6; max-block-size: min(46rem, 80svh); overflow: hidden; }
 .ed-detail-cover img { filter: saturate(.74) brightness(.88); }
 .ed-facts { margin-block: 1.5rem; }
-.ed-facts > div, .ed-progress > div {
+.ed-facts > div, .ed-progress-head {
   display: flex;
   justify-content: space-between;
   gap: .5rem 1rem;
@@ -196,16 +245,52 @@
 .ed-facts :is(dt, dd) { min-inline-size: 0; }
 .ed-facts dt { color: var(--ed-muted); }
 .ed-facts dd { margin: 0; text-align: end; }
+/* Progress keeps the number, native meter and stage in one panel. */
 .ed-progress {
-  padding: 1rem 1.15rem;
+  display: grid;
+  gap: .7rem;
+  margin-block: clamp(1rem, 2.5vw, 1.5rem);
+  padding: clamp(.85rem, 2.4vw, 1.25rem);
   border: 1px solid var(--ed-rule);
-  color: var(--ed-muted);
-  background: color-mix(in srgb, var(--ed-canvas) 80%, transparent);
-  margin-block: 1.5rem;
+  background: color-mix(in srgb, var(--ed-volume) 38%, var(--ed-canvas));
 }
-.ed-progress > div { flex-wrap: wrap; font-size: .875rem; }
-.ed-progress p { margin: .4rem 0 0; }
-.ed-progress progress { width: 100%; height: .5rem; accent-color: var(--ed-accent); }
+.ed-progress-head { align-items: baseline; flex-wrap: wrap; }
+.ed-progress-head h2 { margin: 0; font-size: clamp(.95rem, 2vw, 1.15rem); line-height: 1.5; }
+.ed-progress-value {
+  color: var(--ed-accent);
+  font-size: clamp(1.65rem, 4vw, 2.5rem);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  line-height: 1;
+}
+.ed-progress-value span { margin-inline-start: .12em; font-size: .55em; }
+.ed-progress progress {
+  appearance: none;
+  inline-size: 100%;
+  block-size: .375rem;
+  border: 0;
+  border-radius: 1em;
+  background: var(--ed-rule);
+  color: var(--ed-accent);
+  accent-color: var(--ed-accent);
+}
+.ed-progress progress::-webkit-progress-bar { border-radius: 1em; background: var(--ed-rule); }
+.ed-progress progress::-webkit-progress-value { border-radius: 1em; background: var(--ed-accent); }
+.ed-progress progress::-moz-progress-bar { border-radius: 1em; background: var(--ed-accent); }
+.ed-progress-stage {
+  display: grid;
+  gap: .125rem .65rem;
+  margin: 0;
+  padding-block-start: .55rem;
+  border-block-start: 1px solid var(--ed-rule);
+  color: var(--ed-muted);
+  font-size: .875rem;
+}
+.ed-progress-stage dd { margin: 0; color: var(--ed-ink); }
+@media (min-width: 36rem) {
+  .ed-progress-stage { grid-template-columns: minmax(0, max-content) minmax(0, 1fr); }
+  .ed-progress-stage dd { text-align: end; }
+}
 .ed-split { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 1rem var(--ed-wide-gap); }
 .ed-gallery { grid-template-columns: minmax(0, 1.25fr) repeat(2, minmax(0, .75fr)); gap: 1.25rem 1rem; }
 .ed-gallery figure { margin: 0; min-inline-size: 0; }
@@ -268,9 +353,9 @@
 .ed-quote blockquote { max-inline-size: 35ch; margin: 0 auto; font-size: clamp(1.55rem, 4vw, 3.25rem); line-height: 1.6; }
 .ed-quote figcaption { margin-block-start: 1rem; color: var(--ed-muted); }
 
-@media (max-width: 52rem) {
+@media (max-width: 56rem) {
   .ed-detail-grid, .ed-split, .ed-philosophy { grid-template-columns: minmax(0, 1fr); gap: 1.875rem; }
-  .ed-detail-cover { grid-row: 1; aspect-ratio: 1.35; }
+  .ed-detail-cover { grid-row: 1; aspect-ratio: 1.4; max-block-size: clamp(12rem, 55svh, 33rem); }
   .ed-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .ed-gallery figure:first-child { grid-column: 1 / -1; }
   .ed-gallery figure:first-child .ed-gallery-image { aspect-ratio: 1.65; }

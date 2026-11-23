@@ -6,7 +6,8 @@
         {% include "website/projects/_editorial_card.html" with project=project %}
       {% empty %}
         <p class="ed-body">
-          {% if group_id == 'completed' %}{% if is_en %}No completed projects yet.{% else %}فعلاً پروژهٔ تکمیل‌شده‌ای ثبت نشده است.{% endif %}
+          {% if project_query %}{% if is_en %}No matching projects in this group.{% else %}پروژه‌ای مطابق جست‌وجو در این گروه پیدا نشد.{% endif %}
+          {% elif group_id == 'completed' %}{% if is_en %}No completed projects yet.{% else %}فعلاً پروژهٔ تکمیل‌شده‌ای ثبت نشده است.{% endif %}
           {% else %}{% if is_en %}No ongoing projects yet.{% else %}فعلاً پروژهٔ در حال اجرایی ثبت نشده است.{% endif %}{% endif %}
         </p>
       {% endfor %}

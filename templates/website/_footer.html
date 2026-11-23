@@ -78,7 +78,6 @@
       <small>© {% now "Y" %} {{ site_settings.brand_name }}. {% if is_en %}All rights reserved.{% else %}تمامی حقوق محفوظ است.{% endif %}</small>
       <div class="footer-bottom-actions">
         <a class="footer-language" href="{% url 'website:set_language' %}?lang={% if is_en %}fa{% else %}en{% endif %}" lang="{% if is_en %}fa{% else %}en{% endif %}">{% if is_en %}فارسی{% else %}English{% endif %}</a>
-        <a class="footer-top-link" href="#main-content">{% icon "arrow-up" 16 %} {% if is_en %}Back to top{% else %}بازگشت به بالا{% endif %}</a>
       </div>
     </div>
   </div>

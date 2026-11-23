@@ -4,5 +4,5 @@
   "baseline": "Complete GDCS ZIP; Django and Chromium checks on local fixture data",
   "active_task": null,
   "last_update": "2026-11-23",
-  "note": "GNT-015 completed after local verification on the supplied GNT-014 code. Migration 0020 adds editable project and About content. Production verification and historical exposure tracking under GNT-005 remain open."
+  "note": "GNT-016 completed after local verification on GNT-015. Migration 0021 adds catalogue visibility and bilingual project search labels. Production verification and historical exposure tracking under GNT-005 remain open."
 }

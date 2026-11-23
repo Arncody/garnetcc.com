@@ -22,22 +22,34 @@
       </dl>
 
       {% if project.progress_percent is not None or project.status_note or project.status_note_en %}
-      <div class="ed-progress">
+      <section class="ed-progress" aria-labelledby="project-progress-title">
+        <div class="ed-progress-head">
+          <h2 id="project-progress-title">{% if is_en %}Construction progress{% else %}پیشرفت اجرایی{% endif %}</h2>
+          {% if project.progress_percent is not None %}
+            <bdi class="ed-progress-value" aria-hidden="true">{{ project.progress_percent|unlocalize }}<span>%</span></bdi>
+          {% endif %}
+        </div>
         {% if project.progress_percent is not None %}
-          <div><label for="project-progress">{% if is_en %}Construction progress{% else %}پیشرفت اجرایی{% endif %}</label> <bdi>{{ project.progress_percent|unlocalize }}%</bdi></div>
-          <progress id="project-progress" max="100" value="{{ project.progress_percent|unlocalize }}"></progress>
+          <progress id="project-progress" aria-labelledby="project-progress-title" max="100" value="{{ project.progress_percent|unlocalize }}"></progress>
         {% endif %}
-        {% if project.status_note or project.status_note_en %}<p>{% if is_en %}{{ project.status_note_en|default:project.status_note }}{% else %}{{ project.status_note }}{% endif %}</p>{% endif %}
-      </div>
+        {% if project.status_note or project.status_note_en %}
+          <dl class="ed-progress-stage">
+            <dt>{% if is_en %}Current stage{% else %}مرحلهٔ فعلی{% endif %}</dt>
+            <dd>{% if is_en %}{{ project.status_note_en|default:project.status_note }}{% else %}{{ project.status_note }}{% endif %}</dd>
+          </dl>
+        {% endif %}
+      </section>
       {% endif %}
 
-      {% if project.purchase_request_enabled or gallery or project.catalog_file %}
+      {% with catalog=project.public_catalog %}
+      {% if project.purchase_request_enabled or gallery or catalog %}
       <div class="ed-actions">
         {% if project.purchase_request_enabled %}<button type="button" class="ed-btn ed-btn-solid" data-consult-open>{{ T.project_buy_label }} {% icon "arrow-up-right" 17 %}</button>{% endif %}
         {% if gallery %}<a class="ed-btn" href="#project-gallery">{{ T.project_gallery_title }} <span class="ed-down">{% icon "arrow-up" 16 %}</span></a>{% endif %}
-        {% if project.catalog_file %}<a class="ed-btn" href="{{ project.catalog_file.url }}" target="_blank" rel="noopener">{{ T.project_catalog_button_text }} {% icon "download" 17 %}</a>{% endif %}
+        {% if catalog %}<a class="ed-btn" href="{{ catalog.url }}" target="_blank" rel="noopener">{{ T.project_catalog_button_text }} {% icon "download" 17 %}</a>{% endif %}
       </div>
       {% endif %}
+      {% endwith %}
     </div>
     {% with cover=project.cover_image %}
     {% if cover %}

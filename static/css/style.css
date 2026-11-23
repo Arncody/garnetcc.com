@@ -272,7 +272,6 @@
    accessible glass controls, compact footer and toast feedback
    ========================================================= */
 .mobile-menu-actions{display:none}
-.mobile-back{display:none}
 .required-mark{color:#e85f3c;font-weight:800;margin-inline-start:3px}
 .field-error{margin-top:6px;font-size:.72rem;line-height:1.55;color:#a6342a;font-weight:700}
 .form-alert{margin:0 0 12px;padding:9px 12px;border:1px solid rgba(183,57,45,.18);border-radius:11px;background:rgba(255,238,235,.84);color:#8e3026;font-size:.76rem}
@@ -340,8 +339,6 @@
   .mobile-menu-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:5px}
   .mobile-menu-actions>*{min-height:40px;display:flex;align-items:center;justify-content:center;border-radius:11px;font-size:.73rem;text-decoration:none}
     .menu-lang-link{background:rgba(9,38,52,.06);color:#092634!important;border:1px solid rgba(9,38,52,.10)}
-  .mobile-back{display:flex;position:fixed;bottom:15px;inset-inline-end:15px;z-index:900;align-items:center;gap:5px;padding:8px 11px;border-radius:999px;background:rgba(255,255,255,.90);border:1px solid rgba(255,255,255,.95);box-shadow:0 10px 30px rgba(7,29,43,.15);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);color:#092634;font-size:.66rem;text-decoration:none}
-  .mobile-back span{font-size:1rem;line-height:1}
   .site-toasts{top:76px;inset-inline:12px;max-width:none}
   .site-toast{font-size:.72rem;padding:9px 12px}
   .consult-modal{width:calc(100vw - 20px);height:min(92svh,720px);max-height:92svh;border-radius:20px}
@@ -986,9 +983,6 @@ html, body { max-width:100%; overflow-x:hidden; }
 /* ---- Project page hero ---- */
 .pd-hero{position:relative;overflow:hidden;background:var(--navy);color:#fff}
 .pd-hero-inner{position:relative;z-index:2;min-height:88svh;display:flex;flex-direction:column;justify-content:space-between;gap:40px;padding-block:104px 52px}
-.pd-back{align-self:flex-start;display:inline-flex;align-items:center;min-height:28px;padding:0 13px;border-radius:999px;font-size:.62rem;font-weight:600;color:#fff;
-  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.34);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);text-shadow:0 1px 4px rgba(0,0,0,.4)}
-.pd-back:hover{background:rgba(255,255,255,.24)}
 .pd-copy{max-width:780px}
 .pd-copy .eyebrow{color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.55),0 1px 3px rgba(0,0,0,.45)}
 .pd-copy h1{font-size:clamp(2rem,4.6vw,4.2rem);line-height:1.2;font-weight:var(--hero-weight,500);letter-spacing:-.03em;margin:0 0 14px;text-shadow:0 2px 14px rgba(0,0,0,.55),0 1px 3px rgba(0,0,0,.45)}
@@ -1129,10 +1123,6 @@ html, body { max-width:100%; overflow-x:hidden; }
 
 /* ---------- Inside a project: hero ---------- */
 .pd-hero-inner{padding-block:108px 48px}
-.pd-back{align-self:flex-start;display:inline-flex;align-items:center;gap:9px;min-height:42px;padding:0 20px;border-radius:999px;font-size:.8rem;font-weight:600;
-  color:#0b2a3a;background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.75);text-shadow:none;
-  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 8px 24px rgba(0,0,0,.12)}
-.pd-back:hover{background:rgba(255,255,255,.8)}
 .pd-loc{display:block;margin-bottom:10px;font-size:.84rem;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.55),0 1px 3px rgba(0,0,0,.45)}
 .pd-copy h1{font-size:clamp(2.1rem,5vw,4.2rem);font-weight:var(--hero-weight,500)}
 .pd-chips{gap:8px;margin-top:20px}
@@ -1250,15 +1240,10 @@ html[dir="rtl"] .more-btn em svg{transform:scaleX(-1)}
 .projects-block .empty-state{grid-column:1/-1}
 
 /* =========================================================
-   V23 — ONE BACK BUTTON (bottom) + COMPACT BLOG CARDS
+   V23 — COMPACT BLOG CARDS
    ========================================================= */
 
-/* The only back button is the bottom one: visible on every screen size */
-.mobile-back{display:flex;position:fixed;bottom:15px;inset-inline-end:15px;z-index:900;align-items:center;gap:5px;padding:8px 13px;border-radius:999px;
-  background:rgba(255,255,255,.90);border:1px solid rgba(255,255,255,.95);box-shadow:0 10px 30px rgba(7,29,43,.15);
-  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);color:#092634;font-size:.7rem;text-decoration:none}
-.mobile-back span{font-size:1rem;line-height:1}
-/* project hero without the top back button: content sits at the bottom */
+/* Align the project hero content at the bottom. */
 .pd-hero-inner{justify-content:flex-end}
 
 /* ---- Blog cards: half-size, every feature kept (category, title, date+time, button) ---- */

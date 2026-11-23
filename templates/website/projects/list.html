@@ -1,5 +1,6 @@
 {% extends "website/editorial_base.html" %}{% load static site_icons %}
 {% block title %}{% if hero_section %}{% if is_en %}{{ hero_section.title_en|default:hero_section.title }}{% else %}{{ hero_section.title }}{% endif %}{% elif is_en %}Projects{% else %}پروژه‌ها{% endif %} | {{ site_settings.brand_name }}{% endblock %}
+{% block extra_head %}{{ block.super }}{% if project_query %}<meta name="robots" content="noindex,follow">{% endif %}{% endblock %}
 {% block editorial_page_class %}editorial-portfolio{% endblock %}
 {% block editorial_content %}
 <section class="ed-cinematic ed-cinematic-portfolio" aria-labelledby="portfolio-title">
@@ -14,6 +15,19 @@
     </nav>
   </div>
 </section>
+<div class="container ed-search-area">
+  <form class="ed-project-search" action="{% url 'website:projects_list' %}#project-search" method="get" role="search" aria-label="{{ T.project_search_label }}">
+    <label class="sr-only" for="project-search">{{ T.project_search_label }}</label>
+    <input id="project-search" name="q" type="search" dir="auto" maxlength="100" value="{{ project_query }}" placeholder="{{ T.project_search_placeholder }}">
+    <button type="submit" aria-label="{{ T.project_search_label }}" title="{{ T.project_search_label }}">{% icon "search" 20 %}</button>
+  </form>
+  {% if project_query %}
+  <div class="ed-search-summary">
+    <p role="status">{% if is_en %}Results: {{ project_count }}{% else %}تعداد نتایج: {{ project_count }}{% endif %}</p>
+    <a href="{% url 'website:projects_list' %}#project-search">{% if is_en %}Clear search{% else %}پاک‌کردن جست‌وجو{% endif %}</a>
+  </div>
+  {% endif %}
+</div>
 {% include "website/projects/_editorial_group.html" with group_id="ongoing" group_title=T.projects_ongoing_title projects=ongoing_projects %}
 {% include "website/projects/_editorial_group.html" with group_id="completed" group_title=T.projects_completed_title projects=completed_projects %}
 {% if note_section %}

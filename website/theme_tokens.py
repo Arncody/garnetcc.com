@@ -247,7 +247,7 @@ GROUPS = [
         Token("footer_news_bg", "فرم خبرنامه — پس‌زمینه", "#FFFFFF", ".site-footer .newsletter-form{--newsletter-surface-tint:{v}}"),
         Token("footer_news_text", "فرم خبرنامه — رنگ متن ایمیل", CHARCOAL, ".site-footer .newsletter-form{--newsletter-text-tint:{v}}"),
         Token("footer_news_btn", "فرم خبرنامه — دکمه ثبت", CHARCOAL, ".site-footer .newsletter-form{--newsletter-action-tint:{v}}"),
-        Token("footer_bottom_text", "نوار پایین فوتر (کپی‌رایت و بازگشت به بالا)", "rgba(255,255,255,.66)", ".site-footer .footer-bottom,.site-footer .footer-bottom small,.site-footer .footer-bottom a{color:{v}!important}"),
+        Token("footer_bottom_text", "نوار پایین فوتر (کپی‌رایت و زبان)", "rgba(255,255,255,.66)", ".site-footer .footer-bottom,.site-footer .footer-bottom small,.site-footer .footer-bottom a{color:{v}!important}"),
         Token("footer_bottom_line", "خط بالای نوار پایین فوتر", "rgba(255,255,255,.09)", ".site-footer .footer-bottom{border-top-color:{v}!important}"),
     ]),
     Group("modal", "📝 پاپ‌آپ فرم درخواست مشاوره", "پنجره‌ی باز شونده‌ی فرم مشاوره.", [
@@ -263,7 +263,7 @@ GROUPS = [
         Token("modal_submit_text", "دکمه «ثبت درخواست» — متن", WHITE, "#consultModal .btn.btn-primary{color:{v}!important}"),
         Token("modal_close_bg", "دکمه بستن (×)", "rgba(255,255,255,.65)", "#consultModal .modal-close{background:{v}!important}"),
     ]),
-    Group("floating", "🔘 دکمه‌های شناور و پیام‌ها", "دکمه‌ی گرد تماس، دکمه‌ی «بازگشت» و پیام‌های موفقیت/خطا.", [
+    Group("floating", "🔘 دکمه‌های شناور و پیام‌ها", "دکمهٔ تماس و پیام‌های موفقیت و خطا.", [
         Token("float_call_bg", "دکمه گرد تماس — پس‌زمینه", CHARCOAL, ".floating-call{background:{v}!important;background-image:none!important}"),
         Token("float_call_icon", "دکمه گرد تماس — آیکون", "#FFFFFF", ".floating-call{color:{v}!important}"),
         Token("back_btn_bg", "دکمه «بازگشت» — پس‌زمینه", WHITE, ".mobile-back{background:{v}!important}"),
@@ -281,8 +281,8 @@ GROUPS = [
               ".site-header,.g-bar,.main-nav,.g-panel,.site-header .main-nav{box-shadow:0 14px 42px {v}!important}"),
         Token("shadow_project_cards", "سایه کارت‌ها و ردیف‌های پروژه", "rgba(7,29,43,.12)",
               ".mini-project,.mini-project:hover,.mini-project.project-preview,.proj-row,.proj-row:hover,.project-card,.featured-project,.pd-related-item{box-shadow:0 14px 38px {v}!important}"),
-        Token("shadow_floating", "سایه دکمه‌های شناور و بازگشت", "rgba(7,29,43,.16)",
-              ".floating-call,.mobile-back,.pd-back,.pc-view{box-shadow:0 10px 30px {v}!important}"),
+        Token("shadow_floating", "سایه دکمه‌های شناور", "rgba(7,29,43,.16)",
+              ".floating-call,.pc-view{box-shadow:0 10px 30px {v}!important}"),
         Token("shadow_modal", "سایه پنجره‌ها و فرم‌ها", "rgba(7,29,43,.24)",
               ".consult-modal,.consult-modal-inner,.gender-option:has(input:checked),.site-toast{box-shadow:0 28px 80px {v}!important}"),
     ]),
@@ -294,7 +294,7 @@ RETIRED_DECORATIONS = frozenset({
     "row_status_ongoing_dot", "row_status_completed_dot",
     "about_card_bg", "about_btn_main_bg", "about_btn_main_text",
     "header_cta_bg", "header_cta_hover", "header_cta_text", "all_btn_bg", "rail_nav_bg", "rail_nav_icon",
-    "page_projects_bg", "page_project_detail_bg",
+    "page_projects_bg", "page_project_detail_bg", "back_btn_bg", "back_btn_text",
 } | {token.key for group in GROUPS if group.key in {"projects_page", "project_detail"} for token in group.tokens})
 
 ALL_TOKENS = [t for g in GROUPS for t in g.tokens]

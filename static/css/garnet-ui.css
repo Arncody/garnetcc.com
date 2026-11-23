@@ -87,8 +87,6 @@ html[dir="ltr"] .pc-top{direction:ltr}
 @media(max-width:520px){.floating-call{width:46px;height:46px}.floating-call .ic{width:20px;height:20px}}
 
 /* ---------- دکمه‌ی بازگشت ---------- */
-.mobile-back .ic{width:16px;height:16px}
-.mobile-back span{display:inline-flex}
 .section-link{display:inline-flex;align-items:center;gap:6px}
 
 /* ---------- ریسپانسیو: بدون فضای خالی و بزرگی اضافه ---------- */

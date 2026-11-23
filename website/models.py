@@ -400,6 +400,10 @@ class Project(models.Model):
         "کاتالوگ PDF پروژه", upload_to="projects/catalogs/", validators=PDF_VALIDATORS, blank=True,
         help_text="فایل PDF اختصاصی همین پروژه؛ حداکثر ۲۰ مگابایت. در صورت خالی بودن، دکمه کاتالوگ نمایش داده نمی‌شود.",
     )
+    catalog_visible = models.BooleanField(
+        "نمایش دکمه کاتالوگ پروژه", default=True,
+        help_text="با خاموش کردن این گزینه، دکمه پنهان می‌شود و فایل PDF ذخیره‌شده باقی می‌ماند.",
+    )
     is_featured = models.BooleanField(
         "نمایش برجسته (مثلاً گارنت میدو)", default=False,
         help_text="برای معرفی برجسته‌تر یک پروژه (مثل پروژه گارنت میدو) فعال کنید.",
@@ -422,6 +426,10 @@ class Project(models.Model):
 
     def get_absolute_url(self):
         return reverse("website:project_detail", kwargs={"slug": self.slug})
+
+    @property
+    def public_catalog(self):
+        return self.catalog_file if self.catalog_visible and self.catalog_file else None
 
     @property
     def cover_image(self):
@@ -624,6 +632,8 @@ class CompanyCatalog(models.Model):
 
 
 SITE_TEXT_DEFAULTS = {
+    "project_search_label": ("جست‌وجوی پروژه‌ها", "Search projects"),
+    "project_search_placeholder": ("نام، کد یا موقعیت", "Name, code or location"),
     "projects_ongoing_title": ("پروژه‌های در حال اجرا", "Ongoing projects"),
     "projects_completed_title": ("پروژه‌های تکمیل‌شده", "Completed projects"),
     "project_story_title": ("معرفی پروژه", "About this project"),
@@ -679,6 +689,10 @@ class SiteTexts(SingletonModel):
     """متن‌های قابل ویرایش عنوان‌ها، کادر مشاوره و فرم درخواست؛ هر متن در فارسی و انگلیسی.
     اگر فیلدی خالی بماند، متن پیش‌فرض سایت نمایش داده می‌شود."""
 
+    project_search_label = models.CharField("عنوان جست‌وجوی پروژه‌ها", max_length=80, blank=True, default="جست‌وجوی پروژه‌ها")
+    project_search_label_en = models.CharField("عنوان جست‌وجوی پروژه‌ها (EN)", max_length=80, blank=True, default="Search projects")
+    project_search_placeholder = models.CharField("راهنمای کادر جست‌وجو", max_length=100, blank=True, default="نام، کد یا موقعیت")
+    project_search_placeholder_en = models.CharField("راهنمای کادر جست‌وجو (EN)", max_length=100, blank=True, default="Name, code or location")
     projects_ongoing_title = models.CharField("پروژه‌های در حال اجرا", max_length=100, blank=True, default="پروژه‌های در حال اجرا")
     projects_ongoing_title_en = models.CharField("پروژه‌های در حال اجرا (EN)", max_length=100, blank=True, default="Ongoing projects")
     projects_completed_title = models.CharField("پروژه‌های تکمیل‌شده", max_length=100, blank=True, default="پروژه‌های تکمیل‌شده")
