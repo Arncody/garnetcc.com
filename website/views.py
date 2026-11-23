@@ -225,6 +225,7 @@ def projects_list(request):
     query = request.GET.get("q", "")[:100].strip()
     terms = _project_search_text(query).split()
     projects = list(Project.objects.filter(is_active=True))
+    context = {}
     if terms:
         def matches(project):
             searchable = _project_search_text(" ".join((
@@ -233,16 +234,17 @@ def projects_list(request):
             return all(term in searchable for term in terms)
 
         projects = [project for project in projects if matches(project)]
+        context.update(project_query=query, search_results=projects)
+    else:
+        sections = _editorial_sections(SiteSection.KEY_PROJECTS_HERO, SiteSection.KEY_PROJECTS_NOTE)
+        context.update(
+            hero_section=sections.get(SiteSection.KEY_PROJECTS_HERO),
+            note_section=sections.get(SiteSection.KEY_PROJECTS_NOTE),
+            ongoing_projects=[project for project in projects if project.status == Project.STATUS_ONGOING],
+            completed_projects=[project for project in projects if project.status == Project.STATUS_COMPLETED],
+        )
     prefetch_related_objects(projects, "images")
-    sections = _editorial_sections(SiteSection.KEY_PROJECTS_HERO, SiteSection.KEY_PROJECTS_NOTE)
-    return render(request, "website/projects/list.html", {
-        "project_query": query if terms else "",
-        "project_count": len(projects),
-        "hero_section": sections.get(SiteSection.KEY_PROJECTS_HERO),
-        "note_section": sections.get(SiteSection.KEY_PROJECTS_NOTE),
-        "ongoing_projects": [project for project in projects if project.status == Project.STATUS_ONGOING],
-        "completed_projects": [project for project in projects if project.status == Project.STATUS_COMPLETED],
-    })
+    return render(request, "website/projects/list.html", context)
 
 
 def favicon_ico(request):

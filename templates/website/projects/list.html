@@ -3,6 +3,7 @@
 {% block extra_head %}{{ block.super }}{% if project_query %}<meta name="robots" content="noindex,follow">{% endif %}{% endblock %}
 {% block editorial_page_class %}editorial-portfolio{% endblock %}
 {% block editorial_content %}
+{% if not project_query %}
 <section class="ed-cinematic ed-cinematic-portfolio" aria-labelledby="portfolio-title">
   <img class="ed-cinematic-image" src="{% if hero_section.image %}{{ hero_section.image.url }}{% else %}{% static 'images/editorial/architecture-hero.webp' %}{% endif %}" alt="" fetchpriority="high">
   <div class="container ed-cinematic-content">
@@ -15,7 +16,9 @@
     </nav>
   </div>
 </section>
-<div class="container ed-search-area">
+{% endif %}
+<div class="container ed-search-area{% if project_query %} ed-search-active{% endif %}">
+  {% if project_query %}<h1 class="sr-only">{% if is_en %}Project search results{% else %}نتایج جست‌وجوی پروژه‌ها{% endif %}</h1>{% endif %}
   <form class="ed-project-search" action="{% url 'website:projects_list' %}#project-search" method="get" role="search" aria-label="{{ T.project_search_label }}">
     <label class="sr-only" for="project-search">{{ T.project_search_label }}</label>
     <input id="project-search" name="q" type="search" dir="auto" maxlength="100" value="{{ project_query }}" placeholder="{{ T.project_search_placeholder }}">
@@ -23,11 +26,24 @@
   </form>
   {% if project_query %}
   <div class="ed-search-summary">
-    <p role="status">{% if is_en %}Results: {{ project_count }}{% else %}تعداد نتایج: {{ project_count }}{% endif %}</p>
+    <p role="status">
+      {% if search_results %}
+        {% if is_en %}Results: {{ search_results|length }}{% else %}تعداد نتایج: {{ search_results|length }}{% endif %}
+      {% elif is_en %}No matching projects found.{% else %}پروژه‌ای مطابق جست‌وجو پیدا نشد.{% endif %}
+    </p>
     <a href="{% url 'website:projects_list' %}#project-search">{% if is_en %}Clear search{% else %}پاک‌کردن جست‌وجو{% endif %}</a>
   </div>
   {% endif %}
 </div>
+{% if project_query %}
+  {% if search_results %}
+  <div class="container ed-project-grid ed-search-matches">
+    {% for project in search_results %}
+      {% include "website/projects/_editorial_card.html" with project=project %}
+    {% endfor %}
+  </div>
+  {% endif %}
+{% else %}
 {% include "website/projects/_editorial_group.html" with group_id="ongoing" group_title=T.projects_ongoing_title projects=ongoing_projects %}
 {% include "website/projects/_editorial_group.html" with group_id="completed" group_title=T.projects_completed_title projects=completed_projects %}
 {% if note_section %}
@@ -37,5 +53,6 @@
     <a class="ed-text-link" href="{% url 'website:about' %}">{{ T.home_about_link }} {% icon "arrow-up-right" 18 %}</a>
   </div>
 </section>
+{% endif %}
 {% endif %}
 {% endblock %}

@@ -21,5 +21,6 @@
 | GNT-014 | P1 | Transparent controls, compact footer and blog retirement · requires GNT-013 | done |
 | GNT-015 | P1 | Reference-driven project pages and standalone About · requires GNT-014 | done |
 | GNT-016 | P1 | Responsive project browsing, search and catalogue visibility · requires GNT-015 | done |
+| GNT-017 | P1 | Render a single list of project search results · requires GNT-016 | done |
 
 Only one task active. Changes to this list are not automatically complete tasks.

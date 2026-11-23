@@ -81,3 +81,8 @@
 - Add per-project catalogue action visibility. The PDF stays attached when the action is hidden. Existing catalogues default to visible after migration 0021.
 - Refine editorial headings, spacing, gallery sizing and mobile breakpoints. Place progress percentage, a native progress bar and current stage together. Remove the public history-back and back-to-top controls and square the footer purchase button.
 - Chromium passed 120 page, language and viewport combinations from 320px through 1920px, with separate search checks with and without JavaScript and eight long-text checks. Verified catalogue toggles and search labels through real Django admin saves, zero/unknown/100% progress, purchase and newsletter persistence, Django checks, production-mode collectstatic and migration 0021 apply/revert/reapply in SQLite.
+
+## 2026-11-23 — GNT-017 · Single project search results grid
+
+- Render one set of matching project cards while a query is active. A genuine zero-match search shows one message. The reset and standard status navigation restore the default portfolio view.
+- Verified 64 Chromium result combinations covering completed-only, ongoing-only, mixed and zero results in FA/EN at four widths, with and without JavaScript. Verified search form submission, reset and result navigation in all 16 browser contexts. Django checks and production-mode collectstatic passed.

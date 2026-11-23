@@ -374,5 +374,27 @@
       "2026-11-23: Verified 120 browser checks plus bilingual search with and without JavaScript, eight long-text checks, actual admin PDF visibility toggles, progress boundaries, common navigation and form persistence. Django and static collection passed. SQLite migration 0021 apply/reverse/reapply preserved existing project and catalogue data."
     ],
     "rollback": "Back up the new settings and reverse migration 0021 to website 0020 while GNT-016 code is installed, then restore GNT-015 files."
+  },
+  {
+    "id": "GNT-017",
+    "priority": "P1",
+    "title": "Render a single list of project search results",
+    "status": "done",
+    "depends_on": [
+      "GNT-016"
+    ],
+    "modules": [
+      "M01",
+      "M02"
+    ],
+    "acceptance": [
+      "Show matching projects in one result grid",
+      "Show one message only when zero projects match",
+      "Preserve project status sections, links and browsing on the default index"
+    ],
+    "verification_evidence": [
+      "2026-11-23: Verified 64 responsive Chromium result combinations and 16 submit/reset/result-link checks, including both languages and JavaScript enabled or disabled. Django check and collectstatic passed."
+    ],
+    "rollback": "Restore the preceding version of the affected templates, CSS and view."
   }
 ]

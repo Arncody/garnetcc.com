@@ -129,6 +129,8 @@
 .ed-search-summary p { margin: 0; color: var(--ed-muted); }
 .ed-search-summary a { display: inline-flex; align-items: center; min-block-size: 44px; color: var(--ed-accent); text-decoration: underline; }
 .ed-search-area + .ed-band { padding-block-start: clamp(1.5rem, 3.5vw, 3.5rem); }
+.ed-search-active { padding-block: calc(6rem + env(safe-area-inset-top)) 1.5rem; }
+.ed-search-matches { padding-block-end: clamp(2rem, 5vw, 4rem); }
 
 .ed-actions,
 .ed-note,
