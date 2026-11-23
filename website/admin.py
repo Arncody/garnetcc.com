@@ -17,7 +17,9 @@ from django import forms
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
-from .theme_tokens import GROUPS, ALL_TOKENS, RETIRED_DECORATIONS, PixelToken, normalize_color, clean_overrides
+from .theme_tokens import (
+    ALL_TOKENS, GROUPS, LEGACY_MODAL_COLORS, RETIRED_DECORATIONS, PixelToken, clean_overrides, normalize_color,
+)
 
 
 class ColorTextInput(forms.TextInput):
@@ -97,7 +99,10 @@ class SiteThemeFormBase(forms.ModelForm):
             value = (data.get(field) or "").strip()
             if not (value.startswith("#") and len(value) in (4, 7)):
                 self.add_error(field, "کد HEX معتبر مثل #004E72 وارد کنید.")
-        overrides = {}
+        overrides = {
+            key: value for key, value in clean_overrides(self.instance.color_overrides).items()
+            if key in LEGACY_MODAL_COLORS
+        }
         for token in ALL_TOKENS:
             raw = data.get(token.field_name)
             if raw in (None, ""):

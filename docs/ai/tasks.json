@@ -466,5 +466,28 @@
       "2026-11-23: 60 Chromium checks passed with normal, legacy and blocked styles. Verified bilingual copy, two stored requests, keyboard interaction, six renders of real admin changes, reduced transparency, reset, Django checks and production collectstatic."
     ],
     "rollback": "Restore the GNT-019 form style template and theme controls."
+  },
+  {
+    "id": "GNT-021",
+    "priority": "P1",
+    "title": "Fix localized request phones and the shared form palette",
+    "status": "done",
+    "depends_on": [
+      "GNT-020"
+    ],
+    "modules": [
+      "M01",
+      "M02",
+      "M07"
+    ],
+    "acceptance": [
+      "Accept Persian, Arabic and Latin digits consistently in the browser and Django",
+      "Keep a light glass panel in the home palette with transparent action and lightened control treatment even with legacy saved colors",
+      "Verify responsive layout, keyboard focus, backend validation and admin edits"
+    ],
+    "verification_evidence": [
+      "2026-11-23: Reproduced the issues on GNT-020; 60 Chromium layout checks, three browser submissions, 32 form validation cases, four direct POSTs, persisted numbers and real admin save/reset passed. Django checks, static collection, JS syntax and screenshot capture passed."
+    ],
+    "rollback": "Restore the GNT-020 files. Legacy saved colors remain available to GNT-020."
   }
 ]

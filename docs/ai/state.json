@@ -4,5 +4,5 @@
   "baseline": "Complete GDCS ZIP; Django and Chromium checks on local fixture data",
   "active_task": null,
   "last_update": "2026-11-23",
-  "note": "GNT-020 completed after local verification on GNT-019. The request dialog defaults to light glass with an outlined submit action. Appearance controls use existing SiteTheme settings storage. Live deployment verification and historical GNT-005 tracking remain open."
+  "note": "GNT-021 completed after local verification on GNT-020. The form accepts Latin, Persian and Arabic-Indic digits and uses its own neutral palette. Live deployment verification and historical GNT-005 tracking remain open."
 }

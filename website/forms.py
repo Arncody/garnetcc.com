@@ -6,7 +6,10 @@ import re
 from django import forms
 from .models import ConsultationRequest
 
-PHONE_RE = re.compile(r"^0(9\d{9}|\d{2,3}\d{7,8})$")
+PHONE_PATTERN = r"(?:0(?:9[0-9]{9}|[1-8][0-9]{8,10})|9[0-9]{9}|(?:\+?98|0098)[1-9][0-9]{9})"
+PHONE_RE = re.compile(PHONE_PATTERN)
+PHONE_DIGITS = str.maketrans("۰۱۲۳۴۵۶۷۸۹٠١٢٣٤٥٦٧٨٩", "01234567890123456789")
+PHONE_SEPARATORS = re.compile(r"[\s\-\u061c\u200b-\u200f\u202a-\u202e\u2066-\u2069\ufeff]")
 
 
 class ConsultationForm(forms.ModelForm):
@@ -16,6 +19,7 @@ class ConsultationForm(forms.ModelForm):
         if texts is None:
             from .models import SiteTexts
             texts = SiteTexts.load().resolve(language)
+        self.language = language
         self.fields["name"].label = texts["label_name"]
         self.fields["gender"].label = texts["label_gender"]
         self.fields["phone"].label = texts["label_phone"]
@@ -50,7 +54,7 @@ class ConsultationForm(forms.ModelForm):
             }),
             "phone": forms.TextInput(attrs={
                 "class": "request-control", "maxlength": 20, "placeholder": "۰۹۱۲XXXXXXX", "required": True,
-                "inputmode": "tel", "autocomplete": "tel", "dir": "ltr",
+                "inputmode": "tel", "autocomplete": "tel", "dir": "ltr", "data-phone-pattern": PHONE_PATTERN,
             }),
             "subject": forms.TextInput(attrs={"class": "request-control","maxlength":150,"placeholder":"موضوع درخواست / Project subject", "required": True}),
             "message": forms.Textarea(attrs={
@@ -79,11 +83,13 @@ class ConsultationForm(forms.ModelForm):
         return name
 
     def clean_phone(self):
-        phone = (self.cleaned_data.get("phone") or "").strip()
-        phone = phone.replace(" ", "").replace("-", "")
-        if not PHONE_RE.match(phone):
-            raise forms.ValidationError("شماره تماس معتبر وارد کنید (مثال: 09123456789).")
-        return phone
+        phone = PHONE_SEPARATORS.sub("", self.cleaned_data["phone"].translate(PHONE_DIGITS))
+        if not PHONE_RE.fullmatch(phone):
+            message = "لطفاً یک شماره تماس معتبر وارد کنید."
+            if self.language == "en":
+                message = "Please enter a valid phone number."
+            raise forms.ValidationError(message, code="invalid")
+        return phone if phone.startswith("0") and not phone.startswith("0098") else "0" + phone[-10:]
 
 
 class NewsletterSubscriptionForm(forms.Form):

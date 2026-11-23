@@ -284,6 +284,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Use the same, field-linked feedback nodes for client and server errors.
   if (form) {
+    const { phone } = form.elements;
+    const phonePattern = new RegExp(`^${phone.dataset.phonePattern}$`);
+    const localizedDigits = '۰۱۲۳۴۵۶۷۸۹٠١٢٣٤٥٦٧٨٩';
+    const normalizedPhone = (value) => value
+      .replace(/[۰-۹٠-٩]/g, digit => String(localizedDigits.indexOf(digit) % 10))
+      .replace(/[\s\-\u061c\u200b-\u200f\u202a-\u202e\u2066-\u2069]/g, '');
     const setFieldError = (field, message) => {
       const group = field.closest('[data-consult-field]');
       const target = field.type === 'radio' ? group : field;
@@ -299,11 +305,11 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('change', (event) => setFieldError(event.target, ''));
     form.addEventListener('submit', (event) => {
       const langEn = document.documentElement.lang === 'en';
-      const { name, phone, gender, subject } = form.elements;
+      const { name, gender, subject } = form.elements;
       const errors = [
         [name, name.value.trim().length < 2,
           langEn ? 'Please enter your full name.' : 'لطفاً نام و نام‌خانوادگی را وارد کنید.'],
-        [phone, !/^(?:0?9\d{9}|\+?98\d{10})$/.test(phone.value.replace(/[\s-]/g, '')),
+        [phone, !phonePattern.test(normalizedPhone(phone.value)),
           langEn ? 'Please enter a valid phone number.' : 'لطفاً یک شماره تماس معتبر وارد کنید.'],
         [gender[0], !gender.value,
           langEn ? 'Please choose an option.' : 'لطفاً یکی از گزینه‌ها را انتخاب کنید.'],

@@ -23,7 +23,7 @@
   padding: max(.5rem, env(safe-area-inset-top)) max(.75rem, env(safe-area-inset-right))
            max(.5rem, env(safe-area-inset-bottom)) max(.75rem, env(safe-area-inset-left)) !important;
   overflow: hidden;
-  background: var(--request-overlay) !important;
+  background: var(--request-veil) !important;
 }
 .request-overlay:focus { outline: none; }
 
@@ -34,9 +34,9 @@
   overflow: auto;
   overscroll-behavior: contain;
   padding: clamp(1rem, 3.25vw, var(--request-padding));
-  border: 1px solid var(--request-panel-border);
+  border: 1px solid var(--request-frame);
   border-radius: var(--request-panel-radius);
-  background: var(--request-panel-solid);
+  background: var(--request-solid-surface);
   box-shadow: 0 20px 56px var(--request-shadow);
   color: var(--request-input-text);
   color-scheme: light;
@@ -45,14 +45,14 @@
 }
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .request-panel {
-    background: var(--request-panel-bg);
+    background: var(--request-glass-tint);
     -webkit-backdrop-filter: blur(var(--request-blur));
     backdrop-filter: blur(var(--request-blur));
   }
 }
 @media (prefers-reduced-transparency: reduce), (forced-colors: active) {
   .request-panel {
-    background: var(--request-panel-solid);
+    background: var(--request-solid-surface);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
@@ -64,7 +64,7 @@
   gap: var(--space-3, .75rem);
   margin-block-end: clamp(1rem, 3vw, 1.5rem);
   padding-block-end: clamp(.9rem, 2.5vw, 1.35rem);
-  border-block-end: 1px solid var(--request-line);
+  border-block-end: 1px solid var(--request-divider);
 }
 .request-heading h2 {
   margin: 0;
@@ -79,27 +79,28 @@
   line-height: 1.75;
 }
 .request-close,
-.request-submit {
+#consultModal .request-submit {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-block-size: max(2.75rem, var(--request-control-size));
-  border: 1px solid;
+  border: 0;
+  border-block-end: 1px solid transparent;
   border-radius: var(--request-control-radius);
   font-family: inherit;
   cursor: pointer;
 }
-.request-close {
+#consultModal .request-close {
   min-inline-size: max(2.75rem, var(--request-control-size));
   padding: 0;
-  border-color: var(--request-close-border);
+  border-block-end-color: var(--request-close-line);
   background: var(--request-close-bg);
   color: var(--request-close-text);
   font-size: 1.6rem;
   font-weight: 400;
   line-height: 1;
 }
-.request-close:hover { background: var(--request-close-hover); }
+#consultModal .request-close:hover { background: var(--request-close-hover); }
 
 .request-grid {
   display: grid;
@@ -120,13 +121,14 @@ fieldset.request-field { margin: 0; padding: 0; border: 0; }
   line-height: 1.65;
 }
 .request-required { color: var(--request-required); }
-.request-control {
+#consultModal .request-control {
   display: block;
   inline-size: 100%;
   min-block-size: max(2.75rem, var(--request-control-size));
   min-inline-size: 0;
   padding: .55rem .75rem;
-  border: 1px solid var(--request-input-border);
+  border: 0;
+  border-block-end: 1px solid var(--request-field-line);
   border-radius: var(--request-control-radius);
   background: var(--request-input-bg);
   color: var(--request-input-text);
@@ -135,7 +137,7 @@ fieldset.request-field { margin: 0; padding: 0; border: 0; }
   line-height: 1.5;
 }
 .request-control::placeholder { color: var(--request-placeholder); opacity: 1; }
-.request-control:focus { border-color: var(--request-focus); }
+#consultModal .request-control:focus { border-block-end-color: var(--request-focus); }
 textarea.request-control { min-block-size: 5rem; block-size: 5.5rem; resize: vertical; }
 .request-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .4rem; }
 .request-option {
@@ -145,9 +147,9 @@ textarea.request-control { min-block-size: 5rem; block-size: 5.5rem; resize: ver
   min-inline-size: 0;
   min-block-size: max(2.75rem, var(--request-control-size));
   padding: .4rem .55rem;
-  border: 1px solid var(--request-input-border);
+  border: 0;
   border-radius: var(--request-control-radius);
-  background: var(--request-input-bg);
+  background: transparent;
   color: var(--request-label);
   font-size: var(--font-label, .875rem);
   font-weight: 500;
@@ -162,12 +164,11 @@ textarea.request-control { min-block-size: 5rem; block-size: 5.5rem; resize: ver
   accent-color: var(--request-focus);
 }
 .request-option:has(input:checked) {
-  border-color: var(--request-focus);
-  background: var(--request-selected-bg);
+  background: var(--request-option-selected);
+  font-weight: var(--label-weight, 600);
 }
-.request-control[aria-invalid="true"], .request-field[aria-invalid="true"] .request-option {
-  border-color: var(--request-error);
-}
+#consultModal .request-control[aria-invalid="true"] { border-block-end-color: var(--request-error); }
+.request-field[aria-invalid="true"] .request-option input { accent-color: var(--request-error); }
 .request-error, .request-form-error {
   margin: .35rem 0 0;
   color: var(--request-error);
@@ -184,21 +185,21 @@ textarea.request-control { min-block-size: 5rem; block-size: 5.5rem; resize: ver
   justify-content: flex-end;
   margin-block-start: 1rem;
   padding-block-start: 1rem;
-  border-block-start: 1px solid var(--request-line);
+  border-block-start: 1px solid var(--request-divider);
 }
-.request-submit {
+#consultModal .request-submit {
   max-inline-size: 100%;
   gap: .6rem;
   padding: .55rem 1.1rem;
-  border-color: var(--request-submit-border);
-  background: var(--request-submit-bg);
-  color: var(--request-submit-text);
+  border-block-end-color: var(--request-action-line);
+  background: var(--request-action-bg);
+  color: var(--request-action-text);
   font-size: var(--font-label, .875rem);
   font-weight: var(--button-weight, 600);
   line-height: 1.5;
 }
-.request-submit:hover {
-  background: var(--request-submit-hover);
+#consultModal .request-submit:hover {
+  background: var(--request-action-hover);
 }
 .request-submit .ic { flex: none; }
 
@@ -206,6 +207,6 @@ textarea.request-control { min-block-size: 5rem; block-size: 5.5rem; resize: ver
   .request-grid { grid-template-columns: minmax(0, 1fr); }
   .request-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .request-option:last-child { grid-column: 1 / -1; }
-  .request-submit { inline-size: 100%; }
+  #consultModal .request-submit { inline-size: 100%; }
 }
 </style>

@@ -104,3 +104,9 @@
 - Use a translucent off-white panel, scoped backdrop blur and an outlined, transparent submit action. Provide a solid fallback for reduced transparency and browsers without backdrop blur.
 - Expose independent panel, field, action, state and layout settings in the existing SiteTheme admin section. Retain existing overrides and bilingual copy controls. Reuse the JSON settings field without schema changes.
 - Chromium passed 60 checks on Home and Project Detail in FA/EN at five viewport sizes with normal, stale or blocked local CSS. Verified keyboard and touch interaction, validation, two persisted requests and eight before/after captures. A real admin save and reset covered colors, numeric limits, zero blur and bilingual copy. Verified custom styles and reduced transparency in six additional browser configurations. Django checks and production collectstatic passed. The migration dry-run output matched the GNT-019 baseline.
+
+## 2026-11-23 — GNT-021 · Localized request phones and neutral form palette
+
+- Share the accepted phone pattern between Django and the browser. Accept Latin, Persian and Arabic-Indic digits with optional separators and supported Iranian prefixes. Store normalized local numbers and keep invalid input intact.
+- Use off-white glass, a neutral page veil and a transparent action. Replace control boxes with underlines and preserve keyboard focus. Keep retired form colors in SiteTheme for rollback and offer independent active settings.
+- Reproduced the Persian-digit rejection and the orange button and dark boxes using GNT-020 and legacy fixture settings. Chromium passed 60 page, language, viewport and CSS combinations. Verified three browser submissions, 32 direct validation cases and four CSRF-protected POSTs without browser validation. Verified saved phone numbers, admin save and reset, eight before/after captures, Django checks, production static collection and JavaScript syntax. Migration dry-run output matched GNT-020.

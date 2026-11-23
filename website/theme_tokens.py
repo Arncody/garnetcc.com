@@ -88,7 +88,7 @@ class PixelToken(Token):
 
 def modal_color(key, label, default):
     property_name = "--request-" + key.replace("_", "-")
-    return Token("modal_" + key, label, default, "#consultModal{" + property_name + ":{v}}")
+    return Token("request_" + key, label, default, "#consultModal{" + property_name + ":{v}}")
 
 
 class Group:
@@ -274,29 +274,29 @@ GROUPS = [
     Group("modal", "فرم ثبت درخواست",
           "رنگ، شفافیت، محوشدگی و اندازه‌های فرم مشترک. برای رنگ شیشه rgba وارد کنید؛ "
           "برای دکمه بدون زمینه transparent بنویسید. فیلد خالی به مقدار پیش‌فرض برمی‌گردد.", [
-        modal_color("overlay", "پرده پشت فرم — رنگ و شفافیت", "rgba(0,0,0,.36)"),
-        modal_color("panel_bg", "شیشهٔ فرم — رنگ و شفافیت", "rgba(248,248,246,.86)"),
-        modal_color("panel_solid", "پس‌زمینه جایگزین در مرورگرهای بدون Blur", OFF_WHITE),
-        modal_color("panel_border", "لبه کادر فرم", "rgba(255,255,255,.84)"),
+        modal_color("veil", "پرده پشت فرم — رنگ و شفافیت", "rgba(20,20,20,.28)"),
+        modal_color("glass_tint", "شیشهٔ فرم — رنگ و شفافیت", "rgba(248,248,246,.94)"),
+        modal_color("solid_surface", "پس‌زمینه جایگزین در مرورگرهای بدون Blur", OFF_WHITE),
+        modal_color("frame", "لبه کادر فرم", "rgba(255,255,255,.68)"),
         modal_color("shadow", "رنگ و شدت سایهٔ فرم", "rgba(20,20,20,.22)"),
-        modal_color("line", "خط جداکنندهٔ فرم", "rgba(20,20,20,.17)"),
+        modal_color("divider", "خط جداکنندهٔ فرم", "transparent"),
         modal_color("title", "تیتر فرم", CHARCOAL),
         modal_color("subtitle", "توضیح زیر تیتر", "#494947"),
         modal_color("label", "عنوان فیلدها و گزینه‌ها", CHARCOAL),
         modal_color("required", "نشان فیلد الزامی", "#494947"),
         modal_color("input_bg", "فیلدهای ورودی و گزینه‌ها — پس‌زمینه", "rgba(255,255,255,.44)"),
-        modal_color("input_border", "فیلدهای ورودی و گزینه‌ها — رنگ لبه", "rgba(20,20,20,.58)"),
+        modal_color("field_line", "فیلدهای ورودی — رنگ خط زیر فیلد", "rgba(20,20,20,.50)"),
         modal_color("input_text", "فیلدهای ورودی — متن", CHARCOAL),
         modal_color("placeholder", "راهنمای داخل فیلدها — رنگ متن", "#575754"),
-        modal_color("selected_bg", "گزینهٔ انتخاب‌شده — پس‌زمینه", "rgba(20,20,20,.08)"),
+        modal_color("option_selected", "گزینهٔ انتخاب‌شده — پس‌زمینه", "transparent"),
         modal_color("focus", "فوکوس کیبورد و گزینهٔ انتخاب‌شده — رنگ تأکید", CHARCOAL),
         modal_color("error", "پیام خطا و لبهٔ فیلد نامعتبر", "#86271f"),
-        modal_color("submit_bg", "دکمه ثبت درخواست — پس‌زمینه", "transparent"),
-        modal_color("submit_border", "دکمه ثبت درخواست — رنگ لبه", GRAPHITE),
-        modal_color("submit_text", "دکمه ثبت درخواست — متن و آیکون", CHARCOAL),
-        modal_color("submit_hover", "دکمه ثبت درخواست — پس‌زمینه هنگام هاور", "rgba(20,20,20,.07)"),
+        modal_color("action_bg", "دکمه ثبت درخواست — پس‌زمینه", "transparent"),
+        modal_color("action_line", "دکمه ثبت درخواست — رنگ خط زیر دکمه", "rgba(20,20,20,.50)"),
+        modal_color("action_text", "دکمه ثبت درخواست — متن و آیکون", CHARCOAL),
+        modal_color("action_hover", "دکمه ثبت درخواست — پس‌زمینه هنگام هاور", "rgba(20,20,20,.06)"),
         modal_color("close_bg", "دکمه بستن — پس‌زمینه", "transparent"),
-        modal_color("close_border", "دکمه بستن — رنگ لبه", "rgba(20,20,20,.58)"),
+        modal_color("close_line", "دکمه بستن — رنگ خط زیر دکمه", "transparent"),
         modal_color("close_text", "دکمه بستن — رنگ آیکون", CHARCOAL),
         modal_color("close_hover", "دکمه بستن — پس‌زمینه هنگام هاور", "rgba(20,20,20,.07)"),
         PixelToken("modal_blur", "محوشدگی شیشهٔ فرم (px)", 16, 0, 32, "--request-blur"),
@@ -344,11 +344,14 @@ RETIRED_DECORATIONS = frozenset({
 ALL_TOKENS = [t for g in GROUPS for t in g.tokens]
 TOKENS_BY_KEY = {t.key: t for t in ALL_TOKENS}
 MODAL_TOKENS = {token.key for group in GROUPS if group.key == "modal" for token in group.tokens}
-LEGACY_MODAL_PROPERTIES = {
-    "modal_panel_bg": "--site-theme-modal-background",
-    "modal_panel_border": "--site-theme-modal-border",
-    "modal_shadow": "--request-legacy-shadow",
-}
+# Keep saved colors from the older modal for rollback without applying them to the new controls.
+LEGACY_MODAL_COLORS = frozenset({
+    "modal_overlay", "modal_panel_bg", "modal_panel_solid", "modal_panel_border", "modal_shadow",
+    "modal_line", "modal_title", "modal_subtitle", "modal_label", "modal_required", "modal_input_bg",
+    "modal_input_border", "modal_input_text", "modal_placeholder", "modal_selected_bg", "modal_focus",
+    "modal_error", "modal_submit_bg", "modal_submit_border", "modal_submit_text", "modal_submit_hover",
+    "modal_close_bg", "modal_close_border", "modal_close_text", "modal_close_hover",
+})
 
 # ---- بررسی ساختار در زمان import: کلید تکراری یا مقدار پیش‌فرض نامعتبر = خطای سریع ----
 assert len(TOKENS_BY_KEY) == len(ALL_TOKENS), "theme_tokens: duplicate token key"
@@ -375,7 +378,12 @@ def clean_overrides(raw):
     if isinstance(raw, dict):
         for key, value in raw.items():
             token = TOKENS_BY_KEY.get(key)
-            normalized = token.normalize(value) if token else None
+            if token:
+                normalized = token.normalize(value)
+            elif key in LEGACY_MODAL_COLORS:
+                normalized = normalize_color(value)
+            else:
+                continue
             if normalized:
                 cleaned[key] = normalized
     return cleaned
@@ -388,8 +396,9 @@ def build_theme_css(raw_overrides):
     for token in ALL_TOKENS:  # ترتیب ثابت = خروجی قابل پیش‌بینی
         value = overrides.get(token.key)
         if value is None and token.key in MODAL_TOKENS:
-            legacy_property = LEGACY_MODAL_PROPERTIES.get(token.key)
-            value = f"var({legacy_property},{token.default})" if legacy_property else token.default
+            value = token.default
+            if token.key == "request_shadow":
+                value = f"var(--request-legacy-shadow,{value})"
         if value is None or token.key in RETIRED_DECORATIONS:
             continue
         for rule in token.rules:

@@ -25,5 +25,6 @@
 | GNT-018 | P1 | Align the request form with the home design · requires GNT-017 | done |
 | GNT-019 | P1 | Deliver the request frame with its template · requires GNT-018 | done |
 | GNT-020 | P2 | Make the shared request dialog light and configurable · requires GNT-019 | done |
+| GNT-021 | P1 | Fix localized request phones and the shared form palette · requires GNT-020 | done |
 
 Only one task active. Changes to this list are not automatically complete tasks.
