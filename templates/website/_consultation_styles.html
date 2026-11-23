@@ -4,14 +4,6 @@
 #consultModal.request-overlay,
 #consultModal.request-overlay * { box-sizing: border-box; }
 #consultModal.request-overlay {
-  --request-base: #101111;
-  --request-surface: var(--request-panel-bg, var(--site-theme-modal-background, var(--home-seam, var(--request-base))));
-  --request-ink: var(--off-white, #f8f8f6);
-  --request-muted: #c1c2c0;
-  --request-line: rgba(255, 255, 255, .22);
-  --request-control-line: var(--request-input-border, rgba(255, 255, 255, .36));
-  --request-focus: var(--request-input-text, var(--request-ink));
-  --request-error: #ffbcb4;
   font-family: var(--font, system-ui, sans-serif);
   line-height: 1.6;
 }
@@ -31,26 +23,39 @@
   padding: max(.5rem, env(safe-area-inset-top)) max(.75rem, env(safe-area-inset-right))
            max(.5rem, env(safe-area-inset-bottom)) max(.75rem, env(safe-area-inset-left)) !important;
   overflow: hidden;
-  background: var(--request-overlay-bg, rgba(0, 0, 0, .72)) !important;
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
+  background: var(--request-overlay) !important;
 }
 .request-overlay:focus { outline: none; }
 
 .request-panel {
-  inline-size: min(100%, 42rem);
+  inline-size: min(100%, var(--request-width));
   max-block-size: 100%;
   min-inline-size: 0;
   overflow: auto;
   overscroll-behavior: contain;
-  padding: clamp(1rem, 3.25vw, 2.25rem);
-  border: 1px solid var(--request-panel-border, var(--site-theme-modal-border, rgba(255, 255, 255, .32)));
-  background: linear-gradient(var(--request-surface), var(--request-surface)), var(--request-base);
-  box-shadow: 0 20px 56px rgba(0, 0, 0, .36);
-  color: var(--request-ink);
-  color-scheme: dark;
+  padding: clamp(1rem, 3.25vw, var(--request-padding));
+  border: 1px solid var(--request-panel-border);
+  border-radius: var(--request-panel-radius);
+  background: var(--request-panel-solid);
+  box-shadow: 0 20px 56px var(--request-shadow);
+  color: var(--request-input-text);
+  color-scheme: light;
   overflow-wrap: anywhere;
   scroll-padding-block: .75rem;
+}
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .request-panel {
+    background: var(--request-panel-bg);
+    -webkit-backdrop-filter: blur(var(--request-blur));
+    backdrop-filter: blur(var(--request-blur));
+  }
+}
+@media (prefers-reduced-transparency: reduce), (forced-colors: active) {
+  .request-panel {
+    background: var(--request-panel-solid);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
 }
 .request-heading {
   display: grid;
@@ -63,13 +68,13 @@
 }
 .request-heading h2 {
   margin: 0;
-  color: var(--request-title, var(--request-ink));
+  color: var(--request-title);
   font-size: clamp(1.45rem, 4vw, 2.25rem);
   line-height: 1.4;
 }
 .request-heading p {
   margin: .45rem 0 0;
-  color: var(--request-subtitle, var(--request-muted));
+  color: var(--request-subtitle);
   font-size: var(--font-label, .875rem);
   line-height: 1.75;
 }
@@ -78,28 +83,28 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-block-size: var(--control, 2.75rem);
-  border: 1px solid var(--request-line);
-  border-radius: 0;
+  min-block-size: max(2.75rem, var(--request-control-size));
+  border: 1px solid;
+  border-radius: var(--request-control-radius);
   font-family: inherit;
   cursor: pointer;
 }
 .request-close {
-  min-inline-size: var(--control, 2.75rem);
+  min-inline-size: max(2.75rem, var(--request-control-size));
   padding: 0;
-  border-color: var(--request-control-line);
-  background: var(--request-close-bg, transparent);
-  color: var(--request-close-text, var(--request-ink));
+  border-color: var(--request-close-border);
+  background: var(--request-close-bg);
+  color: var(--request-close-text);
   font-size: 1.6rem;
   font-weight: 400;
   line-height: 1;
 }
-.request-close:hover { background: color-mix(in srgb, var(--request-close-bg, transparent), currentColor 12%); }
+.request-close:hover { background: var(--request-close-hover); }
 
 .request-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: .9rem clamp(.75rem, 2.5vw, 1.25rem);
+  gap: clamp(8px, 2.8vw, var(--request-gap)) clamp(.75rem, 2.5vw, 1.25rem);
 }
 .request-field { min-inline-size: 0; }
 .request-field-wide { grid-column: 1 / -1; }
@@ -109,27 +114,27 @@ fieldset.request-field { margin: 0; padding: 0; border: 0; }
   display: block;
   padding: 0;
   margin-block-end: .35rem;
-  color: var(--request-label, var(--request-ink));
+  color: var(--request-label);
   font-size: var(--font-label, .875rem);
   font-weight: var(--label-weight, 600);
   line-height: 1.65;
 }
-.request-required { color: var(--request-muted); }
+.request-required { color: var(--request-required); }
 .request-control {
   display: block;
   inline-size: 100%;
-  min-block-size: var(--control, 2.75rem);
+  min-block-size: max(2.75rem, var(--request-control-size));
   min-inline-size: 0;
   padding: .55rem .75rem;
-  border: 1px solid var(--request-control-line);
-  border-radius: 0;
-  background: var(--request-input-bg, rgba(255, 255, 255, .05));
-  color: var(--request-input-text, var(--request-ink));
+  border: 1px solid var(--request-input-border);
+  border-radius: var(--request-control-radius);
+  background: var(--request-input-bg);
+  color: var(--request-input-text);
   font: inherit;
   font-size: 1rem;
   line-height: 1.5;
 }
-.request-control::placeholder { color: var(--request-placeholder, var(--request-muted)); opacity: 1; }
+.request-control::placeholder { color: var(--request-placeholder); opacity: 1; }
 .request-control:focus { border-color: var(--request-focus); }
 textarea.request-control { min-block-size: 5rem; block-size: 5.5rem; resize: vertical; }
 .request-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .4rem; }
@@ -138,11 +143,12 @@ textarea.request-control { min-block-size: 5rem; block-size: 5.5rem; resize: ver
   align-items: center;
   gap: .5rem;
   min-inline-size: 0;
-  min-block-size: var(--control, 2.75rem);
+  min-block-size: max(2.75rem, var(--request-control-size));
   padding: .4rem .55rem;
-  border: 1px solid var(--request-control-line);
-  background: var(--request-input-bg, rgba(255, 255, 255, .05));
-  color: var(--request-label, var(--request-ink));
+  border: 1px solid var(--request-input-border);
+  border-radius: var(--request-control-radius);
+  background: var(--request-input-bg);
+  color: var(--request-label);
   font-size: var(--font-label, .875rem);
   font-weight: 500;
   line-height: 1.5;
@@ -157,7 +163,7 @@ textarea.request-control { min-block-size: 5rem; block-size: 5.5rem; resize: ver
 }
 .request-option:has(input:checked) {
   border-color: var(--request-focus);
-  background: color-mix(in srgb, var(--request-input-bg, rgba(255, 255, 255, .05)), var(--request-focus) 12%);
+  background: var(--request-selected-bg);
 }
 .request-control[aria-invalid="true"], .request-field[aria-invalid="true"] .request-option {
   border-color: var(--request-error);
@@ -184,20 +190,20 @@ textarea.request-control { min-block-size: 5rem; block-size: 5.5rem; resize: ver
   max-inline-size: 100%;
   gap: .6rem;
   padding: .55rem 1.1rem;
-  border-color: transparent;
-  background: var(--request-submit-bg, var(--off-white, #f8f8f6));
-  color: var(--request-submit-text, var(--charcoal, #141414));
+  border-color: var(--request-submit-border);
+  background: var(--request-submit-bg);
+  color: var(--request-submit-text);
   font-size: var(--font-label, .875rem);
   font-weight: var(--button-weight, 600);
   line-height: 1.5;
 }
 .request-submit:hover {
-  background: color-mix(in srgb, var(--request-submit-bg, var(--off-white, #f8f8f6)), var(--request-submit-text, var(--charcoal, #141414)) 10%);
+  background: var(--request-submit-hover);
 }
 .request-submit .ic { flex: none; }
 
 @media (max-width: 36rem) {
-  .request-grid { grid-template-columns: minmax(0, 1fr); gap: .65rem; }
+  .request-grid { grid-template-columns: minmax(0, 1fr); }
   .request-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .request-option:last-child { grid-column: 1 / -1; }
   .request-submit { inline-size: 100%; }

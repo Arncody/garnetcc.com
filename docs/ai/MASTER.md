@@ -7,7 +7,7 @@
 - Current application: Django monolith with server-side templates and static CSS/JS.
 - Future frontend/backend technology is NOT decided. Preserve platform-neutral behavior, data and URL contracts.
 - Current task: **none** — select a backlog item.
-- Latest task: **GNT-019** — request dialog frame and template styles, verified locally.
+- Latest task: **GNT-020** — light request dialog and editable appearance, verified locally.
 
 ## Control authority
 - `state.json` and `tasks.json` are **canonical for task status**; this file is a succinct human-readable snapshot.

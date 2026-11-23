@@ -443,5 +443,28 @@
       "2026-11-23: Reproduced the missing panel with GNT-017 CSS. Passed 60 Chromium production-mode checks across Home and Project Detail, FA/EN and five viewport sizes with normal, stale or blocked local CSS. Verified focus, validation, two persisted requests, admin theme updates, Django checks and collectstatic."
     ],
     "rollback": "Restore the prior base template and consultation stylesheet from GNT-018."
+  },
+  {
+    "id": "GNT-020",
+    "priority": "P2",
+    "title": "Make the shared request dialog light and configurable",
+    "status": "done",
+    "depends_on": [
+      "GNT-019"
+    ],
+    "modules": [
+      "M01",
+      "M02",
+      "M07"
+    ],
+    "acceptance": [
+      "Render white translucent glass and a transparent outlined submit action",
+      "Expose independent dialog styling in the existing theme admin while preserving saved settings and editable text",
+      "Verify bilingual responsive rendering, admin overrides and request submission"
+    ],
+    "verification_evidence": [
+      "2026-11-23: 60 Chromium checks passed with normal, legacy and blocked styles. Verified bilingual copy, two stored requests, keyboard interaction, six renders of real admin changes, reduced transparency, reset, Django checks and production collectstatic."
+    ],
+    "rollback": "Restore the GNT-019 form style template and theme controls."
   }
 ]

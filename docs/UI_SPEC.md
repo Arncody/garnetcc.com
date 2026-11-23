@@ -51,8 +51,6 @@ Migration `0021_project_search_and_catalog_visibility` adds bilingual search lab
 
 ## Request form
 
-The shared request dialog uses the home page dark tone, a translucent backdrop and square controls. Name and phone sit side by side above 576px. Inputs use a 16px floor, and the close, option and submit controls retain 44px targets. The panel scrolls independently in short viewports. Field errors and their labels share one feedback area per field. The dialog restores focus to its trigger when dismissed.
+The shared request dialog uses a translucent off-white panel with a thin border and 16px backdrop blur. Its outlined submit action is transparent at rest. The panel uses a solid off-white surface when backdrop blur is unsupported or the visitor requests reduced transparency. Name and phone sit side by side above 576px. Inputs use a 16px floor, and the close, option and submit controls retain at least 44px targets. The panel scrolls independently in short viewports. Field errors and their labels share one feedback area per field. The dialog restores focus to its trigger when dismissed.
 
-The shared template includes the dialog styles with its markup so the frame and controls render even with a stale external stylesheet. The panel has a thin border and an opaque neutral base beneath its configurable color.
-
-Use Site Texts for the heading, description, labels, hints and options. Use SiteTheme → «فرم ثبت درخواست» for the panel, border, field, placeholder and action colors.
+The shared template includes the dialog styles with its markup. SiteTheme → «فرم ثبت درخواست» controls colors, transparency, blur, maximum width and padding, row spacing, corner radii and minimum control height. Leave a setting blank to use its default. Existing overrides take precedence, and transparency can be set with RGBA colors or the value `transparent`. Use Site Texts for bilingual headings, descriptions, labels, hints, options and the submit label.

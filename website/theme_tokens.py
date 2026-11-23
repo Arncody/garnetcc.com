@@ -2,10 +2,10 @@
 website/theme_tokens.py
 وظیفه: فهرست مرکزی «رنگ‌های قابل تغییر اجزای سایت».
 
-هر توکن = یک رنگ قابل ویرایش از پنل ادمین (پوسته و طراحی سایت).
+هر توکن = یک تنظیم ظاهری قابل ویرایش از پنل ادمین (پوسته و طراحی سایت).
 - فقط مقدارهایی که مدیر سایت وارد کرده ذخیره می‌شوند؛ فیلد خالی یعنی «ظاهر پیش‌فرض».
-- برای هر توکن‌ی که مقدار دارد، یک قانون CSS ساخته می‌شود؛ پس بدون مقدار هیچ چیز در ظاهر سایت تغییر نمی‌کند.
-- مقدارها قبل از ذخیره و دوباره هنگام ساخت CSS با فهرست سفید (HEX / rgb / rgba / transparent) اعتبارسنجی
+- رنگ‌های تغییر داده‌شده و تنظیمات فرم درخواست به متغیرها و قوانین CSS تبدیل می‌شوند.
+- مقدارها قبل از ذخیره و دوباره هنگام ساخت CSS اعتبارسنجی
   می‌شوند؛ بنابراین هیچ متن دلخواهی وارد CSS نمی‌شود.
 - این فایل عمداً Django را import نمی‌کند تا مستقل تست شود.
 
@@ -57,6 +57,7 @@ def normalize_color(value):
 
 
 class Token:
+    normalize = staticmethod(normalize_color)
     __slots__ = ("key", "label", "default", "rules")
 
     def __init__(self, key, label, default, rules):
@@ -68,6 +69,26 @@ class Token:
     @property
     def field_name(self):
         return "c_" + self.key
+
+
+class PixelToken(Token):
+    __slots__ = ("minimum", "maximum")
+
+    def __init__(self, key, label, default, minimum, maximum, property_name):
+        super().__init__(key, label, str(default), "#consultModal{" + property_name + ":{v}px}")
+        self.minimum = minimum
+        self.maximum = maximum
+
+    def normalize(self, value):
+        value = str(value).strip()
+        if re.fullmatch(r"[0-9]{1,4}", value) and self.minimum <= int(value) <= self.maximum:
+            return str(int(value))
+        return None
+
+
+def modal_color(key, label, default):
+    property_name = "--request-" + key.replace("_", "-")
+    return Token("modal_" + key, label, default, "#consultModal{" + property_name + ":{v}}")
 
 
 class Group:
@@ -250,21 +271,41 @@ GROUPS = [
         Token("footer_bottom_text", "نوار پایین فوتر (کپی‌رایت و زبان)", "rgba(255,255,255,.66)", ".site-footer .footer-bottom,.site-footer .footer-bottom small,.site-footer .footer-bottom a{color:{v}!important}"),
         Token("footer_bottom_line", "خط بالای نوار پایین فوتر", "rgba(255,255,255,.09)", ".site-footer .footer-bottom{border-top-color:{v}!important}"),
     ]),
-    Group("modal", "فرم ثبت درخواست", "رنگ زمینه، فیلدها و کنترل‌های فرم مشترک سایت.", [
-        Token("modal_overlay", "پرده پشت فرم", "rgba(0,0,0,.72)", "#consultModal{--request-overlay-bg:{v}}"),
-        Token("modal_panel_bg", "پس‌زمینه کادر فرم", "#101111", "#consultModal{--request-panel-bg:{v}}"),
-        Token("modal_panel_border", "لبه کادر فرم", "rgba(255,255,255,.22)", "#consultModal{--request-panel-border:{v}}"),
-        Token("modal_title", "تیتر فرم", OFF_WHITE, "#consultModal{--request-title:{v}}"),
-        Token("modal_subtitle", "توضیح زیر تیتر", "#C1C2C0", "#consultModal{--request-subtitle:{v}}"),
-        Token("modal_label", "عنوان فیلدها", OFF_WHITE, "#consultModal{--request-label:{v}}"),
-        Token("modal_input_bg", "فیلدهای ورودی — پس‌زمینه", "rgba(255,255,255,.05)", "#consultModal{--request-input-bg:{v}}"),
-        Token("modal_input_border", "فیلدهای ورودی — رنگ لبه", "rgba(255,255,255,.36)", "#consultModal{--request-input-border:{v}}"),
-        Token("modal_input_text", "فیلدهای ورودی — متن", OFF_WHITE, "#consultModal{--request-input-text:{v}}"),
-        Token("modal_placeholder", "راهنمای داخل فیلدها — رنگ متن", "#C1C2C0", "#consultModal{--request-placeholder:{v}}"),
-        Token("modal_submit_bg", "دکمه ثبت درخواست — پس‌زمینه", OFF_WHITE, "#consultModal{--request-submit-bg:{v}}"),
-        Token("modal_submit_text", "دکمه ثبت درخواست — متن", CHARCOAL, "#consultModal{--request-submit-text:{v}}"),
-        Token("modal_close_bg", "دکمه بستن — پس‌زمینه", "transparent", "#consultModal{--request-close-bg:{v}}"),
-        Token("modal_close_text", "دکمه بستن — رنگ آیکون", OFF_WHITE, "#consultModal{--request-close-text:{v}}"),
+    Group("modal", "فرم ثبت درخواست",
+          "رنگ، شفافیت، محوشدگی و اندازه‌های فرم مشترک. برای رنگ شیشه rgba وارد کنید؛ "
+          "برای دکمه بدون زمینه transparent بنویسید. فیلد خالی به مقدار پیش‌فرض برمی‌گردد.", [
+        modal_color("overlay", "پرده پشت فرم — رنگ و شفافیت", "rgba(0,0,0,.36)"),
+        modal_color("panel_bg", "شیشهٔ فرم — رنگ و شفافیت", "rgba(248,248,246,.86)"),
+        modal_color("panel_solid", "پس‌زمینه جایگزین در مرورگرهای بدون Blur", OFF_WHITE),
+        modal_color("panel_border", "لبه کادر فرم", "rgba(255,255,255,.84)"),
+        modal_color("shadow", "رنگ و شدت سایهٔ فرم", "rgba(20,20,20,.22)"),
+        modal_color("line", "خط جداکنندهٔ فرم", "rgba(20,20,20,.17)"),
+        modal_color("title", "تیتر فرم", CHARCOAL),
+        modal_color("subtitle", "توضیح زیر تیتر", "#494947"),
+        modal_color("label", "عنوان فیلدها و گزینه‌ها", CHARCOAL),
+        modal_color("required", "نشان فیلد الزامی", "#494947"),
+        modal_color("input_bg", "فیلدهای ورودی و گزینه‌ها — پس‌زمینه", "rgba(255,255,255,.44)"),
+        modal_color("input_border", "فیلدهای ورودی و گزینه‌ها — رنگ لبه", "rgba(20,20,20,.58)"),
+        modal_color("input_text", "فیلدهای ورودی — متن", CHARCOAL),
+        modal_color("placeholder", "راهنمای داخل فیلدها — رنگ متن", "#575754"),
+        modal_color("selected_bg", "گزینهٔ انتخاب‌شده — پس‌زمینه", "rgba(20,20,20,.08)"),
+        modal_color("focus", "فوکوس کیبورد و گزینهٔ انتخاب‌شده — رنگ تأکید", CHARCOAL),
+        modal_color("error", "پیام خطا و لبهٔ فیلد نامعتبر", "#86271f"),
+        modal_color("submit_bg", "دکمه ثبت درخواست — پس‌زمینه", "transparent"),
+        modal_color("submit_border", "دکمه ثبت درخواست — رنگ لبه", GRAPHITE),
+        modal_color("submit_text", "دکمه ثبت درخواست — متن و آیکون", CHARCOAL),
+        modal_color("submit_hover", "دکمه ثبت درخواست — پس‌زمینه هنگام هاور", "rgba(20,20,20,.07)"),
+        modal_color("close_bg", "دکمه بستن — پس‌زمینه", "transparent"),
+        modal_color("close_border", "دکمه بستن — رنگ لبه", "rgba(20,20,20,.58)"),
+        modal_color("close_text", "دکمه بستن — رنگ آیکون", CHARCOAL),
+        modal_color("close_hover", "دکمه بستن — پس‌زمینه هنگام هاور", "rgba(20,20,20,.07)"),
+        PixelToken("modal_blur", "محوشدگی شیشهٔ فرم (px)", 16, 0, 32, "--request-blur"),
+        PixelToken("modal_width", "حداکثر عرض فرم (px)", 672, 420, 800, "--request-width"),
+        PixelToken("modal_padding", "حداکثر فاصلهٔ داخلی فرم (px)", 32, 16, 48, "--request-padding"),
+        PixelToken("modal_gap", "فاصلهٔ ردیف‌های فرم (px)", 14, 8, 24, "--request-gap"),
+        PixelToken("modal_panel_radius", "گردی گوشه‌های کادر فرم (px)", 4, 0, 24, "--request-panel-radius"),
+        PixelToken("modal_control_radius", "گردی گوشه‌های دکمه‌ها و فیلدها (px)", 0, 0, 16, "--request-control-radius"),
+        PixelToken("modal_control_size", "حداقل ارتفاع فیلدها و دکمه‌ها (px)", 44, 44, 64, "--request-control-size"),
     ]),
     Group("floating", "🔘 دکمه‌های شناور و پیام‌ها", "دکمهٔ تماس و پیام‌های موفقیت و خطا.", [
         Token("float_call_bg", "دکمه گرد تماس — پس‌زمینه", CHARCOAL, ".floating-call{background:{v}!important;background-image:none!important}"),
@@ -287,7 +328,7 @@ GROUPS = [
         Token("shadow_floating", "سایه دکمه‌های شناور", "rgba(7,29,43,.16)",
               ".floating-call,.pc-view{box-shadow:0 10px 30px {v}!important}"),
         Token("shadow_modal", "سایه پنجره‌ها و فرم‌ها", "rgba(7,29,43,.24)",
-              ".request-panel,.site-toast{box-shadow:0 28px 80px {v}!important}"),
+              ("#consultModal{--request-legacy-shadow:{v}}", ".site-toast{box-shadow:0 28px 80px {v}!important}")),
     ]),
 ]
 
@@ -302,11 +343,17 @@ RETIRED_DECORATIONS = frozenset({
 
 ALL_TOKENS = [t for g in GROUPS for t in g.tokens]
 TOKENS_BY_KEY = {t.key: t for t in ALL_TOKENS}
+MODAL_TOKENS = {token.key for group in GROUPS if group.key == "modal" for token in group.tokens}
+LEGACY_MODAL_PROPERTIES = {
+    "modal_panel_bg": "--site-theme-modal-background",
+    "modal_panel_border": "--site-theme-modal-border",
+    "modal_shadow": "--request-legacy-shadow",
+}
 
 # ---- بررسی ساختار در زمان import: کلید تکراری یا مقدار پیش‌فرض نامعتبر = خطای سریع ----
 assert len(TOKENS_BY_KEY) == len(ALL_TOKENS), "theme_tokens: duplicate token key"
 for _t in ALL_TOKENS:
-    assert normalize_color(_t.default), "theme_tokens: invalid default for %s" % _t.key
+    assert _t.normalize(_t.default), "theme_tokens: invalid default for %s" % _t.key
 
 
 def _prefix_selector(selector):
@@ -323,24 +370,27 @@ def _render_rule(rule, value):
 
 
 def clean_overrides(raw):
-    """فقط کلیدهای شناخته‌شده با مقدار معتبر نگه داشته می‌شوند."""
+    """فقط کلیدهای شناخته‌شده با رنگ یا اندازهٔ معتبر نگه داشته می‌شوند."""
     cleaned = {}
     if isinstance(raw, dict):
         for key, value in raw.items():
             token = TOKENS_BY_KEY.get(key)
-            normalized = normalize_color(value) if token else None
+            normalized = token.normalize(value) if token else None
             if normalized:
                 cleaned[key] = normalized
     return cleaned
 
 
 def build_theme_css(raw_overrides):
-    """CSS نهایی رنگ‌های تغییرداده‌شده؛ خروجی فقط از قالب‌های ثابت این فایل و مقدارهای اعتبارسنجی‌شده ساخته می‌شود."""
+    """CSS نهایی تنظیمات ظاهری از قالب‌های ثابت و مقدارهای اعتبارسنجی‌شده."""
     overrides = clean_overrides(raw_overrides)
     chunks = []
     for token in ALL_TOKENS:  # ترتیب ثابت = خروجی قابل پیش‌بینی
         value = overrides.get(token.key)
-        if not value or token.key in RETIRED_DECORATIONS:
+        if value is None and token.key in MODAL_TOKENS:
+            legacy_property = LEGACY_MODAL_PROPERTIES.get(token.key)
+            value = f"var({legacy_property},{token.default})" if legacy_property else token.default
+        if value is None or token.key in RETIRED_DECORATIONS:
             continue
         for rule in token.rules:
             chunks.append(_render_rule(rule, value))

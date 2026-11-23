@@ -17,7 +17,7 @@ from django import forms
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
-from .theme_tokens import GROUPS, ALL_TOKENS, RETIRED_DECORATIONS, normalize_color, clean_overrides
+from .theme_tokens import GROUPS, ALL_TOKENS, RETIRED_DECORATIONS, PixelToken, normalize_color, clean_overrides
 
 
 class ColorTextInput(forms.TextInput):
@@ -99,11 +99,11 @@ class SiteThemeFormBase(forms.ModelForm):
                 self.add_error(field, "کد HEX معتبر مثل #004E72 وارد کنید.")
         overrides = {}
         for token in ALL_TOKENS:
-            raw = (data.get(token.field_name) or "").strip()
-            if not raw:
+            raw = data.get(token.field_name)
+            if raw in (None, ""):
                 continue
-            normalized = normalize_color(raw)
-            if not normalized:
+            normalized = token.normalize(raw)
+            if normalized is None:
                 self.add_error(token.field_name, "رنگ معتبر وارد کنید؛ مثل #FF6E42 یا rgba(0,0,0,.5) (برای حذف تغییر، فیلد را خالی بگذارید).")
                 continue
             overrides[token.key] = normalized
@@ -111,21 +111,27 @@ class SiteThemeFormBase(forms.ModelForm):
         return data
 
 
-# فیلدهای رنگ جزء‌به‌جزء از روی فهرست مرکزی theme_tokens.py ساخته می‌شوند (افزودن رنگ جدید فقط در همان فایل).
+def theme_override_field(token):
+    if isinstance(token, PixelToken):
+        return forms.IntegerField(
+            label=token.label, required=False, min_value=token.minimum, max_value=token.maximum,
+            widget=forms.NumberInput(attrs={"placeholder": f"پیش‌فرض: {token.default}"}),
+            help_text=f"پیش‌فرض {token.default} پیکسل، محدودهٔ مجاز {token.minimum} تا {token.maximum} پیکسل.",
+        )
+    return forms.CharField(
+        label=token.label, required=False, max_length=40,
+        disabled=token.key in RETIRED_DECORATIONS,
+        help_text="مقدار قبلی حفظ می‌شود. این تزئین در پوستهٔ جدید نمایش داده نمی‌شود."
+        if token.key in RETIRED_DECORATIONS else "",
+        widget=ColorOverrideWidget(default=token.default),
+    )
+
+
+# تنظیمات ظاهری از روی فهرست مرکزی ساخته می‌شوند.
 SiteThemeForm = type(SiteThemeFormBase)(
     "SiteThemeForm",
     (SiteThemeFormBase,),
-    {
-        "__module__": __name__,
-        **{token.field_name: forms.CharField(
-            label=token.label, required=False, max_length=40,
-            disabled=token.key in RETIRED_DECORATIONS,
-            help_text="مقدار قبلی حفظ می‌شود. این تزئین در پوستهٔ جدید نمایش داده نمی‌شود."
-            if token.key in RETIRED_DECORATIONS else "",
-            widget=ColorOverrideWidget(default=token.default),
-        )
-        for token in ALL_TOKENS},
-    },
+    {"__module__": __name__, **{token.field_name: theme_override_field(token) for token in ALL_TOKENS}},
 )
 
 

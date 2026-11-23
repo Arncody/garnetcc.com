@@ -98,3 +98,9 @@
 - Include scoped dialog styles in the shared template. Keep the dialog above the page with a compact charcoal panel, a thin visible frame and an opaque neutral base beneath the editable panel color.
 - Reproduced the unstyled GNT-018 dialog with the actual GNT-017 stylesheet. Chromium passed 60 checks across Home and Project Detail in FA/EN at five viewport sizes in normal production mode, with older shared CSS, and with local CSS blocked. Captured eight before and after images at mobile and desktop sizes.
 - Verified keyboard focus, touch controls, validation and two stored requests. Verified Django admin changes to the panel border and submit color, including the opaque fallback when given a transparent panel color. Django checks and production-mode collectstatic passed.
+
+## 2026-11-23 — GNT-020 · Light glass request dialog
+
+- Use a translucent off-white panel, scoped backdrop blur and an outlined, transparent submit action. Provide a solid fallback for reduced transparency and browsers without backdrop blur.
+- Expose independent panel, field, action, state and layout settings in the existing SiteTheme admin section. Retain existing overrides and bilingual copy controls. Reuse the JSON settings field without schema changes.
+- Chromium passed 60 checks on Home and Project Detail in FA/EN at five viewport sizes with normal, stale or blocked local CSS. Verified keyboard and touch interaction, validation, two persisted requests and eight before/after captures. A real admin save and reset covered colors, numeric limits, zero blur and bilingual copy. Verified custom styles and reduced transparency in six additional browser configurations. Django checks and production collectstatic passed. The migration dry-run output matched the GNT-019 baseline.
