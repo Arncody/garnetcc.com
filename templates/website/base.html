@@ -43,7 +43,7 @@ small,.small{font-weight:var(--small-weight)}
 <link rel="stylesheet" href="{% static 'css/garnet-ui.css' %}?v=GNT-016">
 <link rel="stylesheet" href="{% static 'css/design-system.css' %}?v=GNT-018">
 <link rel="stylesheet" href="{% static 'css/garnet-presentation.css' %}?v=GNT-014">
-<link rel="stylesheet" href="{% static 'css/consult-modal.css' %}?v=GNT-018">
+{% include "website/_consultation_styles.html" %}
 {% if site_theme.custom_css %}<style id="garnet-custom-css">{{ site_theme.custom_css|safe }}</style>{% endif %}
 </head>
 <body class="site-shell{% if request.resolver_match.view_name == 'website:home' %} site-home{% endif %}">

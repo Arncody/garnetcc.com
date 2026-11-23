@@ -1,0 +1,205 @@
+<style id="garnet-request-styles">
+/* Keep the frame with its template so an old static asset cannot remove it. */
+#consultModal.request-overlay[hidden] { display: none !important; }
+#consultModal.request-overlay,
+#consultModal.request-overlay * { box-sizing: border-box; }
+#consultModal.request-overlay {
+  --request-base: #101111;
+  --request-surface: var(--request-panel-bg, var(--site-theme-modal-background, var(--home-seam, var(--request-base))));
+  --request-ink: var(--off-white, #f8f8f6);
+  --request-muted: #c1c2c0;
+  --request-line: rgba(255, 255, 255, .22);
+  --request-control-line: var(--request-input-border, rgba(255, 255, 255, .36));
+  --request-focus: var(--request-input-text, var(--request-ink));
+  --request-error: #ffbcb4;
+  font-family: var(--font, system-ui, sans-serif);
+  line-height: 1.6;
+}
+#consultModal.request-overlay.is-open:not([hidden]) {
+  display: flex !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483647;
+  align-items: center;
+  justify-content: center;
+  width: 100% !important;
+  height: var(--consult-vh, 100vh) !important;
+  height: var(--consult-vh, 100dvh) !important;
+  min-height: 0;
+  max-height: none;
+  margin: 0 !important;
+  padding: max(.5rem, env(safe-area-inset-top)) max(.75rem, env(safe-area-inset-right))
+           max(.5rem, env(safe-area-inset-bottom)) max(.75rem, env(safe-area-inset-left)) !important;
+  overflow: hidden;
+  background: var(--request-overlay-bg, rgba(0, 0, 0, .72)) !important;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.request-overlay:focus { outline: none; }
+
+.request-panel {
+  inline-size: min(100%, 42rem);
+  max-block-size: 100%;
+  min-inline-size: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: clamp(1rem, 3.25vw, 2.25rem);
+  border: 1px solid var(--request-panel-border, var(--site-theme-modal-border, rgba(255, 255, 255, .32)));
+  background: linear-gradient(var(--request-surface), var(--request-surface)), var(--request-base);
+  box-shadow: 0 20px 56px rgba(0, 0, 0, .36);
+  color: var(--request-ink);
+  color-scheme: dark;
+  overflow-wrap: anywhere;
+  scroll-padding-block: .75rem;
+}
+.request-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--space-3, .75rem);
+  margin-block-end: clamp(1rem, 3vw, 1.5rem);
+  padding-block-end: clamp(.9rem, 2.5vw, 1.35rem);
+  border-block-end: 1px solid var(--request-line);
+}
+.request-heading h2 {
+  margin: 0;
+  color: var(--request-title, var(--request-ink));
+  font-size: clamp(1.45rem, 4vw, 2.25rem);
+  line-height: 1.4;
+}
+.request-heading p {
+  margin: .45rem 0 0;
+  color: var(--request-subtitle, var(--request-muted));
+  font-size: var(--font-label, .875rem);
+  line-height: 1.75;
+}
+.request-close,
+.request-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: var(--control, 2.75rem);
+  border: 1px solid var(--request-line);
+  border-radius: 0;
+  font-family: inherit;
+  cursor: pointer;
+}
+.request-close {
+  min-inline-size: var(--control, 2.75rem);
+  padding: 0;
+  border-color: var(--request-control-line);
+  background: var(--request-close-bg, transparent);
+  color: var(--request-close-text, var(--request-ink));
+  font-size: 1.6rem;
+  font-weight: 400;
+  line-height: 1;
+}
+.request-close:hover { background: color-mix(in srgb, var(--request-close-bg, transparent), currentColor 12%); }
+
+.request-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .9rem clamp(.75rem, 2.5vw, 1.25rem);
+}
+.request-field { min-inline-size: 0; }
+.request-field-wide { grid-column: 1 / -1; }
+fieldset.request-field { margin: 0; padding: 0; border: 0; }
+.request-field > label,
+.request-field > legend {
+  display: block;
+  padding: 0;
+  margin-block-end: .35rem;
+  color: var(--request-label, var(--request-ink));
+  font-size: var(--font-label, .875rem);
+  font-weight: var(--label-weight, 600);
+  line-height: 1.65;
+}
+.request-required { color: var(--request-muted); }
+.request-control {
+  display: block;
+  inline-size: 100%;
+  min-block-size: var(--control, 2.75rem);
+  min-inline-size: 0;
+  padding: .55rem .75rem;
+  border: 1px solid var(--request-control-line);
+  border-radius: 0;
+  background: var(--request-input-bg, rgba(255, 255, 255, .05));
+  color: var(--request-input-text, var(--request-ink));
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.request-control::placeholder { color: var(--request-placeholder, var(--request-muted)); opacity: 1; }
+.request-control:focus { border-color: var(--request-focus); }
+textarea.request-control { min-block-size: 5rem; block-size: 5.5rem; resize: vertical; }
+.request-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .4rem; }
+.request-option {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  min-inline-size: 0;
+  min-block-size: var(--control, 2.75rem);
+  padding: .4rem .55rem;
+  border: 1px solid var(--request-control-line);
+  background: var(--request-input-bg, rgba(255, 255, 255, .05));
+  color: var(--request-label, var(--request-ink));
+  font-size: var(--font-label, .875rem);
+  font-weight: 500;
+  line-height: 1.5;
+  cursor: pointer;
+}
+.request-option input {
+  flex: none;
+  inline-size: 1rem;
+  block-size: 1rem;
+  margin: 0;
+  accent-color: var(--request-focus);
+}
+.request-option:has(input:checked) {
+  border-color: var(--request-focus);
+  background: color-mix(in srgb, var(--request-input-bg, rgba(255, 255, 255, .05)), var(--request-focus) 12%);
+}
+.request-control[aria-invalid="true"], .request-field[aria-invalid="true"] .request-option {
+  border-color: var(--request-error);
+}
+.request-error, .request-form-error {
+  margin: .35rem 0 0;
+  color: var(--request-error);
+  font-size: var(--font-label, .875rem);
+  line-height: 1.65;
+}
+.request-form-error { padding-block: .6rem; }
+#consultModal :is(button, input, textarea):focus-visible {
+  outline: 2px solid var(--request-focus) !important;
+  outline-offset: 2px;
+}
+.request-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-block-start: 1rem;
+  padding-block-start: 1rem;
+  border-block-start: 1px solid var(--request-line);
+}
+.request-submit {
+  max-inline-size: 100%;
+  gap: .6rem;
+  padding: .55rem 1.1rem;
+  border-color: transparent;
+  background: var(--request-submit-bg, var(--off-white, #f8f8f6));
+  color: var(--request-submit-text, var(--charcoal, #141414));
+  font-size: var(--font-label, .875rem);
+  font-weight: var(--button-weight, 600);
+  line-height: 1.5;
+}
+.request-submit:hover {
+  background: color-mix(in srgb, var(--request-submit-bg, var(--off-white, #f8f8f6)), var(--request-submit-text, var(--charcoal, #141414)) 10%);
+}
+.request-submit .ic { flex: none; }
+
+@media (max-width: 36rem) {
+  .request-grid { grid-template-columns: minmax(0, 1fr); gap: .65rem; }
+  .request-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .request-option:last-child { grid-column: 1 / -1; }
+  .request-submit { inline-size: 100%; }
+}
+</style>

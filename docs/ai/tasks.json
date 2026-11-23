@@ -420,5 +420,28 @@
       "2026-11-23: Verified 64 browser combinations, client and server error feedback, keyboard focus and dismissal, short viewport scrolling, persisted request and newsletter submissions, real Django admin edits and 8 render checks, Django system checks and static collection."
     ],
     "rollback": "Restore the previous template, form widget attributes and static assets."
+  },
+  {
+    "id": "GNT-019",
+    "priority": "P1",
+    "title": "Deliver the request frame with its template",
+    "status": "done",
+    "depends_on": [
+      "GNT-018"
+    ],
+    "modules": [
+      "M01",
+      "M02",
+      "M07"
+    ],
+    "acceptance": [
+      "Reproduce the unstyled form when its separate stylesheet is stale",
+      "Render a framed, readable request form when static CSS is stale",
+      "Verify responsive layout, state and submissions with production settings"
+    ],
+    "verification_evidence": [
+      "2026-11-23: Reproduced the missing panel with GNT-017 CSS. Passed 60 Chromium production-mode checks across Home and Project Detail, FA/EN and five viewport sizes with normal, stale or blocked local CSS. Verified focus, validation, two persisted requests, admin theme updates, Django checks and collectstatic."
+    ],
+    "rollback": "Restore the prior base template and consultation stylesheet from GNT-018."
   }
 ]

@@ -4,5 +4,5 @@
   "baseline": "Complete GDCS ZIP; Django and Chromium checks on local fixture data",
   "active_task": null,
   "last_update": "2026-11-23",
-  "note": "GNT-018 completed after local verification on GNT-017. The request form uses the home palette and unified field feedback. Production verification and historical exposure tracking under GNT-005 remain open."
+  "note": "GNT-019 completed after local verification on GNT-018. The request dialog and its styles are served together. Live deployment verification and historical exposure tracking under GNT-005 remain open."
 }

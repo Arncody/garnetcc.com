@@ -92,3 +92,9 @@
 - Align the shared request dialog with the dark homepage, using square controls, a neutral submit action and translucent backdrop. Compact the responsive field and option layout and keep the form scrollable on short screens.
 - Bind error feedback to the corresponding controls and preserve input on server validation. Keep editable bilingual copy and active theme keys, with configurable field border, placeholder and close-icon colors.
 - Verified 64 Chromium route, language and viewport combinations, including 320px widths and landscape. Verified keyboard focus trap and restoration, backdrop and Escape dismissal, a resized 228px viewport, client feedback, server errors and persisted request and newsletter submissions. Verified actual admin writes and browser-rendered colors and long labels at eight viewport and language combinations. Django checks, collectstatic, JavaScript syntax and Git whitespace passed.
+
+## 2026-11-23 — GNT-019 · Request dialog frame and template styles
+
+- Include scoped dialog styles in the shared template. Keep the dialog above the page with a compact charcoal panel, a thin visible frame and an opaque neutral base beneath the editable panel color.
+- Reproduced the unstyled GNT-018 dialog with the actual GNT-017 stylesheet. Chromium passed 60 checks across Home and Project Detail in FA/EN at five viewport sizes in normal production mode, with older shared CSS, and with local CSS blocked. Captured eight before and after images at mobile and desktop sizes.
+- Verified keyboard focus, touch controls, validation and two stored requests. Verified Django admin changes to the panel border and submit color, including the opaque fallback when given a transparent panel color. Django checks and production-mode collectstatic passed.
