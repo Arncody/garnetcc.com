@@ -13,7 +13,7 @@
 <link rel="apple-touch-icon" href="{{ site_settings.favicon.url }}">{% else %}<link rel="icon" href="{% url 'website:favicon' %}">{% endif %}
 <meta property="og:site_name" content="{{ site_settings.brand_name }}"><meta property="og:type" content="website"><meta property="og:url" content="{{ request.build_absolute_uri }}">{% if site_settings.logo %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ site_settings.logo.url }}">{% endif %}
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"{{ site_settings.brand_name|escapejs }}","legalName":"{{ site_settings.legal_name|escapejs }}","url":"{{ request.scheme }}://{{ request.get_host }}/"{% if site_settings.logo %},"logo":"{{ request.scheme }}://{{ request.get_host }}{{ site_settings.logo.url }}"{% endif %}{% if site_settings.instagram_url or site_settings.linkedin_url %},"sameAs":[{% if site_settings.instagram_url %}"{{ site_settings.instagram_url|escapejs }}"{% endif %}{% if site_settings.instagram_url and site_settings.linkedin_url %},{% endif %}{% if site_settings.linkedin_url %}"{{ site_settings.linkedin_url|escapejs }}"{% endif %}]{% endif %}}</script>
-<link rel="stylesheet" href="{% static 'css/fonts.css' %}"><link rel="stylesheet" href="{% static 'css/style.css' %}?v=GNT-016">
+<link rel="stylesheet" href="{% static 'css/fonts.css' %}"><link rel="stylesheet" href="{% static 'css/style.css' %}?v=GNT-018">
 <style id="garnet-theme">
 :root{
  {% for key, value in theme_palette.items %}--{{ key }}:{{ value }};{% endfor %}
@@ -34,7 +34,6 @@ label,.eyebrow{font-weight:var(--label-weight)}
 small,.small{font-weight:var(--small-weight)}
 .site-header{border-radius:0}
 </style>
-<link rel="stylesheet" href="{% static 'css/consult-modal.css' %}?v=20261013-redesign1">
 
 
 {% block extra_head %}{% endblock %}
@@ -42,8 +41,9 @@ small,.small{font-weight:var(--small-weight)}
 {{ theme_css|safe }}
 </style>{% endif %}
 <link rel="stylesheet" href="{% static 'css/garnet-ui.css' %}?v=GNT-016">
-<link rel="stylesheet" href="{% static 'css/design-system.css' %}?v=GNT-016">
+<link rel="stylesheet" href="{% static 'css/design-system.css' %}?v=GNT-018">
 <link rel="stylesheet" href="{% static 'css/garnet-presentation.css' %}?v=GNT-014">
+<link rel="stylesheet" href="{% static 'css/consult-modal.css' %}?v=GNT-018">
 {% if site_theme.custom_css %}<style id="garnet-custom-css">{{ site_theme.custom_css|safe }}</style>{% endif %}
 </head>
 <body class="site-shell{% if request.resolver_match.view_name == 'website:home' %} site-home{% endif %}">
@@ -86,27 +86,9 @@ small,.small{font-weight:var(--small-weight)}
 {% if messages %}<div class="site-toasts" aria-live="polite">{% for message in messages %}<div class="site-toast site-toast-{{ message.tags }}" role="status">{{ message }}</div>{% endfor %}</div>{% endif %}
 {% block content %}{% endblock %}
 </main>
-{% with consult_form=form|default:consultation_form %}
-<div class="consult-modal{% if consult_form.errors %} has-form-errors{% endif %}" id="consultModal" hidden role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="consultTitle" tabindex="-1"{% if consult_form.errors or consult_keep_open %} data-auto-open="true"{% endif %}>
-  <div class="consult-modal-inner">
-    <button type="button" class="modal-close" data-consult-close aria-label="{% if is_en %}Close{% else %}بستن{% endif %}">×</button>
-    <div class="modal-heading"><h2 id="consultTitle">{{ T.modal_title }}</h2><p>{{ T.modal_subtitle }}</p></div>
-    <form method="post" action="{% url 'website:home' %}" class="consult-form" novalidate data-consult-form>
-      {% csrf_token %}{{ consult_form.website }}
-      <div class="form-grid compact-form">
-        <div class="form-group full"><label for="{{ consult_form.name.id_for_label }}">{{ consult_form.name.label }} <span class="required-mark">*</span></label>{{ consult_form.name }}{% if consult_form.name.errors %}<div class="field-error">{{ consult_form.name.errors|striptags }}</div>{% endif %}</div>
-        <div class="form-group"><label>{{ consult_form.gender.label }} <span class="required-mark">*</span></label><div class="gender-options">{% for radio in consult_form.gender %}<label class="gender-option">{{ radio.tag }}<span>{{ radio.choice_label }}</span></label>{% endfor %}</div>{% if consult_form.gender.errors %}<div class="field-error">{{ consult_form.gender.errors|striptags }}</div>{% endif %}</div>
-        <div class="form-group"><label for="{{ consult_form.phone.id_for_label }}">{{ consult_form.phone.label }} <span class="required-mark">*</span></label>{{ consult_form.phone }}{% if consult_form.phone.errors %}<div class="field-error">{{ consult_form.phone.errors|striptags }}</div>{% endif %}</div>
-        <div class="form-group full"><label for="{{ consult_form.subject.id_for_label }}">{{ consult_form.subject.label }} <span class="required-mark">*</span></label>{{ consult_form.subject }}{% if consult_form.subject.errors %}<div class="field-error">{{ consult_form.subject.errors|striptags }}</div>{% endif %}</div>
-        <div class="form-group full"><label for="{{ consult_form.message.id_for_label }}">{{ consult_form.message.label }}</label>{{ consult_form.message }}{% if consult_form.message.errors %}<div class="field-error">{{ consult_form.message.errors|striptags }}</div>{% endif %}</div>
-      </div>
-      {% if consult_form.non_field_errors %}<div class="form-alert" role="alert">{{ consult_form.non_field_errors|striptags }}</div>{% endif %}<button type="submit" class="btn btn-primary btn-block">{{ T.submit_text }}</button>
-    </form>
-  </div>
-</div>
-{% endwith %}
+{% include "website/_consultation.html" with consult_form=form|default:consultation_form %}
 {% include "website/_footer.html" %}
 <a class="floating-call" href="tel:{{ site_settings.phone }}" aria-label="{% if is_en %}Call Garnet{% else %}تماس با گارنت{% endif %}">{% icon "phone" 22 %}</a>
-<script src="{% static 'js/main.js' %}?v=GNT-014" defer></script>
+<script src="{% static 'js/main.js' %}?v=GNT-018" defer></script>
 {% block extra_scripts %}{% endblock %}
 </body></html>

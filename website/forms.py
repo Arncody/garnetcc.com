@@ -25,6 +25,9 @@ class ConsultationForm(forms.ModelForm):
         self.fields["phone"].widget.attrs["placeholder"] = texts["ph_phone"]
         self.fields["subject"].widget.attrs["placeholder"] = texts["ph_subject"]
         self.fields["message"].widget.attrs["placeholder"] = texts["ph_message"]
+        for key in ("name", "phone", "subject", "message"):
+            field = self[key]
+            field.field.widget.attrs["aria-describedby"] = f"{field.auto_id}_error"
         self.fields["gender"].choices = [
             ("male", texts["opt_male"]),
             ("female", texts["opt_female"]),
@@ -41,17 +44,17 @@ class ConsultationForm(forms.ModelForm):
         model = ConsultationRequest
         fields = ["name", "gender", "phone", "subject", "message"]
         widgets = {
-            "gender": forms.RadioSelect(attrs={"class": "gender-options"}),
+            "gender": forms.RadioSelect(),
             "name": forms.TextInput(attrs={
-                "class": "form-control", "maxlength": 100, "placeholder": "مثال: مهندس رادمنش", "required": True,
+                "class": "request-control", "autocomplete": "name", "maxlength": 100, "placeholder": "مثال: مهندس رادمنش", "required": True,
             }),
             "phone": forms.TextInput(attrs={
-                "class": "form-control", "maxlength": 20, "placeholder": "۰۹۱۲XXXXXXX", "required": True,
-                "inputmode": "numeric",
+                "class": "request-control", "maxlength": 20, "placeholder": "۰۹۱۲XXXXXXX", "required": True,
+                "inputmode": "tel", "autocomplete": "tel", "dir": "ltr",
             }),
-            "subject": forms.TextInput(attrs={"class":"form-control","maxlength":150,"placeholder":"موضوع درخواست / Project subject", "required": True}),
+            "subject": forms.TextInput(attrs={"class": "request-control","maxlength":150,"placeholder":"موضوع درخواست / Project subject", "required": True}),
             "message": forms.Textarea(attrs={
-                "class": "form-control", "maxlength": 1000, "rows": 4,
+                "class": "request-control", "maxlength": 1000, "rows": 4,
                 "placeholder": "نوع پروژه، منطقه، متراژ یا سوال مورد نظر...",
             }),
         }

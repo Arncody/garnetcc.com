@@ -86,3 +86,9 @@
 
 - Render one set of matching project cards while a query is active. A genuine zero-match search shows one message. The reset and standard status navigation restore the default portfolio view.
 - Verified 64 Chromium result combinations covering completed-only, ongoing-only, mixed and zero results in FA/EN at four widths, with and without JavaScript. Verified search form submission, reset and result navigation in all 16 browser contexts. Django checks and production-mode collectstatic passed.
+
+## 2026-11-23 — GNT-018 · Request dialog design and field feedback
+
+- Align the shared request dialog with the dark homepage, using square controls, a neutral submit action and translucent backdrop. Compact the responsive field and option layout and keep the form scrollable on short screens.
+- Bind error feedback to the corresponding controls and preserve input on server validation. Keep editable bilingual copy and active theme keys, with configurable field border, placeholder and close-icon colors.
+- Verified 64 Chromium route, language and viewport combinations, including 320px widths and landscape. Verified keyboard focus trap and restoration, backdrop and Escape dismissal, a resized 228px viewport, client feedback, server errors and persisted request and newsletter submissions. Verified actual admin writes and browser-rendered colors and long labels at eight viewport and language combinations. Django checks, collectstatic, JavaScript syntax and Git whitespace passed.

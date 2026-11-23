@@ -466,17 +466,6 @@ html[dir="rtl"] { --hero-direction: to left; }
 .site-shell .proj-row-empty { color: var(--theme-muted); }
 .site-shell :is(.about-panel .about-text, .proj-row-desc, .proj-row-meta, .article-meta) { color: var(--theme-muted); }
 
-#consultModal.is-open:not([hidden]) {
-  background: color-mix(in srgb, var(--theme-dark) 48%, transparent) !important;
-}
-#consultModal.is-open:not([hidden]) > .consult-modal-inner {
-  background: var(--modal-bg) !important;
-  border-color: var(--modal-border) !important;
-  border-radius: var(--radius-panel) !important;
-}
-#consultModal :is(.modal-heading p, label, .form-control) { font-size: var(--font-label); }
-#consultModal :is(.modal-heading h2, label, .form-control) { color: var(--theme-text); }
-
 /* The footer shares the page container, button sizing and SiteTheme colors. */
 .site-shell .site-footer {
   --footer-muted: color-mix(in srgb, var(--footer-text) 75%, var(--footer-bg));

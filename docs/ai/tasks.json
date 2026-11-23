@@ -396,5 +396,29 @@
       "2026-11-23: Verified 64 responsive Chromium result combinations and 16 submit/reset/result-link checks, including both languages and JavaScript enabled or disabled. Django check and collectstatic passed."
     ],
     "rollback": "Restore the preceding version of the affected templates, CSS and view."
+  },
+  {
+    "id": "GNT-018",
+    "priority": "P1",
+    "title": "Align the request form with the home design",
+    "status": "done",
+    "depends_on": [
+      "GNT-017"
+    ],
+    "modules": [
+      "M01",
+      "M02",
+      "M07"
+    ],
+    "acceptance": [
+      "Use a neutral square-corner request overlay aligned with the home palette",
+      "Fit both languages on desktop and mobile, including compact screens",
+      "Preserve existing submissions and admin copy/colors",
+      "Verify live and server-side errors, keyboard, focus restoration and all common triggers"
+    ],
+    "verification_evidence": [
+      "2026-11-23: Verified 64 browser combinations, client and server error feedback, keyboard focus and dismissal, short viewport scrolling, persisted request and newsletter submissions, real Django admin edits and 8 render checks, Django system checks and static collection."
+    ],
+    "rollback": "Restore the previous template, form widget attributes and static assets."
   }
 ]

@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (modal.parentElement !== document.body) document.body.appendChild(modal);
   const closer = modal.querySelector('[data-consult-close]');
   const form = modal.querySelector('[data-consult-form]');
-  const panel = modal.querySelector('.consult-modal-inner');
+  const panel = modal.querySelector('[data-consult-panel]');
   let previousFocus = null;
   let previousOverflow = '';
   let previousHtmlOverflow = '';
@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // visualViewport.height changes when iOS keyboard opens; offsetTop is not
     // added to the fixed overlay to avoid the double-offset Safari issue.
     const height = viewport ? viewport.height : window.innerHeight;
-    modal.style.setProperty('--consult-vh', `${Math.max(240, height)}px`);
+    modal.style.setProperty('--consult-vh', `${Math.max(1, height)}px`);
   };
   const setModalState = (open) => {
     isOpen = open;
@@ -280,68 +280,45 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('orientationchange', updateViewport);
   setModalState(false);
   // Preserve the user's inputs when server-side form validation fails.
-  if (modal.dataset.autoOpen === 'true' || modal.classList.contains('has-form-errors')) openModal();
+  if (modal.dataset.autoOpen === 'true') openModal();
 
-  // Friendly client-side validation: no page navigation and errors stay beside the field.
+  // Use the same, field-linked feedback nodes for client and server errors.
   if (form) {
-    const clearInvalid = (field) => {
-      field.classList.remove('is-invalid');
-      const old = field.parentElement?.querySelector('.client-field-error');
-      old?.remove();
-    };
-    const markInvalid = (field, message) => {
-      clearInvalid(field);
-      field.classList.add('is-invalid');
-      const error = document.createElement('div');
-      error.className = 'field-error client-field-error';
-      error.textContent = message;
-      field.parentElement?.appendChild(error);
+    const setFieldError = (field, message) => {
+      const group = field.closest('[data-consult-field]');
+      const target = field.type === 'radio' ? group : field;
+      const feedback = group?.querySelector('[data-consult-error]');
+      if (!target || !feedback) return;
+      feedback.textContent = message;
+      feedback.hidden = !message;
+      if (message) target.setAttribute('aria-invalid', 'true');
+      else target.removeAttribute('aria-invalid');
     };
 
-    form.querySelectorAll('input, textarea, select').forEach((field) => {
-      field.addEventListener('input', () => clearInvalid(field));
-      field.addEventListener('change', () => clearInvalid(field));
-    });
-
+    form.addEventListener('input', (event) => setFieldError(event.target, ''));
+    form.addEventListener('change', (event) => setFieldError(event.target, ''));
     form.addEventListener('submit', (event) => {
-      let firstInvalid = null;
       const langEn = document.documentElement.lang === 'en';
-      const name = form.querySelector('[name="name"]');
-      const phone = form.querySelector('[name="phone"]');
-      const subject = form.querySelector('[name="subject"]');
-      const gender = form.querySelector('input[name="gender"]:checked');
-      const genderWrap = form.querySelector('.gender-options');
-
-      const requireText = (field, message) => {
-        if (!field || field.value.trim().length < 2) {
-          if (field) markInvalid(field, message);
-          if (!firstInvalid) firstInvalid = field;
-        }
-      };
-      requireText(name, langEn ? 'Please enter your full name.' : 'لطفاً نام و نام‌خانوادگی را وارد کنید.');
-      if (!phone || !/^(?:0?9\d{9}|\+?98\d{10})$/.test(phone.value.replace(/[\s-]/g, ''))) {
-        if (phone) markInvalid(phone, langEn ? 'Please enter a valid phone number.' : 'لطفاً یک شماره تماس معتبر وارد کنید.');
-        if (!firstInvalid) firstInvalid = phone;
+      const { name, phone, gender, subject } = form.elements;
+      const errors = [
+        [name, name.value.trim().length < 2,
+          langEn ? 'Please enter your full name.' : 'لطفاً نام و نام‌خانوادگی را وارد کنید.'],
+        [phone, !/^(?:0?9\d{9}|\+?98\d{10})$/.test(phone.value.replace(/[\s-]/g, '')),
+          langEn ? 'Please enter a valid phone number.' : 'لطفاً یک شماره تماس معتبر وارد کنید.'],
+        [gender[0], !gender.value,
+          langEn ? 'Please choose an option.' : 'لطفاً یکی از گزینه‌ها را انتخاب کنید.'],
+        [subject, subject.value.trim().length < 2,
+          langEn ? 'Please enter the subject of your request.' : 'لطفاً موضوع درخواست را وارد کنید.'],
+      ];
+      let firstInvalid = null;
+      for (const [field, invalid, message] of errors) {
+        setFieldError(field, invalid ? message : '');
+        if (invalid && !firstInvalid) firstInvalid = field;
       }
-      if (!gender) {
-        if (genderWrap) {
-          genderWrap.classList.add('is-invalid');
-          const old = genderWrap.parentElement?.querySelector('.client-field-error');
-          old?.remove();
-          const error = document.createElement('div');
-          error.className = 'field-error client-field-error';
-          error.textContent = langEn ? 'Please choose an option.' : 'لطفاً یکی از گزینه‌ها را انتخاب کنید.';
-          genderWrap.parentElement?.appendChild(error);
-        }
-        if (!firstInvalid) firstInvalid = genderWrap;
-      }
-      requireText(subject, langEn ? 'Please enter the subject of your request.' : 'لطفاً موضوع درخواست را وارد کنید.');
-
       if (firstInvalid) {
         event.preventDefault();
-        openModal();
-        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        if (typeof firstInvalid.focus === 'function') firstInvalid.focus({ preventScroll: true });
+        firstInvalid.focus({ preventScroll: true });
+        firstInvalid.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
       }
     });
   }

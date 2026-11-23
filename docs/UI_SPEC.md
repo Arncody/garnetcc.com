@@ -48,3 +48,9 @@ The header search icon opens the project search field. Use a project name, code 
 Use Site Sections for bilingual text, opening images and optional sections. Set project story headlines, percentages, status notes, catalog files and gallery images in Projects. Use Philosophy Features for the About principles, Site Texts for bilingual group headings and buttons, and SiteTheme → «صفحات پروژه‌ها و درباره گارنت» for the palette of the three page bodies. The opening and philosophy sections use conceptual images from the supplied mockup when no replacement has been uploaded. Existing project records have no default progress. Migration `0020_editorial_pages` seeds copy into new section keys while honoring existing records.
 
 Migration `0021_project_search_and_catalog_visibility` adds bilingual search labels and a catalogue button visibility switch. In Projects, the button is shown when both «نمایش دکمه کاتالوگ پروژه» and the PDF are present. Turning off the switch retains the stored file. Use Site Texts to edit the search label and input hint.
+
+## Request form
+
+The shared request dialog uses the home page dark tone, a translucent backdrop and square controls. Name and phone sit side by side above 576px. Inputs use a 16px floor, and the close, option and submit controls retain 44px targets. The panel scrolls independently in short viewports. Field errors and their labels share one feedback area per field. The dialog restores focus to its trigger when dismissed.
+
+Use Site Texts for the heading, description, labels, hints and options. Use SiteTheme → «فرم ثبت درخواست» for the panel, border, field, placeholder and action colors.

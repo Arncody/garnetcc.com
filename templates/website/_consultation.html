@@ -1,0 +1,56 @@
+{% load site_icons %}
+<div class="request-overlay" id="consultModal" hidden role="dialog" aria-modal="true" aria-hidden="true"
+     aria-labelledby="consultTitle" aria-describedby="consultDescription" tabindex="-1"
+     {% if consult_form.errors or consult_keep_open %}data-auto-open="true"{% endif %}>
+  <section class="request-panel" data-consult-panel>
+    <header class="request-heading">
+      <div class="request-intro">
+        <h2 id="consultTitle">{{ T.modal_title }}</h2>
+        <p id="consultDescription">{{ T.modal_subtitle }}</p>
+      </div>
+      <button type="button" class="request-close" data-consult-close aria-label="{% if is_en %}Close{% else %}بستن{% endif %}"><span aria-hidden="true">×</span></button>
+    </header>
+
+    <form method="post" action="{% url 'website:home' %}" class="request-form" novalidate data-consult-form>
+      {% csrf_token %}{{ consult_form.website }}
+      <div class="request-grid">
+        <div class="request-field" data-consult-field>
+          <label for="{{ consult_form.name.id_for_label }}">{{ consult_form.name.label }} <span class="request-required" aria-hidden="true">*</span></label>
+          {{ consult_form.name }}
+          <p class="request-error" id="{{ consult_form.name.auto_id }}_error" data-consult-error {% if not consult_form.name.errors %}hidden{% endif %}>{{ consult_form.name.errors|join:" " }}</p>
+        </div>
+        <div class="request-field" data-consult-field>
+          <label for="{{ consult_form.phone.id_for_label }}">{{ consult_form.phone.label }} <span class="request-required" aria-hidden="true">*</span></label>
+          {{ consult_form.phone }}
+          <p class="request-error" id="{{ consult_form.phone.auto_id }}_error" data-consult-error {% if not consult_form.phone.errors %}hidden{% endif %}>{{ consult_form.phone.errors|join:" " }}</p>
+        </div>
+        <fieldset class="request-field request-field-wide" data-consult-field aria-describedby="{{ consult_form.gender.auto_id }}_error"{% if consult_form.gender.errors %} aria-invalid="true"{% endif %}>
+          <legend>{{ consult_form.gender.label }} <span class="request-required" aria-hidden="true">*</span></legend>
+          <div class="request-options">
+            {% for radio in consult_form.gender %}
+            <label class="request-option">{{ radio.tag }}<span>{{ radio.choice_label }}</span></label>
+            {% endfor %}
+          </div>
+          <p class="request-error" id="{{ consult_form.gender.auto_id }}_error" data-consult-error {% if not consult_form.gender.errors %}hidden{% endif %}>{{ consult_form.gender.errors|join:" " }}</p>
+        </fieldset>
+        <div class="request-field request-field-wide" data-consult-field>
+          <label for="{{ consult_form.subject.id_for_label }}">{{ consult_form.subject.label }} <span class="request-required" aria-hidden="true">*</span></label>
+          {{ consult_form.subject }}
+          <p class="request-error" id="{{ consult_form.subject.auto_id }}_error" data-consult-error {% if not consult_form.subject.errors %}hidden{% endif %}>{{ consult_form.subject.errors|join:" " }}</p>
+        </div>
+        <div class="request-field request-field-wide" data-consult-field>
+          <label for="{{ consult_form.message.id_for_label }}">{{ consult_form.message.label }}</label>
+          {{ consult_form.message }}
+          <p class="request-error" id="{{ consult_form.message.auto_id }}_error" data-consult-error {% if not consult_form.message.errors %}hidden{% endif %}>{{ consult_form.message.errors|join:" " }}</p>
+        </div>
+      </div>
+
+      {% if consult_form.non_field_errors %}
+        <p class="request-form-error" role="alert">{{ consult_form.non_field_errors|join:" " }}</p>
+      {% endif %}
+      <div class="request-actions">
+        <button type="submit" class="request-submit">{{ T.submit_text }} {% icon "arrow-up-right" 17 %}</button>
+      </div>
+    </form>
+  </section>
+</div>
