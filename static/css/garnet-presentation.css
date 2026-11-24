@@ -33,7 +33,7 @@
 .g-home-hero-shade {
   background: linear-gradient(to bottom,
     rgba(0, 0, 0, .58) 0, rgba(0, 0, 0, .55) min(5rem, 20%), transparent 36%,
-    rgba(0, 0, 0, .28) 65%, var(--home-seam-color) 100%);
+    var(--home-hero-shade, rgba(0, 0, 0, .28)) 65%, var(--home-seam-color) 100%);
 }
 .site-home .g-home-hero-content {
   position: relative;
@@ -161,13 +161,13 @@
 .site-shell .g-header[data-header-strip] .g-cta {
   border-width: 1px !important;
   border-style: solid;
-  border-color: color-mix(in srgb, currentColor 53%, transparent);
+  border-color: var(--header-buy-border, color-mix(in srgb, currentColor 53%, transparent));
   border-radius: 0 !important;
-  background: transparent !important;
-  color: var(--header-strip-text);
+  background: var(--header-buy-bg, transparent) !important;
+  color: var(--header-buy-ink, var(--header-strip-text));
 }
 .site-shell .g-header[data-header-strip] .g-cta:hover {
-  background: color-mix(in srgb, currentColor 10%, transparent) !important;
+  background: var(--header-buy-hover, color-mix(in srgb, currentColor 10%, transparent)) !important;
 }
 @media (min-width: 68.0625rem) {
   html[dir="rtl"] .site-home .g-header .g-nav { justify-content: flex-start; }

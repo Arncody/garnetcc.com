@@ -6,8 +6,8 @@
         {% if cover %}<img src="{{ cover.url }}" alt="" loading="lazy" decoding="async">{% endif %}
       {% endwith %}
       <span class="ed-status">
-        {% if project.status == "completed" %}{% if is_en %}Completed{% else %}تکمیل‌شده{% endif %}
-        {% else %}{% if is_en %}In progress{% else %}در حال اجرا{% endif %}{% endif %}
+        {% if project.status == "completed" %}{{ T.status_completed }}
+        {% else %}{{ T.status_ongoing }}{% endif %}
       </span>
       {% if project.code %}<bdi class="ed-project-code">{{ project.code }}</bdi>{% endif %}
     </div>

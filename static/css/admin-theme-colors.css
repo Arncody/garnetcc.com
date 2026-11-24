@@ -10,3 +10,19 @@
 .garnet-color-reset{flex:0 0 auto;border:1px solid #c9d6db;background:#f4f6f7;color:#17303b;border-radius:9px;padding:7px 11px;cursor:pointer;font-size:12px}
 .garnet-color-reset:hover{background:#e6eef1}
 .garnet-color.is-default .garnet-color-reset{opacity:.45}
+
+.garnet-admin-directory {
+  margin-block-end: 1rem;
+  padding: 1rem;
+  background: var(--darkened-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  text-align: start;
+}
+.garnet-admin-directory h2 { margin: 0 0 .75rem; }
+.garnet-admin-directory ul { display: flex; flex-wrap: wrap; gap: .4rem .75rem; padding: 0; margin: .5rem 0; }
+.garnet-admin-directory li { list-style: none; }
+.garnet-admin-directory a { display: block; padding: .32rem .5rem; text-decoration: underline; }
+.garnet-admin-directory label { display: block; margin-block: .8rem .3rem; }
+.garnet-admin-directory input { box-sizing: border-box; inline-size: min(100%, 26rem); }
+form fieldset[hidden], form .form-row[hidden] { display: none; }

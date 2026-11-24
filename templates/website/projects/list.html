@@ -1,15 +1,15 @@
 {% extends "website/editorial_base.html" %}{% load static site_icons %}
-{% block title %}{% if is_en %}{% firstof hero_section.title_en hero_section.title "Garnet Projects" %}{% else %}{% firstof hero_section.title "پروژه‌های گارنت" %}{% endif %} | {{ site_settings.brand_name }}{% endblock %}
+{% block title %}{% if is_en %}{% firstof hero_section.title_en hero_section.title T.portfolio_title %}{% else %}{% firstof hero_section.title T.portfolio_title %}{% endif %} | {{ site_settings.brand_name }}{% endblock %}
 {% block extra_head %}{{ block.super }}
-  <link rel="stylesheet" href="{% static 'css/garnet-portfolio.css' %}?v=GNT-022">
+  <link rel="stylesheet" href="{% static 'css/garnet-portfolio.css' %}?v=GNT-025">
   {% if project_query %}<meta name="robots" content="noindex,follow">{% endif %}
 {% endblock %}
 {% block editorial_page_class %}editorial-portfolio{% endblock %}
 {% block editorial_content %}
 <section class="portfolio-masthead" aria-labelledby="portfolio-title">
   <div class="container">
-    <p class="ed-kicker"><bdi>{% if is_en %}{% firstof hero_section.subtitle_en hero_section.subtitle "GARNET / PORTFOLIO" %}{% else %}{% firstof hero_section.subtitle "GARNET / PORTFOLIO" %}{% endif %}</bdi></p>
-    <h1 id="portfolio-title">{% if is_en %}{% firstof hero_section.title_en hero_section.title "Garnet Projects" %}{% else %}{% firstof hero_section.title "پروژه‌های گارنت" %}{% endif %}</h1>
+    <p class="ed-kicker"><bdi>{% if is_en %}{% firstof hero_section.subtitle_en hero_section.subtitle T.portfolio_kicker %}{% else %}{% firstof hero_section.subtitle T.portfolio_kicker %}{% endif %}</bdi></p>
+    <h1 id="portfolio-title">{% if is_en %}{% firstof hero_section.title_en hero_section.title T.portfolio_title %}{% else %}{% firstof hero_section.title T.portfolio_title %}{% endif %}</h1>
   </div>
 </section>
 <div class="portfolio-toolbar">
@@ -23,13 +23,13 @@
     <div class="ed-search-summary">
       <p role="status">
         {% if search_results %}
-          {% if is_en %}Results: {{ search_results|length }}{% else %}تعداد نتایج: {{ search_results|length }}{% endif %}
-        {% elif is_en %}No matching projects found.{% else %}پروژه‌ای مطابق جست‌وجو پیدا نشد.{% endif %}
+          {{ T.project_results }}: {{ search_results|length }}
+        {% else %}{{ T.project_no_matches }}{% endif %}
       </p>
-      <a href="{% url 'website:projects_list' %}#project-search">{% if is_en %}Clear search{% else %}پاک‌کردن جست‌وجو{% endif %}</a>
+      <a href="{% url 'website:projects_list' %}#project-search">{{ T.project_clear_search }}</a>
     </div>
     {% else %}
-    <nav class="portfolio-status-links" aria-label="{% if is_en %}Project status{% else %}وضعیت پروژه‌ها{% endif %}">
+    <nav class="portfolio-status-links" aria-label="{{ T.project_status }}">
       <a class="ed-text-link" href="#ongoing">{{ T.projects_ongoing_title }} <span class="ed-down">{% icon "arrow-up" 14 %}</span></a>
       <a class="ed-text-link" href="#completed">{{ T.projects_completed_title }} <span class="ed-down">{% icon "arrow-up" 14 %}</span></a>
     </nav>

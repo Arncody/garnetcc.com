@@ -304,17 +304,12 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('input', (event) => setFieldError(event.target, ''));
     form.addEventListener('change', (event) => setFieldError(event.target, ''));
     form.addEventListener('submit', (event) => {
-      const langEn = document.documentElement.lang === 'en';
       const { name, gender, subject } = form.elements;
       const errors = [
-        [name, name.value.trim().length < 2,
-          langEn ? 'Please enter your full name.' : 'لطفاً نام و نام‌خانوادگی را وارد کنید.'],
-        [phone, !phonePattern.test(normalizedPhone(phone.value)),
-          langEn ? 'Please enter a valid phone number.' : 'لطفاً یک شماره تماس معتبر وارد کنید.'],
-        [gender[0], !gender.value,
-          langEn ? 'Please choose an option.' : 'لطفاً یکی از گزینه‌ها را انتخاب کنید.'],
-        [subject, subject.value.trim().length < 2,
-          langEn ? 'Please enter the subject of your request.' : 'لطفاً موضوع درخواست را وارد کنید.'],
+        [name, name.value.trim().length < 2, form.dataset.nameError],
+        [phone, !phonePattern.test(normalizedPhone(phone.value)), form.dataset.phoneError],
+        [gender[0], !gender.value, form.dataset.genderError],
+        [subject, subject.value.trim().length < 2, form.dataset.subjectError],
       ];
       let firstInvalid = null;
       for (const [field, invalid, message] of errors) {

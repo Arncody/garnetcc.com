@@ -69,7 +69,7 @@
 }
 
 .project-gallery-viewer {
-  --ed-ink: var(--project-dark-ink, #f8f8f6);
+  --ed-ink: var(--viewer-ink, var(--project-dark-ink, #f8f8f6));
   --gallery-gutter: clamp(.625rem, 2vw, 1.5rem);
   --gallery-caption-limit: clamp(2.5rem, 10vh, 5rem);
   --gallery-caption-limit: clamp(2.5rem, 10dvh, 5rem);
@@ -84,7 +84,7 @@
   border: 1px solid color-mix(in srgb, var(--ed-ink) 16%, transparent);
   border-radius: .5rem;
   overflow: hidden;
-  background: var(--project-dark, #141414);
+  background: var(--viewer-surface, var(--project-dark, #141414));
   color: var(--ed-ink);
   color-scheme: dark;
   box-shadow: 0 1rem 4rem rgba(0, 0, 0, .28);
@@ -113,8 +113,8 @@ html:has(.project-gallery-viewer[open]) { overflow: hidden; }
   padding: 0;
   border: 1px solid rgba(248, 248, 246, .26);
   border-radius: 50%;
-  background: rgba(20, 20, 20, .8);
-  color: var(--off-white, #f8f8f6);
+  background: var(--viewer-close-bg, rgba(20, 20, 20, .8));
+  color: var(--viewer-close-ink, var(--off-white, #f8f8f6));
   font: 400 1.55rem/1 system-ui, sans-serif;
   cursor: pointer;
 }
@@ -137,7 +137,7 @@ html:has(.project-gallery-viewer[open]) { overflow: hidden; }
   min-inline-size: 9rem;
   min-block-size: 3.5rem;
   overflow: hidden;
-  background: var(--project-dark, #141414);
+  background: var(--viewer-surface, var(--project-dark, #141414));
 }
 .project-viewer-stage.is-interactive {
   min-block-size: 9.25rem;
@@ -158,7 +158,7 @@ html:has(.project-gallery-viewer[open]) { overflow: hidden; }
   border: 0;
   border-radius: 50%;
   background: transparent;
-  color: var(--off-white, #f8f8f6);
+  color: var(--viewer-arrow-ink, var(--off-white, #f8f8f6));
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
@@ -171,7 +171,7 @@ html:has(.project-gallery-viewer[open]) { overflow: hidden; }
   block-size: 1.95rem;
   border: 1px solid rgba(248, 248, 246, .3);
   border-radius: 50%;
-  background: rgba(20, 20, 20, .55);
+  background: var(--viewer-arrow-bg, rgba(20, 20, 20, .55));
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
 }
@@ -218,7 +218,7 @@ html:has(.project-gallery-viewer[open]) { overflow: hidden; }
 }
 .project-viewer-caption > div { min-inline-size: 0; }
 .project-viewer-caption p { margin: 0; overflow-wrap: anywhere; }
-.project-viewer-caption :is([data-gallery-position], [data-gallery-note]) { color: var(--project-dark-muted, #c1c2c0); }
+.project-viewer-caption :is([data-gallery-position], [data-gallery-note]) { color: var(--viewer-muted, var(--project-dark-muted, #c1c2c0)); }
 .project-viewer-caption [data-gallery-position] { flex: none; font-variant-numeric: tabular-nums; }
 
 @media (prefers-reduced-motion: reduce) {

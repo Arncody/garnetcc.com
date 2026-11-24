@@ -19,7 +19,7 @@
 
 {% with story=sections.about_story %}
 {% if story %}
-<section class="ed-band" id="story" aria-labelledby="brand-story">
+<section class="ed-band" id="story" data-about-section="story" aria-labelledby="brand-story">
   <div class="container ed-split">
     <div>
       {% if story.subtitle or story.subtitle_en %}<p class="ed-kicker">{% if is_en %}{{ story.subtitle_en|default:story.subtitle }}{% else %}{{ story.subtitle }}{% endif %}</p>{% endif %}
@@ -36,7 +36,7 @@
 
 {% with philosophy=sections.about_philosophy %}
 {% if philosophy %}
-<section class="ed-band ed-band-alt" id="philosophy" aria-labelledby="brand-philosophy">
+<section class="ed-band ed-band-alt" id="philosophy" data-about-section="philosophy" aria-labelledby="brand-philosophy">
   <div class="container ed-philosophy">
     <figure class="ed-detail-cover">
       <img src="{% if philosophy.image %}{{ philosophy.image.url }}{% else %}{% static 'images/editorial/architecture-study.webp' %}{% endif %}" alt="" loading="lazy" decoding="async">
@@ -54,7 +54,7 @@
 
 {% with heading=sections.about_principles %}
 {% if heading %}
-<section class="ed-band" aria-labelledby="brand-principles">
+<section class="ed-band" aria-labelledby="brand-principles" data-about-section="principles">
   <div class="container">
     <div class="ed-principles-intro">
       <div>
@@ -81,7 +81,7 @@
 
 {% with quote=sections.about_quote %}
 {% if quote %}
-<section class="ed-band ed-band-alt">
+<section class="ed-band ed-band-alt" data-about-section="quote">
   <figure class="container ed-quote">
     <p class="ed-kicker">{% if is_en %}{{ quote.title_en|default:quote.title }}{% else %}{{ quote.title }}{% endif %}</p>
     <blockquote>
@@ -96,7 +96,7 @@
 
 {% with cta=sections.about_cta %}
 {% if cta %}
-<section class="ed-band ed-related">
+<section class="ed-band ed-related" data-about-section="cta">
   <div class="container">
     <h2 class="ed-heading">{% if is_en %}{{ cta.title_en|default:cta.title }}{% else %}{{ cta.title }}{% endif %}</h2>
     <div class="ed-body">{% if is_en %}{{ cta.content_en|default:cta.content|linebreaks }}{% else %}{{ cta.content|linebreaks }}{% endif %}</div>

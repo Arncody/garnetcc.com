@@ -11,6 +11,8 @@ from PIL import Image, UnidentifiedImageError
 from django.db import models
 from django.urls import reverse
 
+from .interface_copy import resolve_copy
+
 phone_validator = RegexValidator(
     regex=r"^0(9\d{9}|\d{2,3}\d{7,8})$",
     message="شماره تماس معتبر وارد کنید (مثال: 09123456789 یا 02634019271).",
@@ -686,6 +688,7 @@ class NewsletterSubscriber(models.Model):
 
 
 class SiteTexts(SingletonModel):
+    interface_copy = models.JSONField(default=dict, blank=True, editable=False)
     """متن‌های قابل ویرایش عنوان‌ها، کادر مشاوره و فرم درخواست؛ هر متن در فارسی و انگلیسی.
     اگر فیلدی خالی بماند، متن پیش‌فرض سایت نمایش داده می‌شود."""
 
@@ -784,4 +787,4 @@ class SiteTexts(SingletonModel):
                 out[key] = (getattr(self, key + "_en") or "").strip() or en
             else:
                 out[key] = (getattr(self, key) or "").strip() or fa
-        return out
+        return {**out, **resolve_copy(self.interface_copy, lang)}

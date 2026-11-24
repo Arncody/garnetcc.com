@@ -54,3 +54,37 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
 })();
+
+document.addEventListener('DOMContentLoaded', () => {
+  const panel = document.querySelector('[data-appearance-search]');
+  if (!panel) return;
+
+  const input = panel.querySelector('input');
+  const empty = panel.querySelector('[data-appearance-empty]');
+  const groups = [...document.querySelectorAll('[data-appearance-index] a')].map(link => {
+    const heading = document.getElementById(link.hash.slice(1));
+    const fieldset = heading.closest('fieldset');
+    const details = heading.closest('details');
+    link.addEventListener('click', () => { if (details) details.open = true; });
+    if (details && fieldset.querySelector('.errorlist')) details.open = true;
+    return { link, heading, fieldset, details, rows: [...fieldset.querySelectorAll('.form-row')] };
+  });
+  const normalize = (text) => text.toLowerCase().replace(/ي/g, 'ی').replace(/ك/g, 'ک').replace(/[\u200c\s]+/g, ' ').trim();
+  panel.hidden = false;
+  input.addEventListener('input', () => {
+    const words = normalize(input.value).split(' ').filter(Boolean);
+    let found = false;
+    for (const group of groups) {
+      const title = normalize(group.heading.textContent);
+      for (const row of group.rows) {
+        const label = normalize([...row.querySelectorAll('label')].map(label => label.textContent).join(' '));
+        row.hidden = !words.every(word => `${title} ${label}`.includes(word));
+      }
+      const visible = group.rows.some(row => !row.hidden);
+      group.fieldset.hidden = group.link.parentElement.hidden = !visible;
+      if (visible && words.length && group.details) group.details.open = true;
+      found ||= visible;
+    }
+    empty.hidden = found;
+  });
+});

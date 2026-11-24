@@ -137,8 +137,8 @@ html[dir="rtl"] { --hero-direction: to left; }
 
 /* Only the full-width overlay paints the scrolled header. */
 .site-shell .g-header[data-header-strip] {
-  --header-strip-base: color-mix(in srgb, var(--white) 96%, var(--header-strip-tint, var(--header-bg)));
-  --header-strip-text: color-mix(in srgb, var(--charcoal) 92%, var(--header-strip-ink, var(--header-text)));
+  --header-strip-base: var(--header-strip-tint, var(--site-theme-header-background, var(--white)));
+  --header-strip-text: var(--header-strip-ink, var(--header-text));
   --header-glass-opacity: clamp(60%, calc(var(--header-opacity) * 100% - 16%), 70%);
   color: var(--header-strip-text);
   background: transparent !important;
@@ -177,17 +177,17 @@ html[dir="rtl"] { --hero-direction: to left; }
   color: inherit;
 }
 .site-shell:has(.hero, .pd-hero, .editorial-page) .g-header[data-header-strip]:not(.scrolled) {
-  --header-strip-text: var(--white);
+  --header-strip-text: var(--header-hero-ink, var(--white));
+  --header-active-text: var(--header-hero-hover, var(--header-strip-text));
 }
 .site-shell:has(.hero, .pd-hero, .editorial-page) .g-header:not(.scrolled) .g-brand img {
   filter: brightness(0) invert(1);
 }
 .site-shell:has(.hero, .pd-hero, .editorial-page) .g-header:not(.scrolled) :is(.g-nav > a, .g-nav-parent, .g-nav-btn, .brand-text) {
-  color: var(--white);
   text-shadow: 0 1px 3px rgba(0, 0, 0, .75);
 }
 .site-shell:has(.hero, .pd-hero, .editorial-page) .g-header:not(.scrolled) :is(.g-nav > a, .g-nav-parent, .g-nav-btn)::after {
-  background: currentColor;
+  background: var(--header-strip-rule, currentColor);
 }
 .site-shell:has(.hero, .pd-hero, .editorial-page) .g-header:not(.scrolled) .g-header-content :focus-visible {
   outline-color: var(--white) !important;
@@ -209,7 +209,7 @@ html[dir="rtl"] { --hero-direction: to left; }
 
 .g-header .g-brand img { display: block; object-fit: contain; object-position: left center; }
 .g-header .g-brand .brand-text {
-  color: color-mix(in srgb, var(--charcoal) 92%, var(--header-brand-tint, var(--header-strip-ink, var(--header-text))));
+  color: var(--header-brand-tint, var(--header-strip-text));
   overflow-wrap: anywhere;
 }
 .g-header .g-logo-light-fallback { filter: brightness(0); }
@@ -221,15 +221,15 @@ html[dir="rtl"] { --hero-direction: to left; }
   padding: 0;
   border: 0;
   background: transparent;
-  color: color-mix(in srgb, var(--charcoal) 92%, var(--header-strip-toggle, var(--menu-line)));
+  color: var(--header-strip-toggle, var(--header-strip-text));
   list-style: none;
   cursor: pointer;
 }
 .g-header .g-toggle::-webkit-details-marker { display: none; }
 .g-header .g-toggle::marker { content: ""; }
-.site-shell:has(.hero, .pd-hero, .editorial-page) .g-header:not(.scrolled) .g-toggle { color: var(--white); }
+.site-shell:has(.hero, .pd-hero, .editorial-page) .g-header:not(.scrolled) .g-toggle { color: var(--header-strip-toggle, var(--header-strip-text)); }
 .site-shell .g-header .g-mobile-menu[open] .g-toggle {
-  background: color-mix(in srgb, var(--off-white) 94%, var(--header-toggle-tint, var(--white)));
+  background: var(--header-toggle-tint, var(--off-white));
   color: var(--charcoal);
 }
 .g-header .g-nav { gap: clamp(.625rem, 1.3vw, 1.375rem); }
@@ -247,10 +247,10 @@ html[dir="rtl"] { --hero-direction: to left; }
   transition: none;
 }
 .g-header :is(.g-nav > a, .g-nav-parent, .g-nav-btn):is(:hover, :focus-visible, .is-active, [aria-expanded="true"]) {
-  color: color-mix(in srgb, var(--charcoal) 92%, var(--header-strip-hover, var(--header-muted)));
+  color: var(--header-active-text, var(--header-strip-hover, var(--header-muted)));
 }
 .g-header :is(.g-nav > a, .g-nav-parent, .g-nav-btn)::after {
-  background: color-mix(in srgb, var(--charcoal) 80%, var(--header-strip-rule, currentColor));
+  background: var(--header-strip-rule, currentColor);
   bottom: var(--space-1);
 }
 .g-header :is(.g-sub, .g-mobile-panel) {
@@ -468,8 +468,10 @@ html[dir="rtl"] { --hero-direction: to left; }
 
 /* The footer shares the page container, button sizing and SiteTheme colors. */
 .site-shell .site-footer {
+  --footer-bg: var(--footer-surface-override, var(--site-theme-footer-background, var(--footer-charcoal)));
+  --footer-text: var(--footer-ink-override, var(--site-theme-footer-text, var(--theme-white)));
   --footer-muted: color-mix(in srgb, var(--footer-text) 75%, var(--footer-bg));
-  --footer-divider: color-mix(in srgb, var(--footer-text) 15%, var(--footer-bg));
+  --footer-divider: var(--footer-divider-override, color-mix(in srgb, var(--footer-text) 15%, var(--footer-bg)));
   background: var(--footer-bg) !important;
   background-image: none !important;
   color: var(--footer-text) !important;
@@ -568,9 +570,9 @@ html[dir="rtl"] .site-footer .footer-wordmark { object-position: right center; }
 .site-footer .footer-col > a:hover { color: var(--footer-text); text-decoration: underline; }
 
 .site-shell .site-footer .newsletter-form {
-  --newsletter-surface: color-mix(in srgb, var(--off-white) 94%, var(--newsletter-surface-tint, var(--white)));
-  --newsletter-ink: color-mix(in srgb, var(--charcoal) 85%, var(--newsletter-text-tint, var(--charcoal)));
-  --newsletter-action: color-mix(in srgb, var(--charcoal) 85%, var(--newsletter-action-tint, var(--charcoal)));
+  --newsletter-surface: var(--newsletter-surface-tint, var(--off-white));
+  --newsletter-ink: var(--newsletter-text-tint, var(--charcoal));
+  --newsletter-action: var(--newsletter-action-tint, var(--charcoal));
   position: relative;
   display: flex;
   align-items: stretch;
@@ -594,7 +596,7 @@ html[dir="rtl"] .site-footer .footer-wordmark { object-position: right center; }
   font-size: var(--font-label);
   text-align: match-parent;
 }
-.site-footer .newsletter-form input::placeholder { color: var(--graphite); opacity: 1; }
+.site-footer .newsletter-form input::placeholder { color: var(--newsletter-placeholder, var(--graphite)); opacity: 1; }
 .site-shell .site-footer .newsletter-form button {
   display: inline-flex;
   align-items: center;
@@ -604,11 +606,11 @@ html[dir="rtl"] .site-footer .footer-wordmark { object-position: right center; }
   flex: 0 0 auto;
   padding-inline: var(--space-3);
   background: var(--newsletter-action);
-  color: var(--white);
+  color: var(--newsletter-action-ink, var(--white));
   border: 0;
   cursor: pointer;
 }
-.site-shell .site-footer .newsletter-form button:hover { background: var(--graphite); }
+.site-shell .site-footer .newsletter-form button:hover { background: var(--newsletter-action-hover, var(--graphite)); }
 .newsletter-honeypot {
   position: absolute;
   inset: 0 auto auto 0;

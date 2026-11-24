@@ -4,5 +4,5 @@
   "baseline": "Complete GDCS ZIP; Django and Chromium checks on local fixture data",
   "active_task": null,
   "last_update": "2026-11-24",
-  "note": "GNT-024 completed after local verification on GNT-023. The gallery has translucent photo arrows and related projects has editable dark styling. Live deployment verification and historical GNT-005 tracking remain open."
+  "note": "GNT-025 completed after local verification on GNT-024. The CMS directory exposes searchable active theme and bilingual copy settings. The new interface-copy migration was tested. Live deployment verification and historical GNT-005 tracking remain open."
 }

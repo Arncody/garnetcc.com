@@ -559,5 +559,29 @@
       "2026-11-24: Chromium passed twelve FA/EN viewport configurations, physical arrow placement and direction, 44px targets, gestures, keyboard, single image, and inline fallbacks. Verified actual admin saves and scoped computed colors plus Django checks and production static collection."
     ],
     "rollback": "Restore the GNT-023 gallery and project presentation files."
+  },
+  {
+    "id": "GNT-025",
+    "priority": "P1",
+    "title": "Audit the CMS and connect public colors and copy to the admin",
+    "status": "done",
+    "depends_on": [
+      "GNT-024"
+    ],
+    "modules": [
+      "M01",
+      "M02",
+      "M03",
+      "M04"
+    ],
+    "acceptance": [
+      "Hide retired controls, keep stored settings and trace live sections from the theme admin",
+      "Fix theme cascading and wire visible bilingual interface copy",
+      "Verify admin writes, public rendering, reset, permissions and migration on fixtures"
+    ],
+    "verification_evidence": [
+      "2026-11-24: Verified 26 real admin color edits and bilingual text edits, reset, permissions, legacy data retention, 10 responsive Chromium contexts, both forms and persistence, Django checks, collectstatic and apply/revert/reapply of migration 0022."
+    ],
+    "rollback": "Restore GNT-024 source. New optional interface-copy column can stay through code rollback."
   }
 ]

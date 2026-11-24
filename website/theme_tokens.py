@@ -121,7 +121,7 @@ GROUPS = [
         Token("text_body", "متن عمومی سایت", CHARCOAL, "body.site-shell{color:{v}!important}"),
         Token("text_heading", "تیتر بخش‌ها و صفحه‌ها",
               CHARCOAL, ".compact-heading h1,.compact-heading h2,.compact-heading h3{color:{v}!important}"),
-        Token("text_section_link", "لینک «همه مقالات» و لینک‌های کنار تیتر", CHARCOAL,
+        Token("text_section_link", "پیوندهای کنار تیتر", CHARCOAL,
               ".compact-heading .section-link{color:{v}!important}"),
         Token("text_empty_state", "پیام‌های خالی (مثل «پروژه‌ای ثبت نشده»)", GRAPHITE,
               ".empty-state,.projects-block .empty-state{color:{v}!important}"),
@@ -142,7 +142,12 @@ GROUPS = [
         Token("header_cta_hover", "دکمه «درخواست مشاوره» — پس‌زمینه هنگام Hover", GRAPHITE,
               ".g-header .g-cta:hover{background:{v}!important;background-image:none!important;filter:none!important}"),
         Token("header_cta_text", "دکمه «درخواست مشاوره» — رنگ متن", WHITE, ".g-header .g-cta,.g-header .g-cta span{color:{v}!important}"),
-        Token("header_cta_border", "دکمه «درخواست مشاوره» — رنگ لبه", "rgba(255,255,255,.2)", ".g-header .g-cta{border-color:{v}!important}"),
+        Token("header_cta_border", "دکمه «درخواست مشاوره» — رنگ لبه", "rgba(255,255,255,.2)", ".g-header{--header-buy-border:{v}}"),
+        Token("header_hero_link", "رنگ منو و جست‌وجو پیش از اسکرول روی زمینه تیره", WHITE, ".g-header{--header-hero-ink:{v}}"),
+        Token("header_hero_hover", "رنگ گزینه فعال یا هاور روی زمینه تیره", WHITE, ".g-header{--header-hero-hover:{v}}"),
+        Token("header_buy_surface", "دکمه درخواست خرید — زمینه", "transparent", ".g-header{--header-buy-bg:{v}}"),
+        Token("header_buy_hover", "دکمه درخواست خرید — زمینه هنگام هاور", "rgba(255,255,255,.1)", ".g-header{--header-buy-hover:{v}}"),
+        Token("header_buy_ink", "دکمه درخواست خرید — نوشته", OFF_WHITE, ".g-header{--header-buy-ink:{v}}"),
         Token("header_dropdown_bg", "زیرمنوی پروژه‌ها (دسکتاپ) — پس‌زمینه", WHITE, ".g-header .g-sub{background:{v}!important}"),
         Token("header_dropdown_border", "زیرمنوی پروژه‌ها (دسکتاپ) — لبه", STONE, ".g-header .g-sub{border-color:{v}!important}"),
         Token("header_dropdown_text", "زیرمنوی پروژه‌ها (دسکتاپ) — متن", CHARCOAL, ".g-header .g-sub a{color:{v}!important}"),
@@ -164,6 +169,7 @@ GROUPS = [
         Token("panel_sub_bg", "زیرگزینه‌های پروژه‌ها در پنل — پس‌زمینه", "rgba(255,255,255,.1)", ".g-header .g-mobile-panel .g-panel-sub a{background:{v}!important}"),
     ]),
     Group("hero", "🎬 بخش اصلی (Hero) صفحه اصلی", "تیتر، توضیح و دکمه‌های روی تصویر/ویدیوی اول صفحه.", [
+        Token("hero_shade", "پوشش بالای تصویر یا ویدیوی اول", "rgba(0,0,0,.28)", ".g-home-hero{--home-hero-shade:{v}}"),
         Token("hero_title", "تیتر اصلی", "#FFFFFF", ".hero h1{color:{v}!important}"),
         Token("hero_text", "متن زیر تیتر", "rgba(255,255,255,.78)", ".hero .hero-copy>p{color:{v}!important}"),
         Token("hero_btn_text", "متن دکمه‌های شیشه‌ای Hero", WHITE, ".hero .hero-action-link{color:{v}!important}"),
@@ -171,8 +177,8 @@ GROUPS = [
         Token("home_glass_border", "لبه دکمه‌های روی ویدیو", "rgba(255,255,255,.52)", ".g-home-hero{--home-glass-border:{v}}"),
         Token("hero_btn_hover", "دکمه‌های Hero هنگام Hover", "rgba(255,255,255,.24)", ".hero .hero-action-link:hover{background:{v}!important}"),
     ]),
-    Group("preview_cards", "🏗️ کارت‌های پیش‌نمایش پروژه و مقاله (صفحه اصلی، جزئیات پروژه، لیست مقالات)",
-          "کارت‌هایی که روی تصویر نوشته دارند؛ شامل وضعیت، عنوان، موقعیت و دکمه‌ی مشاهده.", [
+    Group("preview_cards", "🏗️ کارت‌های پیش‌نمایش پروژه در صفحه اصلی",
+          "وضعیت، عنوان، موقعیت و دکمه مشاهدهٔ کارت‌های صفحه اصلی.", [
         Token("card_bg", "زمینه کارت (پشت تصویر / وقتی تصویر ندارد) — هماهنگ با بخش درباره گارنت", OFF_WHITE,
               ".mini-project.project-preview{background:{v}!important;background-image:none!important}"),
         Token("card_shadow", "سایه کارت‌های پیش‌نمایش (برای حذف سایه rgba(0,0,0,0) وارد کنید)", "rgba(0,0,0,0)",
@@ -183,13 +189,13 @@ GROUPS = [
         Token("card_status_ongoing_dot", "نشان «در حال اجرا» — نقطه", "#2CF08A", ".mini-project.project-preview .pc-status.pc-ongoing i{background:{v}!important;box-shadow:0 0 9px {v}!important}"),
         Token("card_status_completed_bg", "نشان «به اتمام رسیده» — پس‌زمینه", "rgba(30,52,82,.5)", ".mini-project.project-preview .pc-status.pc-completed{background:{v}!important}"),
         Token("card_status_completed_dot", "نشان «به اتمام رسیده» — نقطه", "#7CC4FF", ".mini-project.project-preview .pc-status.pc-completed i{background:{v}!important;box-shadow:0 0 9px {v}!important}"),
-        Token("card_status_text", "متن نشان وضعیت / دسته مقاله", "#FFFFFF", ".mini-project.project-preview .pc-status{color:{v}!important}"),
+        Token("card_status_text", "متن نشان وضعیت", "#FFFFFF", ".mini-project.project-preview .pc-status{color:{v}!important}"),
         Token("card_btn_bg", "دکمه «مشاهده» — پس‌زمینه", WHITE, ".mini-project.project-preview .pc-view{background:{v}!important}"),
         Token("card_btn_text", "دکمه «مشاهده» — متن و فلش", CHARCOAL,
               ".mini-project.project-preview .pc-view,.mini-project.project-preview .pc-view span,.mini-project.project-preview .pc-view em,.mini-project.project-preview .pc-view svg{color:{v}!important;stroke:{v}!important}"),
         Token("card_btn_circle", "دایره‌ی فلش در دکمه «مشاهده»", "#FFFFFF", ".mini-project.project-preview .pc-view em{background:{v}!important}"),
     ]),
-    Group("rail_buttons", "⏩ دکمه‌های ردیف پروژه‌ها", "دکمه «مشاهده همه پروژه‌ها» و فلش‌های چپ/راست ردیف چرخان.", [
+    Group("rail_buttons", "دکمه مشاهده همه پروژه‌ها", "رنگ پیوند فهرست پروژه‌ها در صفحه اصلی.", [
         Token("all_btn_bg", "دکمه «مشاهده همه پروژه‌ها» — پس‌زمینه", "transparent",
               ".all-projects-btn{background:{v}!important;background-image:none!important}"),
         Token("all_btn_icon", "دکمه «مشاهده همه پروژه‌ها» — متن و آیکون", CHARCOAL, ".all-projects-btn{color:{v}!important}"),
@@ -263,6 +269,16 @@ GROUPS = [
             ("related_ink", "پروژه‌های بیشتر — رنگ متن و دکمه", OFF_WHITE),
         )
     ]),
+    Group("gallery", "نمایشگر عکس پروژه", "رنگ پنجره، نوشته و دکمه‌های جابه‌جایی عکس.", [
+        Token("gallery_surface", "زمینه قاب و نوار پایین", CHARCOAL, ".project-gallery-viewer{--viewer-surface:{v}}"),
+        Token("gallery_ink", "رنگ عنوان عکس", OFF_WHITE, ".project-gallery-viewer{--viewer-ink:{v}}"),
+        Token("gallery_muted", "رنگ توضیح و شمارنده عکس", "#CCC9C1", ".project-gallery-viewer{--viewer-muted:{v}}"),
+        Token("gallery_veil", "رنگ پرده پشت نمایشگر", "rgba(20,20,20,.86)", ".project-gallery-viewer::backdrop{background:{v}}"),
+        Token("gallery_arrow_bg", "پس‌زمینه فلش‌های چپ و راست", "rgba(20,20,20,.55)", ".project-gallery-viewer{--viewer-arrow-bg:{v}}"),
+        Token("gallery_arrow_ink", "رنگ فلش‌ها", OFF_WHITE, ".project-gallery-viewer{--viewer-arrow-ink:{v}}"),
+        Token("gallery_close_bg", "پس‌زمینه دکمه بستن", "rgba(20,20,20,.8)", ".project-gallery-viewer{--viewer-close-bg:{v}}"),
+        Token("gallery_close_ink", "رنگ ضربدر بستن", OFF_WHITE, ".project-gallery-viewer{--viewer-close-ink:{v}}"),
+    ]),
     Group("editorial_pages", "رنگ صفحه درباره گارنت",
           "رنگ‌های محتوای صفحه درباره گارنت. هدر و فوتر از کنترل‌های مشترک خود استفاده می‌کنند.", [
         Token("editorial_canvas", "رنگ زمینه و انتهای تصویر آغاز صفحه", "#101411", ".editorial-about{--ed-theme-canvas:{v}}"),
@@ -271,9 +287,34 @@ GROUPS = [
         Token("editorial_muted", "رنگ توضیحات", "#C1C8BF", ".editorial-about{--ed-theme-muted:{v}}"),
         Token("editorial_accent", "رنگ تأکیدی و نوار پیشرفت", "#C6BCA9", ".editorial-about{--ed-theme-accent:{v}}"),
     ]),
+    Group("about_sections", "رنگ بخش‌های صفحه درباره گارنت",
+          "زمینه، تیتر و توضیح هر بخش به‌صورت جداگانه. فیلد خالی از پالت صفحه درباره استفاده می‌کند.", [
+        Token(f"about_{key}_{part}", f"{label} — {part_label}", color,
+              f".editorial-about [data-about-section={key}]{{{property_name}:{{v}}}}")
+        for key, label in (
+            ("story", "داستان برند"), ("philosophy", "فلسفه و تصویر"),
+            ("principles", "اصول"), ("quote", "نقل‌قول"), ("cta", "بخش پایانی"),
+        )
+        for part, part_label, color, property_name in (
+            ("bg", "زمینه", "#101411", "--about-band-bg"),
+            ("ink", "تیتر و دکمه", "#F4F3EF", "--ed-ink"),
+            ("muted", "توضیحات", "#C1C8BF", "--ed-muted"),
+        )
+    ]),
+    Group("project_controls", "جست‌وجو، کارت‌ها و پیشرفت پروژه",
+          "رنگ عناصر داخل فهرست و صفحه جزئیات پروژه.", [
+        Token("project_search_bg", "زمینه فیلد جست‌وجو", "#F4F1EA", ".editorial-portfolio .ed-project-search{--search-surface:{v}}"),
+        Token("project_search_ink", "متن فیلد جست‌وجو", CHARCOAL, ".editorial-portfolio .ed-project-search{--search-ink:{v}}"),
+        Token("project_search_placeholder", "راهنمای فیلد جست‌وجو", GRAPHITE, ".editorial-portfolio .ed-project-search{--search-placeholder:{v}}"),
+        Token("project_search_border", "لبه فیلد جست‌وجو", STONE, ".editorial-portfolio .ed-project-search{--search-border:{v}}"),
+        Token("project_card_badge_bg", "زمینه نشان وضعیت و کد پروژه", CHARCOAL, ".editorial-portfolio,.editorial-detail{--project-badge-bg:{v}}"),
+        Token("project_card_badge_ink", "متن نشان وضعیت و کد پروژه", OFF_WHITE, ".editorial-portfolio,.editorial-detail{--project-badge-ink:{v}}"),
+        Token("project_progress_surface", "زمینه کادر پیشرفت اجرایی", CHARCOAL, ".editorial-detail .ed-progress{--project-progress-surface:{v}}"),
+        Token("project_progress_fill", "رنگ خط پیشرفت و عدد درصد", OFF_WHITE, ".editorial-detail .ed-progress{--ed-accent:{v}}"),
+    ]),
     Group("footer", "⬛ فوتر (پایین سایت)", "رنگ زمینه، تیترها، لینک‌ها، آیکون‌ها و فرم خبرنامه.", [
-        Token("footer_bg", "پس‌زمینه فوتر", PALETTE["footer-charcoal"], ".site-footer{background:{v}!important;background-image:none!important}"),
-        Token("footer_text", "متن‌های فوتر", "#FFFFFF", ".site-footer{color:{v}!important}"),
+        Token("footer_bg", "پس‌زمینه فوتر", PALETTE["footer-charcoal"], ".site-footer{--footer-surface-override:{v}}"),
+        Token("footer_text", "متن‌های فوتر", "#FFFFFF", ".site-footer{--footer-ink-override:{v}}"),
         Token("footer_heading", "تیترهای ستون‌های فوتر", "#FFFFFF", ".site-footer .footer-col h2{color:{v}!important}"),
         Token("footer_link", "لینک‌ها و متن ستون‌ها", "rgba(255,255,255,.66)",
               ".site-footer .footer-grid-reference .footer-col-body>a,.site-footer .footer-grid-reference .footer-col-body>p{color:{v}!important}"),
@@ -287,6 +328,10 @@ GROUPS = [
         Token("footer_news_bg", "فرم خبرنامه — پس‌زمینه", "#FFFFFF", ".site-footer .newsletter-form{--newsletter-surface-tint:{v}}"),
         Token("footer_news_text", "فرم خبرنامه — رنگ متن ایمیل", CHARCOAL, ".site-footer .newsletter-form{--newsletter-text-tint:{v}}"),
         Token("footer_news_btn", "فرم خبرنامه — دکمه ثبت", CHARCOAL, ".site-footer .newsletter-form{--newsletter-action-tint:{v}}"),
+        Token("footer_news_placeholder", "فرم خبرنامه — رنگ راهنمای ایمیل", GRAPHITE, ".site-footer .newsletter-form{--newsletter-placeholder:{v}}"),
+        Token("footer_news_btn_text", "فرم خبرنامه — نوشته و فلش دکمه", WHITE, ".site-footer .newsletter-form{--newsletter-action-ink:{v}}"),
+        Token("footer_news_btn_hover", "فرم خبرنامه — رنگ هاور دکمه", GRAPHITE, ".site-footer .newsletter-form{--newsletter-action-hover:{v}}"),
+        Token("footer_divider", "خط بین ستون‌ها و بخش‌های فوتر", "rgba(255,255,255,.15)", ".site-footer{--footer-divider-override:{v}}"),
         Token("footer_bottom_text", "نوار پایین فوتر (کپی‌رایت و زبان)", "rgba(255,255,255,.66)", ".site-footer .footer-bottom,.site-footer .footer-bottom small,.site-footer .footer-bottom a{color:{v}!important}"),
         Token("footer_bottom_line", "خط بالای نوار پایین فوتر", "rgba(255,255,255,.09)", ".site-footer .footer-bottom{border-top-color:{v}!important}"),
     ]),
@@ -358,9 +403,11 @@ RETIRED_DECORATIONS = frozenset({
     "about_card_bg", "about_btn_main_bg", "about_btn_main_text",
     "header_cta_bg", "header_cta_hover", "header_cta_text", "all_btn_bg", "rail_nav_bg", "rail_nav_icon",
     "page_projects_bg", "page_project_detail_bg", "back_btn_bg", "back_btn_text",
+    "text_section_link", "footer_contact_icon", "shadow_surfaces", "shadow_project_cards",
 } | {token.key for group in GROUPS if group.key in {"projects_page", "project_detail"} for token in group.tokens})
 
 ALL_TOKENS = [t for g in GROUPS for t in g.tokens]
+ACTIVE_TOKENS = tuple(token for token in ALL_TOKENS if token.key not in RETIRED_DECORATIONS)
 TOKENS_BY_KEY = {t.key: t for t in ALL_TOKENS}
 MODAL_TOKENS = {token.key for group in GROUPS if group.key == "modal" for token in group.tokens}
 # Keep saved colors from the older modal for rollback without applying them to the new controls.
@@ -412,13 +459,13 @@ def build_theme_css(raw_overrides):
     """CSS نهایی تنظیمات ظاهری از قالب‌های ثابت و مقدارهای اعتبارسنجی‌شده."""
     overrides = clean_overrides(raw_overrides)
     chunks = []
-    for token in ALL_TOKENS:  # ترتیب ثابت = خروجی قابل پیش‌بینی
+    for token in ACTIVE_TOKENS:  # ترتیب ثابت = خروجی قابل پیش‌بینی
         value = overrides.get(token.key)
         if value is None and token.key in MODAL_TOKENS:
             value = token.default
             if token.key == "request_shadow":
                 value = f"var(--request-legacy-shadow,{value})"
-        if value is None or token.key in RETIRED_DECORATIONS:
+        if value is None:
             continue
         for rule in token.rules:
             chunks.append(_render_rule(rule, value))

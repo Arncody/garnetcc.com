@@ -15,7 +15,7 @@
         {% endif %}
         <figure class="project-gallery-tile" id="project-gallery-image-{{ image.pk }}">
           <a class="project-gallery-preview" href="#project-gallery-image-{{ image.pk }}" data-gallery-image
-             aria-label="{% if is_en %}Enlarge{% else %}بزرگ‌نمایی{% endif %} — {{ image_label }}">
+             aria-label="{{ T.gallery_enlarge }} — {{ image_label }}">
             <img src="{{ image.image.url }}" alt="{{ image_label }}" loading="lazy" decoding="async">
             <span class="project-gallery-enlarge" aria-hidden="true">{% icon "arrow-up-right" 18 %}</span>
           </a>
@@ -25,28 +25,27 @@
             {% if description %}<span data-gallery-description>{{ description }}</span>{% endif %}
           </figcaption>
           {% endif %}
-          <a class="project-gallery-collapse" data-gallery-collapse href="#project-gallery">{% if is_en %}Collapse photo{% else %}کوچک‌کردن عکس{% endif %}</a>
+          <a class="project-gallery-collapse" data-gallery-collapse href="#project-gallery">{{ T.gallery_collapse }}</a>
         </figure>
       {% endif %}
     {% endfor %}
   </div>
 
   <dialog class="project-gallery-viewer" id="project-gallery-viewer" aria-label="{{ T.project_gallery_title }}"
-          data-gallery-total-label="{% if is_en %}of{% else %}از{% endif %}">
+          data-gallery-total-label="{{ T.gallery_of }}">
     <p class="sr-only" id="gallery-navigation-help">
-      {% if is_en %}Use the arrow buttons or keys, swipe, or drag the photo to browse.
-      {% else %}برای جابه‌جایی، از فلش‌ها یا کلیدهای جهت‌دار استفاده کنید یا عکس را بکشید.{% endif %}
+      {{ T.gallery_help }}
     </p>
     <div class="project-viewer-frame">
       <form class="project-viewer-close" method="dialog">
-        <button type="submit" data-gallery-close autofocus aria-label="{% if is_en %}Close{% else %}بستن{% endif %}"><span aria-hidden="true">×</span></button>
+        <button type="submit" data-gallery-close autofocus aria-label="{{ T.close_label }}"><span aria-hidden="true">×</span></button>
       </form>
       <div class="project-viewer-stage" data-gallery-stage>
         <img alt="" draggable="false" decoding="async">
         <button type="button" class="project-viewer-arrow" data-gallery-step="-1" hidden
-                aria-label="{% if is_en %}Previous photo{% else %}عکس بعدی{% endif %}"></button>
+                aria-label="{% if is_en %}{{ T.gallery_previous }}{% else %}{{ T.gallery_next }}{% endif %}"></button>
         <button type="button" class="project-viewer-arrow" data-gallery-step="1" hidden
-                aria-label="{% if is_en %}Next photo{% else %}عکس قبلی{% endif %}"></button>
+                aria-label="{% if is_en %}{{ T.gallery_next }}{% else %}{{ T.gallery_previous }}{% endif %}"></button>
       </div>
       <div class="project-viewer-caption" role="status" aria-atomic="true">
         <div>

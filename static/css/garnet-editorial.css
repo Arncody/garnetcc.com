@@ -96,10 +96,10 @@
 .ed-band {
   position: relative;
   padding-block: clamp(2.75rem, 6vw, 6.5rem);
-  background: radial-gradient(ellipse 70% 66% at 72% 45%, var(--ed-volume), transparent 90%);
+  background: var(--about-band-bg, radial-gradient(ellipse 70% 66% at 72% 45%, var(--ed-volume), transparent 90%));
 }
 .ed-band-alt {
-  background: radial-gradient(ellipse 70% 66% at 23% 52%, var(--ed-volume), transparent 90%);
+  background: var(--about-band-bg, radial-gradient(ellipse 70% 66% at 23% 52%, var(--ed-volume), transparent 90%));
 }
 .ed-band + .ed-band { border-block-start: 1px solid var(--ed-rule); }
 
@@ -116,7 +116,7 @@
   display: flex;
   inline-size: min(100%, 24rem);
   min-inline-size: 0;
-  border: 1px solid var(--ed-rule);
+  border: 1px solid var(--search-border, var(--ed-rule));
   background: color-mix(in srgb, var(--ed-volume) 34%, var(--ed-canvas));
   color-scheme: dark;
 }
@@ -126,7 +126,7 @@
   border: 0;
   border-radius: 0;
   background: transparent;
-  color: var(--ed-ink);
+  color: var(--search-ink, var(--ed-ink));
 }
 .ed-project-search input {
   flex: 1;
@@ -135,7 +135,7 @@
   font: inherit;
   font-size: 1rem;
 }
-.ed-project-search input::placeholder { color: var(--ed-muted); opacity: 1; }
+.ed-project-search input::placeholder { color: var(--search-placeholder, var(--ed-muted)); opacity: 1; }
 .ed-project-search button {
   display: grid;
   place-items: center;
@@ -216,8 +216,8 @@
 .ed-status, .ed-project-code, .ed-detail-cover figcaption {
   position: absolute;
   padding: .3rem .65rem;
-  background: rgba(10, 13, 11, .84);
-  color: #f4f3ef;
+  background: var(--project-badge-bg, rgba(10, 13, 11, .84));
+  color: var(--project-badge-ink, #f4f3ef);
   font-size: .8125rem;
 }
 .ed-status { inset-block-start: .875rem; inset-inline-start: .875rem; }
@@ -268,7 +268,7 @@
   margin-block: clamp(1rem, 2.5vw, 1.5rem);
   padding: clamp(.85rem, 2.4vw, 1.25rem);
   border: 1px solid var(--ed-rule);
-  background: color-mix(in srgb, var(--ed-volume) 38%, var(--ed-canvas));
+  background: var(--project-progress-surface, color-mix(in srgb, var(--ed-volume) 38%, var(--ed-canvas)));
 }
 .ed-progress-head { align-items: baseline; flex-wrap: wrap; }
 .ed-progress-head h2 { margin: 0; font-size: clamp(.95rem, 2vw, 1.15rem); line-height: 1.5; }

@@ -4,7 +4,7 @@
 {% endcomment %}
 {% if rail and projects|length > 1 %}
 <div class="proj-rail-wrap">
-<div class="proj-rail" data-rail tabindex="0" data-speed="{{ site_settings.projects_carousel_speed }}" role="region" aria-label="{% if is_en %}Projects{% else %}پروژه‌ها{% endif %}">
+<div class="proj-rail" data-rail tabindex="0" data-speed="{{ site_settings.projects_carousel_speed }}" role="region" aria-label="{{ T.project_collection }}">
   <div class="proj-rail-track" data-rail-track>
     {% for project in projects %}{% include "website/_project_card.html" with project=project %}{% endfor %}
   </div>

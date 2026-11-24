@@ -3,14 +3,14 @@
 {% block meta_description %}{% if is_en %}{{ project.short_description_en|default:project.short_description }}{% else %}{{ project.short_description }}{% endif %}{% endblock %}
 {% block extra_head %}
   {{ block.super }}
-  {% if gallery %}<link rel="stylesheet" href="{% static 'css/project-gallery.css' %}?v=GNT-024">{% endif %}
+  {% if gallery %}<link rel="stylesheet" href="{% static 'css/project-gallery.css' %}?v=GNT-025">{% endif %}
 {% endblock %}
 {% block editorial_page_class %}editorial-detail{% endblock %}
 {% block editorial_content %}
 <section class="ed-band ed-detail-intro" aria-labelledby="project-title">
   <div class="container ed-detail-grid">
     <div class="ed-detail-copy">
-      <a class="ed-text-link" href="{% url 'website:projects_list' %}">{% if is_en %}Projects{% else %}پروژه‌ها{% endif %}</a>
+      <a class="ed-text-link" href="{% url 'website:projects_list' %}">{{ T.project_collection }}</a>
       {% if project.badge_text or project.badge_text_en %}
         <p class="ed-kicker">{% if is_en %}{{ project.badge_text_en|default:project.badge_text }}{% else %}{{ project.badge_text }}{% endif %}</p>
       {% endif %}
@@ -19,16 +19,16 @@
         <p class="ed-body">{% if is_en %}{{ project.short_description_en|default:project.short_description }}{% else %}{{ project.short_description }}{% endif %}</p>
       {% endif %}
       <dl class="ed-facts">
-        {% if project.code %}<div><dt>{% if is_en %}Project code{% else %}کد پروژه{% endif %}</dt><dd><bdi>{{ project.code }}</bdi></dd></div>{% endif %}
-        {% if project.location or project.location_en %}<div><dt>{% if is_en %}Location{% else %}موقعیت{% endif %}</dt><dd>{% if is_en %}{{ project.location_en|default:project.location }}{% else %}{{ project.location }}{% endif %}</dd></div>{% endif %}
-        <div><dt>{% if is_en %}Status{% else %}وضعیت پروژه{% endif %}</dt><dd>{% if project.status == 'completed' %}{% if is_en %}Completed{% else %}تکمیل‌شده{% endif %}{% else %}{% if is_en %}In progress{% else %}در حال اجرا{% endif %}{% endif %}</dd></div>
-        {% if project.year %}<div><dt>{% if is_en %}Year{% else %}سال{% endif %}</dt><dd><bdi>{{ project.year|unlocalize }}</bdi></dd></div>{% endif %}
+        {% if project.code %}<div><dt>{{ T.project_code }}</dt><dd><bdi>{{ project.code }}</bdi></dd></div>{% endif %}
+        {% if project.location or project.location_en %}<div><dt>{{ T.project_location }}</dt><dd>{% if is_en %}{{ project.location_en|default:project.location }}{% else %}{{ project.location }}{% endif %}</dd></div>{% endif %}
+        <div><dt>{{ T.project_status }}</dt><dd>{% if project.status == 'completed' %}{{ T.status_completed }}{% else %}{{ T.status_ongoing }}{% endif %}</dd></div>
+        {% if project.year %}<div><dt>{{ T.project_year }}</dt><dd><bdi>{{ project.year|unlocalize }}</bdi></dd></div>{% endif %}
       </dl>
 
       {% if project.progress_percent is not None or project.status_note or project.status_note_en %}
       <section class="ed-progress" aria-labelledby="project-progress-title">
         <div class="ed-progress-head">
-          <h2 id="project-progress-title">{% if is_en %}Construction progress{% else %}پیشرفت اجرایی{% endif %}</h2>
+          <h2 id="project-progress-title">{{ T.project_progress }}</h2>
           {% if project.progress_percent is not None %}
             <bdi class="ed-progress-value" aria-hidden="true">{{ project.progress_percent|unlocalize }}<span>%</span></bdi>
           {% endif %}
@@ -38,7 +38,7 @@
         {% endif %}
         {% if project.status_note or project.status_note_en %}
           <dl class="ed-progress-stage">
-            <dt>{% if is_en %}Current stage{% else %}مرحلهٔ فعلی{% endif %}</dt>
+            <dt>{{ T.project_current_stage }}</dt>
             <dd>{% if is_en %}{{ project.status_note_en|default:project.status_note }}{% else %}{{ project.status_note }}{% endif %}</dd>
           </dl>
         {% endif %}

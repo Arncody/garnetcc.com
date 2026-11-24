@@ -29,5 +29,6 @@
 | GNT-022 | P1 | Refine the project portfolio, project pages and gallery · requires GNT-021 | done |
 | GNT-023 | P2 | Simplify the project photo viewer · requires GNT-022 | done |
 | GNT-024 | P2 | Add subtle gallery navigation and an editable related-projects surface · requires GNT-023 | done |
+| GNT-025 | P1 | Audit the CMS and connect public colors and copy · requires GNT-024 | done |
 
 Only one task active. Changes to this list are not automatically complete tasks.

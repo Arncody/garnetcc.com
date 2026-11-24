@@ -58,3 +58,12 @@ The shared request dialog uses translucent off-white glass from the site palette
 The shared template includes the dialog styles with its markup. SiteTheme → «فرم ثبت درخواست» controls the active colors, transparency, blur, sizes and spacing. Earlier saved form colors are retained for rollback. The current palette is editable independently. Use Site Texts for bilingual headings, labels, hints, options and the submit label.
 
 The request form accepts Latin, Persian and Arabic-Indic digits, local and Iranian country-code formats, spaces and dashes. Django defines the accepted pattern for both the browser and server. Requests are saved with Latin digits in local format. Invalid numbers keep their original text and display field feedback.
+
+
+## Appearance and content administration
+
+Open «پوسته و طراحی سایت» or «متن‌های عنوان‌ها و فرم» to use the shared «پوسته و محتوا» directory. Search by section or field name and use the section links to jump to settings. The directory links to the original content models according to the account's permissions. Titles and descriptions unique to a page, project or gallery photo continue to be edited on that record. Shared labels, empty states, feedback and accessibility text have separate FA and EN values in SiteTexts. Clearing a field restores the default for that language.
+
+Use the appearance sections for the two header states, the purchase button, the home introduction and preview cards, search, project progress, gallery controls, related projects, About sections, the request form and footer. The header retains its opacity and the saved tint feeds that surface directly. Newsletter colors and the section-specific overrides apply to their own controls. Older inactive settings are no longer presented as editable and their stored values survive a save.
+
+Migration `0022_sitetexts_interface_copy` adds a JSON field for the shared labels. Run `python manage.py migrate --noinput` before restarting the application after deployment. The file patch also removes six unreferenced legacy CSS, JavaScript and templates.

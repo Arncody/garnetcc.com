@@ -9,9 +9,10 @@
 - `website/admin.py`: editable CMS/admin experience.
 - `website/context_processors.py`: global template context.
 - `website/theme_tokens.py`: theme tokens/visual settings.
+- `website/interface_copy.py`: bilingual defaults for shared interface labels and feedback.
 - `website/media_views.py`, `website/storage.py`: media delivery/storage behavior.
 - `website/sitemaps.py`: sitemap generation.
-- `website/migrations/0001..0021`: schema history, including the article archive and editable portfolio/About content, search labels and catalogue visibility.
+- `website/migrations/0001..0022`: schema history, including the article archive and editable portfolio/About content, search labels and catalogue visibility.
 - `templates/website/`: shared shell, home, About, project pages and cards.
 - `static/css/`: style.css, garnet-ui.css, admin styles and others.
 - `static/js/main.js`: frontend behavior; additional admin scripts.

@@ -3,7 +3,7 @@
 <html lang="{% if is_en %}en{% else %}fa{% endif %}" dir="{% if is_en %}ltr{% else %}rtl{% endif %}">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>{% block title %}{% if is_en %}{{ site_settings.brand_name }} | Luxury Architecture & Development{% else %}{{ site_settings.meta_title|default:"گارنت | معماری و ساخت لوکس" }}{% endif %}{% endblock %}</title>
+<title>{% block title %}{% if is_en or not site_settings.meta_title %}{{ site_settings.brand_name }} | {{ T.home_title_suffix }}{% else %}{{ site_settings.meta_title }}{% endif %}{% endblock %}</title>
 <meta name="description" content="{% block meta_description %}{{ site_settings.meta_description }}{% endblock %}">
 <link rel="canonical" href="{{ request.build_absolute_uri }}">
 <meta name="theme-color" content="{{ theme_background }}">
@@ -13,7 +13,7 @@
 <link rel="apple-touch-icon" href="{{ site_settings.favicon.url }}">{% else %}<link rel="icon" href="{% url 'website:favicon' %}">{% endif %}
 <meta property="og:site_name" content="{{ site_settings.brand_name }}"><meta property="og:type" content="website"><meta property="og:url" content="{{ request.build_absolute_uri }}">{% if site_settings.logo %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ site_settings.logo.url }}">{% endif %}
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"{{ site_settings.brand_name|escapejs }}","legalName":"{{ site_settings.legal_name|escapejs }}","url":"{{ request.scheme }}://{{ request.get_host }}/"{% if site_settings.logo %},"logo":"{{ request.scheme }}://{{ request.get_host }}{{ site_settings.logo.url }}"{% endif %}{% if site_settings.instagram_url or site_settings.linkedin_url %},"sameAs":[{% if site_settings.instagram_url %}"{{ site_settings.instagram_url|escapejs }}"{% endif %}{% if site_settings.instagram_url and site_settings.linkedin_url %},{% endif %}{% if site_settings.linkedin_url %}"{{ site_settings.linkedin_url|escapejs }}"{% endif %}]{% endif %}}</script>
-<link rel="stylesheet" href="{% static 'css/fonts.css' %}"><link rel="stylesheet" href="{% static 'css/style.css' %}?v=GNT-018">
+<link rel="stylesheet" href="{% static 'css/fonts.css' %}"><link rel="stylesheet" href="{% static 'css/style.css' %}?v=GNT-025">
 <style id="garnet-theme">
 :root{
  {% for key, value in theme_palette.items %}--{{ key }}:{{ value }};{% endfor %}
@@ -41,13 +41,13 @@ small,.small{font-weight:var(--small-weight)}
 {{ theme_css|safe }}
 </style>{% endif %}
 <link rel="stylesheet" href="{% static 'css/garnet-ui.css' %}?v=GNT-016">
-<link rel="stylesheet" href="{% static 'css/design-system.css' %}?v=GNT-018">
-<link rel="stylesheet" href="{% static 'css/garnet-presentation.css' %}?v=GNT-014">
+<link rel="stylesheet" href="{% static 'css/design-system.css' %}?v=GNT-025">
+<link rel="stylesheet" href="{% static 'css/garnet-presentation.css' %}?v=GNT-025">
 {% include "website/_consultation_styles.html" %}
 {% if site_theme.custom_css %}<style id="garnet-custom-css">{{ site_theme.custom_css|safe }}</style>{% endif %}
 </head>
 <body class="site-shell{% if request.resolver_match.view_name == 'website:home' %} site-home{% endif %}">
-<a class="skip-link" href="#main-content">{% if is_en %}Skip to content{% else %}رفتن به محتوای اصلی{% endif %}</a>
+<a class="skip-link" href="#main-content">{{ T.skip_content }}</a>
 <header class="g-header" data-header-strip>
   <div class="g-header-inner">
     <div class="g-header-content">
@@ -60,7 +60,7 @@ small,.small{font-weight:var(--small-weight)}
           <span class="brand-text">{{ site_settings.brand_name }}</span>
         {% endif %}
       </a>
-      <nav class="g-nav" dir="{% if is_en %}ltr{% else %}rtl{% endif %}" aria-label="{% if is_en %}Main{% else %}منوی اصلی{% endif %}">
+      <nav class="g-nav" dir="{% if is_en %}ltr{% else %}rtl{% endif %}" aria-label="{{ T.nav_main }}">
         {% for item in menu_items %}{% if item.consult %}<button type="button" class="g-nav-btn" data-consult-open>{{ item.label }}</button>{% elif item.children %}<div class="g-nav-group" data-nav-group>
           <a href="{{ item.url }}" class="g-nav-parent{% if item.active %} is-active{% endif %}"{% if item.active %} aria-current="page"{% endif %} aria-expanded="false" aria-controls="desktop-submenu-{{ forloop.counter }}" data-nav-parent>{{ item.label }}<svg class="g-chev" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></a>
           <div class="g-sub" id="desktop-submenu-{{ forloop.counter }}">{% for child in item.children %}<a href="{{ child.url }}">{{ child.label }}</a>{% endfor %}</div>
@@ -70,8 +70,8 @@ small,.small{font-weight:var(--small-weight)}
         <a class="g-search-control" href="{% url 'website:projects_list' %}#project-search" aria-label="{{ T.project_search_label }}" title="{{ T.project_search_label }}">{% icon "search" 21 %}</a>
         <button type="button" class="g-cta" title="{{ T.consultation_button_text }}" data-consult-open><span dir="auto">{{ T.consultation_button_text }}</span></button>
         <details class="g-mobile-menu" id="mobile-menu">
-          <summary class="g-toggle" id="nav-toggle" aria-label="{% if is_en %}Menu{% else %}منو{% endif %}" aria-controls="main-nav">{% icon "menu" 24 %}</summary>
-          <nav class="g-mobile-panel" id="main-nav" dir="{% if is_en %}ltr{% else %}rtl{% endif %}" aria-label="{% if is_en %}Menu{% else %}منو{% endif %}">
+          <summary class="g-toggle" id="nav-toggle" aria-label="{{ T.nav_menu }}" aria-controls="main-nav">{% icon "menu" 24 %}</summary>
+          <nav class="g-mobile-panel" id="main-nav" dir="{% if is_en %}ltr{% else %}rtl{% endif %}" aria-label="{{ T.nav_menu }}">
             {% for item in menu_items %}{% if item.consult %}<button type="button" class="g-panel-btn" data-consult-open>{{ item.label }}</button>{% elif item.children %}<div class="g-panel-group" data-panel-group>
               <a href="{{ item.url }}" class="g-panel-parent{% if item.active %} is-active{% endif %}"{% if item.active %} aria-current="page"{% endif %} aria-expanded="false" aria-controls="mobile-submenu-{{ forloop.counter }}" data-panel-parent><span>{{ item.label }}</span><svg class="g-chev" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></a>
               <div class="g-panel-sub" id="mobile-submenu-{{ forloop.counter }}" hidden>{% for child in item.children %}<a href="{{ child.url }}">{{ child.label }}</a>{% endfor %}</div>
@@ -88,7 +88,7 @@ small,.small{font-weight:var(--small-weight)}
 </main>
 {% include "website/_consultation.html" with consult_form=form|default:consultation_form %}
 {% include "website/_footer.html" %}
-<a class="floating-call" href="tel:{{ site_settings.phone }}" aria-label="{% if is_en %}Call Garnet{% else %}تماس با گارنت{% endif %}">{% icon "phone" 22 %}</a>
-<script src="{% static 'js/main.js' %}?v=GNT-022" defer></script>
+<a class="floating-call" href="tel:{{ site_settings.phone }}" aria-label="{{ T.call_label }}">{% icon "phone" 22 %}</a>
+<script src="{% static 'js/main.js' %}?v=GNT-025" defer></script>
 {% block extra_scripts %}{% endblock %}
 </body></html>

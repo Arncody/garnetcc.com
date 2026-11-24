@@ -2,7 +2,7 @@ from django.urls import reverse
 
 from .models import SiteSettings, SiteTheme, SiteTexts, CompanyCatalog, MenuItem
 from .forms import ConsultationForm
-from .navigation import is_legacy_about_link, is_retired_blog_link
+from .navigation import is_legacy_about_link, is_projects_link, is_retired_blog_link
 from .theme_tokens import PALETTE, build_theme_css, normalize_color
 
 
@@ -28,69 +28,44 @@ def _theme_color_properties(theme):
     return properties
 
 
-def _menu_items(request, lang):
-    """منوی اصلی از پنل ادمین (به‌همراه زیرمنوها)؛ آیتم فعال بر اساس مسیر فعلی مشخص می‌شود."""
-    path = request.path or "/"
+def _menu_items(request, lang, texts):
+    path = request.path
     host = request.get_host()
     home_path = reverse("website:home")
     about_path = reverse("website:about")
+    projects_path = reverse("website:projects_list")
     items = []
     for item in MenuItem.objects.filter(is_active=True).prefetch_related("children"):
         url = (item.url or "").strip()
-        if not item.open_consult:
-            if is_retired_blog_link(url, host):
-                continue
-            if is_legacy_about_link(url, host, home_path):
-                url = about_path
+        if not item.open_consult and is_retired_blog_link(url, host):
+            continue
+        if not item.open_consult and is_legacy_about_link(url, host, home_path):
+            url = about_path
         base = url.split("#", 1)[0]
-        has_hash = "#" in url
-        if item.open_consult or has_hash or not base:
-            active = False
-        elif base == "/":
-            active = path == "/"
-        else:
-            active = path.startswith(base)
+        active = not item.open_consult and "#" not in url and bool(base) and (
+            path == home_path if base == home_path else path == base or path.startswith(base.rstrip("/") + "/")
+        )
         children = []
-        # زیرمنوی پروژه‌ها را به مسیرهای قطعی وصل می‌کنیم؛ لینک‌های قدیمی مثل #ongoing
-        # نباید کاربر را به سکشن هم‌نام در صفحه اصلی بفرستند.
-        is_projects_item = (base.rstrip("/").endswith("projects") or "پروژه" in item.title or "project" in (item.title_en or "").lower())
-        if not item.open_consult:
+        if not item.open_consult and is_projects_link(url, host, projects_path, home_path):
+            url, active = projects_path, path.startswith(projects_path)
+            children = [
+                {"label": texts["projects_ongoing_title"], "url": projects_path + "#ongoing"},
+                {"label": texts["projects_completed_title"], "url": projects_path + "#completed"},
+            ]
+        elif not item.open_consult:
             for sub in item.children.all():
                 sub_url = (sub.url or "").strip()
-                if not sub.is_active or is_retired_blog_link(sub_url, host):
+                if not sub.is_active or not sub_url or is_retired_blog_link(sub_url, host):
                     continue
                 if is_legacy_about_link(sub_url, host, home_path):
                     sub_url = about_path
-                if is_projects_item:
-                    label_probe = f"{sub.title} {sub.title_en}".lower()
-                    if any(word in label_probe for word in ("در حال اجرا", "ongoing", "progress")):
-                        sub_url = "/projects/#ongoing"
-                    elif any(word in label_probe for word in ("تمام", "اتمام", "completed", "finished", "built")):
-                        sub_url = "/projects/#completed"
-                if not sub_url:
-                    continue
                 children.append({
                     "label": (sub.title_en or sub.title) if lang == "en" else sub.title,
                     "url": sub_url,
                 })
-            # منوی پروژه‌ها همیشه دقیقاً دو گزینه استاندارد و با مقصد معتبر دارد؛
-            # این کار خطاهای ناشی از لینک ناقص/قدیمی زیرمنو در دیتابیس را خنثی می‌کند.
-            if is_projects_item:
-                children = [
-                    {"label": "Ongoing projects" if lang == "en" else "پروژه‌های در حال اجرا", "url": "/projects/#ongoing"},
-                    {"label": "Completed projects" if lang == "en" else "پروژه‌های تکمیل شده", "url": "/projects/#completed"},
-                ]
-        # لینک والد پروژه‌ها همیشه به صفحه واقعی پروژه‌ها می‌رود؛ حتی اگر مقدار قدیمی
-        # دیتابیس خالی یا به یک anchor صفحه اصلی اشاره کند.
-        if is_projects_item:
-            url = "/projects/"
-            base = "/projects/"
-            active = path.startswith("/projects/")
-
         items.append({
             "label": (item.title_en or item.title) if lang == "en" else item.title,
             "url": url or "#",
-            "base": base,
             "consult": item.open_consult,
             "active": active,
             "children": children,
@@ -98,11 +73,15 @@ def _menu_items(request, lang):
     return items
 
 
+def site_copy(request):
+    if not hasattr(request, "_garnet_copy"):
+        lang = "en" if request.session.get("site_lang") == "en" else "fa"
+        request._garnet_copy = (lang, SiteTexts.load().resolve(lang))
+    return request._garnet_copy
+
+
 def site_settings(request):
-    lang = request.session.get("site_lang", "fa")
-    if lang not in {"fa", "en"}:
-        lang = "fa"
-    texts = SiteTexts.load().resolve(lang)
+    lang, texts = site_copy(request)
     settings_obj = SiteSettings.load()
     theme = SiteTheme.load()
     colors = _theme_color_properties(theme)
@@ -119,5 +98,5 @@ def site_settings(request):
         "is_en": lang == "en",
         "T": texts,
         "consultation_form": ConsultationForm(language=lang, texts=texts),
-        "menu_items": _menu_items(request, lang),
+        "menu_items": _menu_items(request, lang, texts),
     }

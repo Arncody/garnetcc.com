@@ -1,0 +1,25 @@
+{% extends "admin/change_form.html" %}
+
+{% block field_sets %}
+<div class="garnet-admin-directory" dir="rtl">
+  <nav aria-label="مسیرهای ویرایش پوسته و محتوا">
+    <h2>پوسته و محتوا</h2>
+    <ul>
+      {% for label, url in appearance_links %}<li><a href="{{ url }}">{{ label }}</a></li>{% endfor %}
+    </ul>
+  </nav>
+  <div hidden data-appearance-search>
+    <label for="appearance-filter">پیدا کردن رنگ یا متن در این صفحه</label>
+    <input id="appearance-filter" type="search" placeholder="مثلاً خبرنامه، گالری یا هدر" autocomplete="off">
+    <p data-appearance-empty hidden role="status">تنظیمی با این عبارت پیدا نشد.</p>
+  </div>
+  <nav aria-label="رفتن به بخش تنظیمات">
+    <ul data-appearance-index>
+      {% for fieldset in adminform %}
+      <li><a href="#fieldset-0-{{ forloop.counter0 }}-heading">{{ fieldset.name }}</a></li>
+      {% endfor %}
+    </ul>
+  </nav>
+</div>
+{{ block.super }}
+{% endblock %}

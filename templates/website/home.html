@@ -19,9 +19,9 @@
         {% home_project_action_url hero.primary_button_url "ongoing" as ongoing_url %}
         {% home_project_action_url hero.secondary_button_url "completed" as completed_url %}
         <div class="hero-actions hero-quick-actions g-home-hero-actions">
-          <a href="{{ ongoing_url }}" class="btn hero-action-link">{% if is_en %}{{ hero.primary_button_text_en|default:"Ongoing Projects" }}{% else %}{{ hero.primary_button_text|default:"پروژه‌های در حال اجرا" }}{% endif %}</a>
-          <a href="{{ completed_url }}" class="btn hero-action-link">{% if is_en %}{{ hero.secondary_button_text_en|default:"Completed Projects" }}{% else %}{{ hero.secondary_button_text|default:"پروژه‌های تکمیل‌شده" }}{% endif %}</a>
-          {% if catalog %}<a href="{{ catalog.file.url }}" class="btn hero-action-link" target="_blank" rel="noopener">{% if is_en %}Company Catalog{% else %}کاتالوگ شرکت{% endif %}</a>{% endif %}
+          <a href="{{ ongoing_url }}" class="btn hero-action-link">{% if is_en %}{{ hero.primary_button_text_en|default:T.home_ongoing }}{% else %}{{ hero.primary_button_text|default:T.home_ongoing }}{% endif %}</a>
+          <a href="{{ completed_url }}" class="btn hero-action-link">{% if is_en %}{{ hero.secondary_button_text_en|default:T.home_completed }}{% else %}{{ hero.secondary_button_text|default:T.home_completed }}{% endif %}</a>
+          {% if catalog %}<a href="{{ catalog.file.url }}" class="btn hero-action-link" target="_blank" rel="noopener">{{ T.company_catalog }}</a>{% endif %}
         </div>
       </div>
     </div>
@@ -51,7 +51,7 @@
       <h2>{{ T.home_projects_title }}</h2>
       <a class="all-projects-btn" href="{% url 'website:projects_list' %}"><span>{{ T.all_projects_btn }}</span>{% if is_en %}{% icon "arrow-right" 17 %}{% else %}{% icon "arrow-left" 17 %}{% endif %}</a>
     </div>
-    {% if is_en %}{% include "website/_projects_rail.html" with projects=home_projects rail=rail_home grid_class="home-cards" empty_text="Projects will appear here." %}{% else %}{% include "website/_projects_rail.html" with projects=home_projects rail=rail_home grid_class="home-cards" empty_text="پروژه‌ها در این بخش نمایش داده می‌شوند." %}{% endif %}
+    {% include "website/_projects_rail.html" with projects=home_projects rail=rail_home grid_class="home-cards" empty_text=T.home_empty %}
   </div>
 </section>
 

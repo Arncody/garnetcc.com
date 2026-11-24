@@ -129,3 +129,10 @@
 - Add translucent navigation arrows on the left and right edges of the full-size photo. Visible discs use 44px touch targets and RTL-aware labels and navigation. Keep swipes, mouse dragging and the single-photo layout.
 - Use a charcoal default background for related projects. SiteTheme can set its background and foreground independently through the existing color controls.
 - Chromium passed 12 bilingual viewport configurations, gesture and keyboard navigation, the single-photo case and both inline fallbacks. Verified actual admin saves and rendered custom colors scoped to related projects. Django checks, production static collection and JavaScript syntax passed.
+
+## 2026-11-24 — GNT-025 · Searchable CMS appearance and copy
+
+- Hide retired controls and page sections in the admin, keep stored legacy data, and remove six unreferenced public/admin template or static files. Remove unused homepage context work. Resolve the project submenu by its internal destination and read the editable bilingual labels.
+- Add a permission-aware appearance and content directory, searchable field groups, and an editable bilingual interface copy registry. Use the same values for the browser and Django request feedback. Add migration 0022 to store overrides without rewriting existing copy.
+- Wire saved colors to the header, newsletter, sections of About, gallery, portfolio search and progress. Repair priority between default CSS and component settings.
+- Django checks and production-mode static collection passed. Migration 0022 applied, reverted and reapplied on a fixture. Verified 26 real color saves, bilingual copy and reset, legacy override preservation and permission-restricted admin links. Chromium verified both languages across five widths and the admin filter. Submitted purchase and newsletter forms in both languages and verified persisted records and the localized server error.

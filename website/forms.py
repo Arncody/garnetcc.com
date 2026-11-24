@@ -19,7 +19,9 @@ class ConsultationForm(forms.ModelForm):
         if texts is None:
             from .models import SiteTexts
             texts = SiteTexts.load().resolve(language)
-        self.language = language
+        self.texts = texts
+        for name in ("name", "phone", "gender", "subject"):
+            self.fields[name].error_messages["required"] = texts[f"request_{name}_error"]
         self.fields["name"].label = texts["label_name"]
         self.fields["gender"].label = texts["label_gender"]
         self.fields["phone"].label = texts["label_phone"]
@@ -79,17 +81,21 @@ class ConsultationForm(forms.ModelForm):
     def clean_name(self):
         name = (self.cleaned_data.get("name") or "").strip()
         if len(name) < 2:
-            raise forms.ValidationError("نام معتبر وارد کنید.")
+            raise forms.ValidationError(self.texts["request_name_error"], code="invalid")
         return name
 
     def clean_phone(self):
         phone = PHONE_SEPARATORS.sub("", self.cleaned_data["phone"].translate(PHONE_DIGITS))
         if not PHONE_RE.fullmatch(phone):
-            message = "لطفاً یک شماره تماس معتبر وارد کنید."
-            if self.language == "en":
-                message = "Please enter a valid phone number."
-            raise forms.ValidationError(message, code="invalid")
+            raise forms.ValidationError(self.texts["request_phone_error"], code="invalid")
         return phone if phone.startswith("0") and not phone.startswith("0098") else "0" + phone[-10:]
+
+
+    def clean_subject(self):
+        subject = self.cleaned_data["subject"]
+        if len(subject) < 2:
+            raise forms.ValidationError(self.texts["request_subject_error"], code="invalid")
+        return subject
 
 
 class NewsletterSubscriptionForm(forms.Form):

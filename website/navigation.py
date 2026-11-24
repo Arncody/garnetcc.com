@@ -29,3 +29,12 @@ def is_legacy_about_link(url, site_host, home_path):
         and target.path.rstrip("/") in {"", home_path.rstrip("/")}
         and target.fragment in {"about", "about-garnet"}
     )
+
+def is_projects_link(url, site_host, projects_path, home_path):
+    target = _local_target(url, site_host)
+    if target is None or target.scheme not in {"", "http", "https"}:
+        return False
+    path = target.path.rstrip("/")
+    return path == projects_path.rstrip("/") or (
+        path in {"", home_path.rstrip("/")} and target.fragment in {"projects", "ongoing", "completed"}
+    )

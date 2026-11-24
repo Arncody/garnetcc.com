@@ -8,10 +8,12 @@
         <h2 id="consultTitle">{{ T.modal_title }}</h2>
         <p id="consultDescription">{{ T.modal_subtitle }}</p>
       </div>
-      <button type="button" class="request-close" data-consult-close aria-label="{% if is_en %}Close{% else %}بستن{% endif %}"><span aria-hidden="true">×</span></button>
+      <button type="button" class="request-close" data-consult-close aria-label="{{ T.close_label }}"><span aria-hidden="true">×</span></button>
     </header>
 
-    <form method="post" action="{% url 'website:home' %}" class="request-form" novalidate data-consult-form>
+    <form method="post" action="{% url 'website:home' %}" class="request-form" novalidate data-consult-form
+          data-name-error="{{ T.request_name_error }}" data-phone-error="{{ T.request_phone_error }}"
+          data-gender-error="{{ T.request_gender_error }}" data-subject-error="{{ T.request_subject_error }}">
       {% csrf_token %}{{ consult_form.website }}
       <div class="request-grid">
         <div class="request-field" data-consult-field>

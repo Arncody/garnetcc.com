@@ -22,7 +22,7 @@
 }
 .editorial-portfolio .ed-project-search {
   border-color: color-mix(in srgb, var(--ed-muted) 75%, var(--project-light));
-  background: var(--project-light);
+  background: var(--search-surface, var(--project-light));
   color-scheme: light;
 }
 .editorial-portfolio .ed-project-search:focus-within { border-color: var(--ed-ink); }
@@ -60,8 +60,8 @@
 .editorial-portfolio .ed-project-cover img { filter: none; }
 .editorial-portfolio :is(.ed-status, .ed-project-code) {
   padding: .22rem .45rem;
-  background: var(--project-dark);
-  color: var(--project-dark-ink);
+  background: var(--project-badge-bg, var(--project-dark));
+  color: var(--project-badge-ink, var(--project-dark-ink));
   font-size: .75rem;
   line-height: 1.5;
 }

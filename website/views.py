@@ -11,10 +11,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
 from django.http import HttpResponseRedirect
-from django.utils.translation import gettext_lazy as _
 from django.utils.http import url_has_allowed_host_and_scheme
 
-from .models import HeroSection, Project, SiteSection, PhilosophyFeature, CompanyCatalog, SiteTexts, NewsletterSubscriber
+from .models import HeroSection, Project, SiteSection, PhilosophyFeature, NewsletterSubscriber
+from .context_processors import site_copy
 from .forms import ConsultationForm, NewsletterSubscriptionForm
 
 # محدودیت درخواست فرم مشاوره برای هر IP (ضد اسپم ساده، بدون نیاز به Redis)
@@ -59,51 +59,27 @@ def _mixed_home_projects(limit=24):
     return mixed
 
 
-def _common_context():
-    ongoing_qs = Project.objects.filter(status=Project.STATUS_ONGOING, is_active=True).prefetch_related("images")
-    completed_qs = (
-        Project.objects.filter(status=Project.STATUS_COMPLETED, is_active=True)
-        .prefetch_related("images")
-    )
-    hero = HeroSection.load()
-    home_projects = _mixed_home_projects()
+def _home_context():
     about_section = SiteSection.objects.filter(key=SiteSection.KEY_ABOUT, is_active=True).first()
-    # پس‌زمینه درباره فقط از تصویر اختصاصی همان بخش می‌آید؛ تصویر پروژه‌ها fallback نیست.
-    about_bg = about_section.image if about_section and about_section.image else None
-
     return {
-        "hero": hero,
-        "hero_stats": hero.stats.all(),
-        "home_projects": home_projects,
-        "about_bg": about_bg,
-        "completed_projects": completed_qs,
-        "ongoing_projects": ongoing_qs,
-        "featured_project": ongoing_qs.filter(is_featured=True).first(),
-        "other_ongoing_projects": ongoing_qs.filter(is_featured=False),
+        "hero": HeroSection.load(),
+        "home_projects": _mixed_home_projects(),
         "about_section": about_section,
-        "why_section": SiteSection.objects.filter(key=SiteSection.KEY_WHY_GARNET, is_active=True).first(),
-        "cta_section": SiteSection.objects.filter(key=SiteSection.KEY_CTA, is_active=True).first(),
-        "philosophy_features": PhilosophyFeature.objects.filter(is_active=True),
-        "catalog": CompanyCatalog.objects.filter(is_active=True).first(),
+        "about_bg": about_section.image if about_section else None,
     }
 
 
 @require_http_methods(["GET", "POST"])
 def home(request):
-    context = _common_context()
+    context = _home_context()
 
     if request.method == "POST":
-        lang = request.session.get("site_lang", "fa")
-        if lang not in {"fa", "en"}:
-            lang = "fa"
-        form = ConsultationForm(request.POST, language=lang, texts=SiteTexts.load().resolve(lang))
+        lang, texts = site_copy(request)
+        form = ConsultationForm(request.POST, language=lang, texts=texts)
         ip_address = _get_client_ip(request)
 
         if _is_rate_limited(ip_address):
-            messages.error(
-                request,
-                _("تعداد درخواست‌های شما بیش از حد مجاز است. لطفاً کمی بعد دوباره تلاش کنید."),
-            )
+            messages.error(request, texts["request_limit"])
             context["form"] = form
             context["consult_keep_open"] = True
             return render(request, "website/home.html", context)
@@ -112,14 +88,12 @@ def home(request):
             consultation = form.save(commit=False)
             consultation.ip_address = ip_address
             consultation.save()
-            messages.success(request, _("درخواست مشاوره شما با موفقیت ثبت شد. به‌زودی با شما تماس می‌گیریم."))
+            messages.success(request, texts["request_success"])
             return redirect("website:home")
 
-        messages.error(request, _("لطفاً خطاهای فرم را برطرف کنید."))
+        messages.error(request, texts["request_invalid"])
         context["form"] = form
         context["consult_keep_open"] = True
-    else:
-        context["form"] = ConsultationForm(language=request.session.get("site_lang", "fa"))
 
     return render(request, "website/home.html", context)
 
@@ -128,12 +102,13 @@ def home(request):
 @require_http_methods(["POST"])
 def subscribe_newsletter(request):
     """Validate and store newsletter emails; duplicate submissions are idempotent."""
+    _, texts = site_copy(request)
     ip_address = _get_client_ip(request)
     if ip_address:
         key = f"newsletter_rl_{ip_address}"
         count = cache.get(key, 0)
         if count >= 5:
-            messages.error(request, "تعداد تلاش‌ها زیاد است؛ لطفاً کمی بعد دوباره امتحان کنید." if request.session.get("site_lang", "fa") != "en" else "Too many attempts. Please try again later.")
+            messages.error(request, texts["newsletter_limit"])
             return redirect("website:home")
         cache.set(key, count + 1, 60 * 60)
     form = NewsletterSubscriptionForm(request.POST)
@@ -146,11 +121,11 @@ def subscribe_newsletter(request):
             subscriber.is_active = True
             subscriber.save(update_fields=["is_active", "updated_at"])
         if created:
-            messages.success(request, "ایمیل شما با موفقیت در خبرنامه ثبت شد." if request.session.get("site_lang", "fa") != "en" else "Your email has been subscribed successfully.")
+            messages.success(request, texts["newsletter_success"])
         else:
-            messages.info(request, "این ایمیل قبلاً در خبرنامه ثبت شده است." if request.session.get("site_lang", "fa") != "en" else "This email is already subscribed.")
+            messages.info(request, texts["newsletter_exists"])
     else:
-        messages.error(request, "لطفاً یک آدرس ایمیل معتبر وارد کنید." if request.session.get("site_lang", "fa") != "en" else "Please enter a valid email address.")
+        messages.error(request, texts["newsletter_invalid"])
     referer = request.META.get("HTTP_REFERER", "")
     if referer and url_has_allowed_host_and_scheme(referer, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
         return HttpResponseRedirect(referer + ("#newsletter" if "#" not in referer else ""))
