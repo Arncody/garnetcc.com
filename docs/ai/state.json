@@ -4,5 +4,5 @@
   "baseline": "Complete GDCS ZIP; Django and Chromium checks on local fixture data",
   "active_task": null,
   "last_update": "2026-11-24",
-  "note": "GNT-022 completed after local verification using supplied Gar.zip. The project pages share an editable charcoal and ivory palette. The gallery supports touch and desktop gestures. Live deployment verification and historical GNT-005 tracking remain open."
+  "note": "GNT-023 completed after local verification on GNT-022. The project photo viewer uses a photo-sized frame and one close button. Live deployment verification and historical GNT-005 tracking remain open."
 }

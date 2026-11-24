@@ -27,5 +27,6 @@
 | GNT-020 | P2 | Make the shared request dialog light and configurable · requires GNT-019 | done |
 | GNT-021 | P1 | Fix localized request phones and the shared form palette · requires GNT-020 | done |
 | GNT-022 | P1 | Refine the project portfolio, project pages and gallery · requires GNT-021 | done |
+| GNT-023 | P2 | Simplify the project photo viewer · requires GNT-022 | done |
 
 Only one task active. Changes to this list are not automatically complete tasks.

@@ -11,8 +11,6 @@
   const caption = viewer.querySelector('[data-gallery-caption]');
   const note = viewer.querySelector('[data-gallery-note]');
   const position = viewer.querySelector('[data-gallery-position]');
-  const previous = viewer.querySelector('[data-gallery-prev]');
-  const next = viewer.querySelector('[data-gallery-next]');
   const rtl = document.documentElement.dir === 'rtl';
   const formatNumber = new Intl.NumberFormat(document.documentElement.lang);
   let index = 0;
@@ -52,10 +50,9 @@
   };
 
   if (items.length > 1) {
-    previous.hidden = next.hidden = position.hidden = false;
+    viewer.setAttribute('aria-describedby', 'gallery-navigation-help');
+    position.hidden = false;
     stage.classList.add('is-interactive');
-    previous.addEventListener('click', () => show(index - 1));
-    next.addEventListener('click', () => show(index + 1));
 
     viewer.addEventListener('keydown', (event) => {
       if (event.altKey || event.ctrlKey || event.metaKey) return;
@@ -90,6 +87,11 @@
       resetGesture();
       if (Math.abs(dx) >= 40 && Math.abs(dx) > 1.25 * Math.abs(dy)) {
         show(index + ((dx < 0) !== rtl ? 1 : -1));
+      } else if (Math.abs(dx) <= 8 && Math.abs(dy) <= 8) {
+        const bounds = stage.getBoundingClientRect();
+        const offset = (event.clientX - bounds.left) / bounds.width;
+        if (offset >= 0 && offset <= .24) show(index + (rtl ? 1 : -1));
+        else if (offset >= .76 && offset <= 1) show(index + (rtl ? -1 : 1));
       }
     });
 

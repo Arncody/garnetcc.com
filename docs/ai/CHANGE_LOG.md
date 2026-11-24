@@ -117,3 +117,9 @@
 - Share an editable charcoal and ivory palette across the portfolio and project details. Place the story and gallery side by side on desktop and reduce the height of related project cards on mobile. Restore the two existing About fallback images missing from the supplied archive.
 - Replace the gallery viewer with a native dialog supporting touch, mouse dragging, keyboard, captions and focus restoration. Expand images inline without JavaScript or native dialog support.
 - Chromium verified FA/EN at 320, 390, 768, 1024 and 1440px, including search, related cards, request modal and empty gallery scenarios. Separate gallery checks covered touch, dragging, arrows, keyboard and no-dialog fallback. Verified ten real admin color saves and computed styles on both project pages and About. Django checks, static collection and JavaScript syntax passed.
+
+## 2026-11-24 — GNT-023 · Minimal project photo viewer
+
+- Size the charcoal viewer to the uncropped photo and use a single overlaid close control. Preserve captions and the position indicator in a compact bar under the photo.
+- Keep touch swipes, desktop dragging, keyboard navigation and inline enlargement. Add single-tap navigation at the photo edges and describe the controls for assistive technology.
+- Chromium passed 12 bilingual modal configurations with portrait and landscape images, including a short landscape viewport. Checked the one-button layout, long captions, gestures, focus restoration, and expansion with JavaScript disabled or native dialog support unavailable. Django checks, production static collection and JavaScript syntax passed.

@@ -514,5 +514,27 @@
       "2026-11-24: Production-mode Django checks and static collection passed. Chromium FA/EN at five widths verified portfolio search, status links, project layouts, related cards and purchase prompt. Dedicated gallery tests verified gestures, keyboard, focus and inline fallback. Ten real admin colors saved and verified in the browser. Home and About routes returned 200."
     ],
     "rollback": "Restore the changed files from the supplied Gar.zip. No database migration is required."
+  },
+  {
+    "id": "GNT-023",
+    "priority": "P2",
+    "title": "Simplify the project photo viewer",
+    "status": "done",
+    "depends_on": [
+      "GNT-022"
+    ],
+    "modules": [
+      "M01",
+      "M02"
+    ],
+    "acceptance": [
+      "Show a photo-sized viewer using the project palette with one close button",
+      "Keep bilingual captions and navigation by touch, mouse and keyboard",
+      "Verify responsive layout and graceful inline expansion"
+    ],
+    "verification_evidence": [
+      "2026-11-24: Chromium passed 12 modal configurations in FA/EN, including portrait/landscape images, a short landscape viewport, long captions, touch swipes, dragging, edge taps, keyboard navigation, focus restoration and inline fallbacks. Django checks and production static collection passed."
+    ],
+    "rollback": "Restore the GNT-022 gallery template, styles and script."
   }
 ]

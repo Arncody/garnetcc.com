@@ -31,32 +31,25 @@
     {% endfor %}
   </div>
 
-  <dialog class="project-gallery-viewer" id="project-gallery-viewer" aria-labelledby="viewer-title"
+  <dialog class="project-gallery-viewer" id="project-gallery-viewer" aria-label="{{ T.project_gallery_title }}"
           data-gallery-total-label="{% if is_en %}of{% else %}از{% endif %}">
+    <p class="sr-only" id="gallery-navigation-help">
+      {% if is_en %}Swipe, drag, tap either edge of the photo, or use the left and right arrow keys to browse.
+      {% else %}برای جابه‌جایی، عکس را بکشید، روی لبهٔ راست یا چپ بزنید یا از کلیدهای جهت‌دار استفاده کنید.{% endif %}
+    </p>
     <div class="project-viewer-frame">
-      <header class="project-viewer-bar">
-        <h3 id="viewer-title">{{ T.project_gallery_title }}</h3>
-        <div class="project-viewer-actions">
-          <button type="button" data-gallery-prev hidden aria-label="{% if is_en %}Previous photo{% else %}عکس قبلی{% endif %}">
-            {% if is_en %}{% icon "arrow-left" 18 %}{% else %}{% icon "arrow-right" 18 %}{% endif %}
-          </button>
-          <button type="button" data-gallery-next hidden aria-label="{% if is_en %}Next photo{% else %}عکس بعدی{% endif %}">
-            {% if is_en %}{% icon "arrow-right" 18 %}{% else %}{% icon "arrow-left" 18 %}{% endif %}
-          </button>
-          <form method="dialog">
-            <button type="submit" data-gallery-close autofocus aria-label="{% if is_en %}Close{% else %}بستن{% endif %}"><span aria-hidden="true">×</span></button>
-          </form>
-        </div>
-      </header>
+      <form class="project-viewer-close" method="dialog">
+        <button type="submit" data-gallery-close autofocus aria-label="{% if is_en %}Close{% else %}بستن{% endif %}"><span aria-hidden="true">×</span></button>
+      </form>
       <div class="project-viewer-stage" data-gallery-stage>
         <img alt="" draggable="false" decoding="async">
       </div>
       <div class="project-viewer-caption" role="status" aria-atomic="true">
-        <span data-gallery-position hidden></span>
         <div>
           <p data-gallery-caption></p>
           <p data-gallery-note hidden></p>
         </div>
+        <bdi data-gallery-position hidden></bdi>
       </div>
     </div>
   </dialog>

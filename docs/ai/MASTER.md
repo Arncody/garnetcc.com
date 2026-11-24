@@ -7,7 +7,7 @@
 - Current application: Django monolith with server-side templates and static CSS/JS.
 - Future frontend/backend technology is NOT decided. Preserve platform-neutral behavior, data and URL contracts.
 - Current task: **none** — select a backlog item.
-- Latest task: **GNT-022** — compact portfolio, shared project palette and swipe gallery, verified locally.
+- Latest task: **GNT-023** — minimal project photo viewer, verified locally.
 
 ## Control authority
 - `state.json` and `tasks.json` are **canonical for task status**; this file is a succinct human-readable snapshot.
