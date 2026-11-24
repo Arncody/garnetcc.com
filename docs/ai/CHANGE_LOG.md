@@ -110,3 +110,10 @@
 - Share the accepted phone pattern between Django and the browser. Accept Latin, Persian and Arabic-Indic digits with optional separators and supported Iranian prefixes. Store normalized local numbers and keep invalid input intact.
 - Use off-white glass, a neutral page veil and a transparent action. Replace control boxes with underlines and preserve keyboard focus. Keep retired form colors in SiteTheme for rollback and offer independent active settings.
 - Reproduced the Persian-digit rejection and the orange button and dark boxes using GNT-020 and legacy fixture settings. Chromium passed 60 page, language, viewport and CSS combinations. Verified three browser submissions, 32 direct validation cases and four CSRF-protected POSTs without browser validation. Verified saved phone numbers, admin save and reset, eight before/after captures, Django checks, production static collection and JavaScript syntax. Migration dry-run output matched GNT-020.
+
+## 2026-11-24 — GNT-022 · Project portfolio and gallery
+
+- Use the supplied Gar.zip as the baseline. Simplify the portfolio opening to its title and label, move search and status links into a compact toolbar, and remove the About callout. Keep status anchors and compact the project cards.
+- Share an editable charcoal and ivory palette across the portfolio and project details. Place the story and gallery side by side on desktop and reduce the height of related project cards on mobile. Restore the two existing About fallback images missing from the supplied archive.
+- Replace the gallery viewer with a native dialog supporting touch, mouse dragging, keyboard, captions and focus restoration. Expand images inline without JavaScript or native dialog support.
+- Chromium verified FA/EN at 320, 390, 768, 1024 and 1440px, including search, related cards, request modal and empty gallery scenarios. Separate gallery checks covered touch, dragging, arrows, keyboard and no-dialog fallback. Verified ten real admin color saves and computed styles on both project pages and About. Django checks, static collection and JavaScript syntax passed.

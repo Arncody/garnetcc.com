@@ -1,6 +1,10 @@
 {% extends "website/editorial_base.html" %}{% load l10n static site_icons %}
 {% block title %}{% if is_en %}{{ project.title_en|default:project.title }}{% else %}{{ project.title }}{% endif %} | {{ site_settings.brand_name }}{% endblock %}
 {% block meta_description %}{% if is_en %}{{ project.short_description_en|default:project.short_description }}{% else %}{{ project.short_description }}{% endif %}{% endblock %}
+{% block extra_head %}
+  {{ block.super }}
+  {% if gallery %}<link rel="stylesheet" href="{% static 'css/project-gallery.css' %}?v=GNT-022">{% endif %}
+{% endblock %}
 {% block editorial_page_class %}editorial-detail{% endblock %}
 {% block editorial_content %}
 <section class="ed-band ed-detail-intro" aria-labelledby="project-title">
@@ -63,70 +67,41 @@
 </section>
 
 {% with intro=project.full_description|default:project.short_description intro_en=project.full_description_en|default:project.short_description_en %}
-{% if intro or intro_en or project.feature_list or project.feature_list_en or project.story_title or project.story_title_en %}
-<section class="ed-band ed-band-alt" aria-labelledby="project-story">
-  <div class="container ed-split">
-    <h2 class="ed-heading" id="project-story">{% if is_en %}{{ project.story_title_en|default:project.story_title|default:T.project_story_title }}{% else %}{{ project.story_title|default:T.project_story_title }}{% endif %}</h2>
-    <div class="ed-body">
-      {% if is_en %}{{ intro_en|default:intro|linebreaks }}{% else %}{{ intro|linebreaks }}{% endif %}
-      {% if is_en %}{% with items=project.features_en %}{% if items %}<ul class="ed-list">{% for item in items %}<li>{{ item }}</li>{% endfor %}</ul>{% endif %}{% endwith %}
-      {% elif project.features %}<ul class="ed-list">{% for item in project.features %}<li>{{ item }}</li>{% endfor %}</ul>{% endif %}
-      {% if project.purchase_request_enabled %}
-        {% if is_en and project.cta_text_en %}<button type="button" class="ed-btn" data-consult-open>{{ project.cta_text_en }}</button>
-        {% elif not is_en and project.cta_text %}<button type="button" class="ed-btn" data-consult-open>{{ project.cta_text }}</button>{% endif %}
-      {% endif %}
-    </div>
+{% if gallery or intro or intro_en or project.feature_list or project.feature_list_en or project.story_title or project.story_title_en %}
+<div class="ed-band ed-detail-story">
+  <div class="container ed-detail-story-grid">
+    {% if intro or intro_en or project.feature_list or project.feature_list_en or project.story_title or project.story_title_en %}
+    <section class="ed-detail-story-copy" aria-labelledby="project-story">
+      <h2 class="ed-heading" id="project-story">{% if is_en %}{{ project.story_title_en|default:project.story_title|default:T.project_story_title }}{% else %}{{ project.story_title|default:T.project_story_title }}{% endif %}</h2>
+      <div class="ed-body">
+        {% if is_en %}{{ intro_en|default:intro|linebreaks }}{% else %}{{ intro|linebreaks }}{% endif %}
+        {% if is_en %}{% with items=project.features_en %}{% if items %}<ul class="ed-list">{% for item in items %}<li>{{ item }}</li>{% endfor %}</ul>{% endif %}{% endwith %}
+        {% elif project.features %}<ul class="ed-list">{% for item in project.features %}<li>{{ item }}</li>{% endfor %}</ul>{% endif %}
+        {% if project.purchase_request_enabled %}
+          {% if is_en and project.cta_text_en %}<button type="button" class="ed-btn" data-consult-open>{{ project.cta_text_en }}</button>
+          {% elif not is_en and project.cta_text %}<button type="button" class="ed-btn" data-consult-open>{{ project.cta_text }}</button>{% endif %}
+        {% endif %}
+      </div>
+    </section>
+    {% endif %}
+    {% if gallery %}{% include "website/projects/_gallery_viewer.html" %}{% endif %}
   </div>
-</section>
+</div>
 {% endif %}
 {% endwith %}
-
-{% if gallery %}
-<section class="ed-band" id="project-gallery" aria-labelledby="gallery-title">
-  <div class="container">
-    <h2 class="ed-heading" id="gallery-title">{{ T.project_gallery_title }}</h2>
-    <div class="ed-gallery">
-      {% for image in gallery %}
-      {% if image.image %}
-      {% if is_en %}{% firstof image.caption_en image.caption project.title_en project.title as image_label %}
-      {% else %}{% firstof image.caption project.title as image_label %}{% endif %}
-      <figure>
-        <button class="ed-gallery-image" type="button" data-editorial-image aria-label="{% if is_en %}Enlarge{% else %}بزرگ‌نمایی{% endif %} — {{ image_label }}" disabled>
-          <img src="{{ image.image.url }}" alt="{{ image_label }}" loading="lazy" decoding="async">
-          {% icon "arrow-up-right" 19 %}
-        </button>
-        {% if image.caption or image.caption_en or image.description or image.description_en %}
-        <figcaption>
-          <span>{% if is_en %}{{ image.caption_en|default:image.caption }}{% else %}{{ image.caption }}{% endif %}</span>
-          {% if is_en %}{{ image.description_en|default:image.description }}{% else %}{{ image.description }}{% endif %}
-        </figcaption>
-        {% endif %}
-      </figure>
-      {% endif %}
-      {% endfor %}
-    </div>
-  </div>
-</section>
-
-<dialog class="ed-lightbox" id="editorial-lightbox" aria-label="{{ T.project_gallery_title }}">
-  <div class="ed-lightbox-content">
-    <div class="ed-lightbox-actions">
-      <button type="button" class="ed-btn" data-gallery-prev hidden>{% if is_en %}Previous{% else %}قبلی{% endif %}</button>
-      <button type="button" class="ed-btn" data-gallery-next hidden>{% if is_en %}Next{% else %}بعدی{% endif %}</button>
-      <form method="dialog"><button type="submit" class="ed-btn" autofocus>{% if is_en %}Close{% else %}بستن{% endif %}</button></form>
-    </div>
-    <img alt="">
-    <p aria-live="polite"></p>
-  </div>
-</dialog>
-{% endif %}
 
 {% if related_section %}
 <section class="ed-band ed-band-alt ed-related">
   <div class="container">
-    <h2 class="ed-heading">{% if is_en %}{{ related_section.title_en|default:related_section.title }}{% else %}{{ related_section.title }}{% endif %}</h2>
-    <div class="ed-body">{% if is_en %}{{ related_section.content_en|default:related_section.content|linebreaks }}{% else %}{{ related_section.content|linebreaks }}{% endif %}</div>
-    <a class="ed-btn ed-btn-solid" href="{% url 'website:projects_list' %}">{{ T.all_projects_btn }} {% icon "arrow-up-right" 17 %}</a>
+    <div class="ed-related-head">
+      <div>
+        <h2 class="ed-heading">{% if is_en %}{{ related_section.title_en|default:related_section.title }}{% else %}{{ related_section.title }}{% endif %}</h2>
+        {% if related_section.content or related_section.content_en %}
+        <div class="ed-body">{% if is_en %}{{ related_section.content_en|default:related_section.content|linebreaks }}{% else %}{{ related_section.content|linebreaks }}{% endif %}</div>
+        {% endif %}
+      </div>
+      <a class="ed-btn ed-btn-solid" href="{% url 'website:projects_list' %}">{{ T.all_projects_btn }} {% icon "arrow-up-right" 17 %}</a>
+    </div>
     {% if related_projects %}
       <div class="ed-project-grid ed-project-grid-related">
         {% for item in related_projects %}{% include "website/projects/_editorial_card.html" with project=item %}{% endfor %}
@@ -137,5 +112,5 @@
 {% endif %}
 {% endblock %}
 {% block extra_scripts %}
-  {% if gallery %}<script src="{% static 'js/editorial-gallery.js' %}?v=GNT-015" defer></script>{% endif %}
+  {% if gallery %}<script src="{% static 'js/editorial-gallery.js' %}?v=GNT-022" defer></script>{% endif %}
 {% endblock %}

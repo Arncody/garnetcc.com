@@ -3,6 +3,6 @@
   "project": "GARNET",
   "baseline": "Complete GDCS ZIP; Django and Chromium checks on local fixture data",
   "active_task": null,
-  "last_update": "2026-11-23",
-  "note": "GNT-021 completed after local verification on GNT-020. The form accepts Latin, Persian and Arabic-Indic digits and uses its own neutral palette. Live deployment verification and historical GNT-005 tracking remain open."
+  "last_update": "2026-11-24",
+  "note": "GNT-022 completed after local verification using supplied Gar.zip. The project pages share an editable charcoal and ivory palette. The gallery supports touch and desktop gestures. Live deployment verification and historical GNT-005 tracking remain open."
 }

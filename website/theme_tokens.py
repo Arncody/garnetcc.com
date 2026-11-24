@@ -244,13 +244,30 @@ GROUPS = [
         Token("pd_btn_pulse", "رنگ هاله ضربانی دکمه درخواست خرید / مشاوره", "rgba(204,108,66,.42)", ".pd-btn.pd-btn-primary::after,.pd-cta::after{border-color:{v}!important}"),
         Token("pd_chip_bg", "کپسول‌های کد / وضعیت / سال", "rgba(20,26,30,.28)", ".pd-chips li{background:{v}!important}"),
     ]),
-    Group("editorial_pages", "صفحات پروژه‌ها و درباره گارنت",
-          "رنگ‌های محتوای سه صفحه. هدر و فوتر از کنترل‌های مشترک خود استفاده می‌کنند.", [
-        Token("editorial_canvas", "رنگ زمینه و انتهای تصویر آغاز صفحه", "#101411", ".editorial-page{--ed-theme-canvas:{v}}"),
-        Token("editorial_volume", "رنگ عمق بخش‌ها و زمینه کارت‌ها", "#263028", ".editorial-page{--ed-theme-volume:{v}}"),
-        Token("editorial_ink", "رنگ تیترها و دکمه‌های متنی", "#F4F3EF", ".editorial-page{--ed-theme-ink:{v}}"),
-        Token("editorial_muted", "رنگ توضیحات", "#C1C8BF", ".editorial-page{--ed-theme-muted:{v}}"),
-        Token("editorial_accent", "رنگ تأکیدی و نوار پیشرفت", "#C6BCA9", ".editorial-page{--ed-theme-accent:{v}}"),
+    Group("project_presentation", "رنگ صفحات پروژه‌ها",
+          "پالت مشترک فهرست و جزئیات پروژه. متن‌ها، خط‌ها و سطوح روشن و تیره را جداگانه تنظیم کنید.", [
+        Token("project_" + key, label, color,
+              ".editorial-portfolio,.editorial-detail{--project-theme-" + key.replace("_", "-") + ":{v}}")
+        for key, label, color in (
+            ("dark", "زمینهٔ تیرهٔ بالای صفحات", CHARCOAL),
+            ("dark_surface", "سطح تیرهٔ پیشرفت پروژه و نمایشگر گالری", "#222222"),
+            ("dark_ink", "متن اصلی روی زمینهٔ تیره", OFF_WHITE),
+            ("dark_muted", "متن فرعی روی زمینهٔ تیره", "#CCC9C1"),
+            ("dark_line", "خط و حاشیه روی زمینهٔ تیره", "#4B4A47"),
+            ("light", "زمینهٔ شیری فهرست، معرفی و گالری", "#F4F1EA"),
+            ("light_surface", "سطح روشن جست‌وجو و پروژه‌های مرتبط", "#FBF9F4"),
+            ("light_ink", "متن اصلی، دکمه‌ها و آیکون‌ها روی زمینهٔ روشن", CHARCOAL),
+            ("light_muted", "متن فرعی روی زمینهٔ روشن", "#55534F"),
+            ("light_line", "خط و حاشیه روی زمینهٔ روشن", "#D1CCC2"),
+        )
+    ]),
+    Group("editorial_pages", "رنگ صفحه درباره گارنت",
+          "رنگ‌های محتوای صفحه درباره گارنت. هدر و فوتر از کنترل‌های مشترک خود استفاده می‌کنند.", [
+        Token("editorial_canvas", "رنگ زمینه و انتهای تصویر آغاز صفحه", "#101411", ".editorial-about{--ed-theme-canvas:{v}}"),
+        Token("editorial_volume", "رنگ عمق بخش‌ها و زمینه کارت‌ها", "#263028", ".editorial-about{--ed-theme-volume:{v}}"),
+        Token("editorial_ink", "رنگ تیترها و دکمه‌های متنی", "#F4F3EF", ".editorial-about{--ed-theme-ink:{v}}"),
+        Token("editorial_muted", "رنگ توضیحات", "#C1C8BF", ".editorial-about{--ed-theme-muted:{v}}"),
+        Token("editorial_accent", "رنگ تأکیدی و نوار پیشرفت", "#C6BCA9", ".editorial-about{--ed-theme-accent:{v}}"),
     ]),
     Group("footer", "⬛ فوتر (پایین سایت)", "رنگ زمینه، تیترها، لینک‌ها، آیکون‌ها و فرم خبرنامه.", [
         Token("footer_bg", "پس‌زمینه فوتر", PALETTE["footer-charcoal"], ".site-footer{background:{v}!important;background-image:none!important}"),

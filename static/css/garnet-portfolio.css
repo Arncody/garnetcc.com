@@ -1,0 +1,87 @@
+.editorial-portfolio .portfolio-masthead {
+  --ed-ink: var(--project-dark-ink);
+  padding-block: calc(clamp(6rem, 9vw, 8rem) + env(safe-area-inset-top)) clamp(2.25rem, 5vw, 4.5rem);
+  background: var(--project-dark);
+  color: var(--ed-ink);
+}
+.portfolio-masthead .ed-kicker {
+  margin-block-end: .625rem;
+  color: var(--project-dark-muted);
+}
+.editorial-portfolio .portfolio-masthead h1 {
+  max-inline-size: 24ch;
+  margin: 0;
+  font-size: clamp(1.9rem, 4.8vw, 4.15rem);
+}
+.portfolio-toolbar {
+  border-block-end: 1px solid var(--ed-rule);
+  background: var(--project-light-surface);
+}
+.editorial-portfolio .ed-search-area {
+  padding-block: clamp(.75rem, 1.75vw, 1.25rem);
+}
+.editorial-portfolio .ed-project-search {
+  border-color: color-mix(in srgb, var(--ed-muted) 75%, var(--project-light));
+  background: var(--project-light);
+  color-scheme: light;
+}
+.editorial-portfolio .ed-project-search:focus-within { border-color: var(--ed-ink); }
+.portfolio-status-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 clamp(.875rem, 2.2vw, 1.75rem);
+}
+.portfolio-status-links .ed-text-link {
+  gap: .4rem;
+  font-size: .875rem;
+}
+.editorial-portfolio .ed-search-summary a { color: var(--ed-ink); }
+
+.editorial-portfolio .ed-band {
+  padding-block: clamp(1.5rem, 4.25vw, 3.5rem) clamp(2rem, 4.5vw, 3.75rem);
+  background: var(--project-light);
+}
+.editorial-portfolio .ed-band-alt { background: var(--project-light-surface); }
+.editorial-portfolio .ed-heading {
+  margin-block-end: clamp(1rem, 2vw, 1.75rem);
+  font-size: clamp(1.35rem, 2.8vw, 2.25rem);
+}
+.editorial-portfolio .ed-project-grid {
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(.875rem, 2.2vw, 1.75rem);
+}
+.editorial-portfolio .ed-search-matches {
+  padding-block: clamp(1.5rem, 3vw, 2.75rem) clamp(2rem, 4.5vw, 3.75rem);
+}
+.editorial-portfolio .ed-project-cover {
+  aspect-ratio: 1.55;
+  background: var(--project-light-surface);
+}
+.editorial-portfolio .ed-project-cover img { filter: none; }
+.editorial-portfolio :is(.ed-status, .ed-project-code) {
+  padding: .22rem .45rem;
+  background: var(--project-dark);
+  color: var(--project-dark-ink);
+  font-size: .75rem;
+  line-height: 1.5;
+}
+.editorial-portfolio .ed-status { inset-block-start: .5rem; inset-inline-start: .5rem; }
+.editorial-portfolio .ed-project-code { inset-block-end: .5rem; inset-inline-end: .5rem; }
+.editorial-portfolio .ed-project-meta {
+  gap: .35rem;
+  padding-block: .625rem .5rem;
+}
+.editorial-portfolio .ed-project-meta h3 { font-size: clamp(1rem, 2.05vw, 1.4rem); }
+.editorial-portfolio .ed-project-meta p { margin-block-start: .125rem; font-size: .8125rem; }
+.editorial-portfolio .ed-project-arrow {
+  inline-size: 1.75rem;
+  border: 0;
+}
+.editorial-portfolio .ed-project-grid > .ed-body { grid-column: 1 / -1; }
+
+@media (min-width: 23rem) {
+  .editorial-portfolio .ed-project-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 52rem) {
+  .editorial-portfolio .ed-project-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}

@@ -1,39 +1,40 @@
 {% extends "website/editorial_base.html" %}{% load static site_icons %}
-{% block title %}{% if hero_section %}{% if is_en %}{{ hero_section.title_en|default:hero_section.title }}{% else %}{{ hero_section.title }}{% endif %}{% elif is_en %}Projects{% else %}پروژه‌ها{% endif %} | {{ site_settings.brand_name }}{% endblock %}
-{% block extra_head %}{{ block.super }}{% if project_query %}<meta name="robots" content="noindex,follow">{% endif %}{% endblock %}
+{% block title %}{% if is_en %}{% firstof hero_section.title_en hero_section.title "Garnet Projects" %}{% else %}{% firstof hero_section.title "پروژه‌های گارنت" %}{% endif %} | {{ site_settings.brand_name }}{% endblock %}
+{% block extra_head %}{{ block.super }}
+  <link rel="stylesheet" href="{% static 'css/garnet-portfolio.css' %}?v=GNT-022">
+  {% if project_query %}<meta name="robots" content="noindex,follow">{% endif %}
+{% endblock %}
 {% block editorial_page_class %}editorial-portfolio{% endblock %}
 {% block editorial_content %}
-{% if not project_query %}
-<section class="ed-cinematic ed-cinematic-portfolio" aria-labelledby="portfolio-title">
-  <img class="ed-cinematic-image" src="{% if hero_section.image %}{{ hero_section.image.url }}{% else %}{% static 'images/editorial/architecture-hero.webp' %}{% endif %}" alt="" fetchpriority="high">
-  <div class="container ed-cinematic-content">
-    {% if hero_section.subtitle or hero_section.subtitle_en %}<p class="ed-kicker"><bdi>{% if is_en %}{{ hero_section.subtitle_en|default:hero_section.subtitle }}{% else %}{{ hero_section.subtitle }}{% endif %}</bdi></p>{% endif %}
-    <h1 id="portfolio-title">{% if hero_section %}{% if is_en %}{{ hero_section.title_en|default:hero_section.title }}{% else %}{{ hero_section.title }}{% endif %}{% elif is_en %}Projects{% else %}پروژه‌ها{% endif %}</h1>
-    {% if hero_section %}<div class="ed-body">{% if is_en %}{{ hero_section.content_en|default:hero_section.content|linebreaks }}{% else %}{{ hero_section.content|linebreaks }}{% endif %}</div>{% endif %}
-    <nav class="ed-actions" aria-label="{% if is_en %}Project status{% else %}وضعیت پروژه‌ها{% endif %}">
-      <a class="ed-btn" href="#ongoing">{{ T.projects_ongoing_title }} <span class="ed-down">{% icon "arrow-up" 16 %}</span></a>
-      <a class="ed-btn" href="#completed">{{ T.projects_completed_title }} <span class="ed-down">{% icon "arrow-up" 16 %}</span></a>
-    </nav>
+<section class="portfolio-masthead" aria-labelledby="portfolio-title">
+  <div class="container">
+    <p class="ed-kicker"><bdi>{% if is_en %}{% firstof hero_section.subtitle_en hero_section.subtitle "GARNET / PORTFOLIO" %}{% else %}{% firstof hero_section.subtitle "GARNET / PORTFOLIO" %}{% endif %}</bdi></p>
+    <h1 id="portfolio-title">{% if is_en %}{% firstof hero_section.title_en hero_section.title "Garnet Projects" %}{% else %}{% firstof hero_section.title "پروژه‌های گارنت" %}{% endif %}</h1>
   </div>
 </section>
-{% endif %}
-<div class="container ed-search-area{% if project_query %} ed-search-active{% endif %}">
-  {% if project_query %}<h1 class="sr-only">{% if is_en %}Project search results{% else %}نتایج جست‌وجوی پروژه‌ها{% endif %}</h1>{% endif %}
-  <form class="ed-project-search" action="{% url 'website:projects_list' %}#project-search" method="get" role="search" aria-label="{{ T.project_search_label }}">
-    <label class="sr-only" for="project-search">{{ T.project_search_label }}</label>
-    <input id="project-search" name="q" type="search" dir="auto" maxlength="100" value="{{ project_query }}" placeholder="{{ T.project_search_placeholder }}">
-    <button type="submit" aria-label="{{ T.project_search_label }}" title="{{ T.project_search_label }}">{% icon "search" 20 %}</button>
-  </form>
-  {% if project_query %}
-  <div class="ed-search-summary">
-    <p role="status">
-      {% if search_results %}
-        {% if is_en %}Results: {{ search_results|length }}{% else %}تعداد نتایج: {{ search_results|length }}{% endif %}
-      {% elif is_en %}No matching projects found.{% else %}پروژه‌ای مطابق جست‌وجو پیدا نشد.{% endif %}
-    </p>
-    <a href="{% url 'website:projects_list' %}#project-search">{% if is_en %}Clear search{% else %}پاک‌کردن جست‌وجو{% endif %}</a>
+<div class="portfolio-toolbar">
+  <div class="container ed-search-area">
+    <form class="ed-project-search" action="{% url 'website:projects_list' %}#project-search" method="get" role="search" aria-label="{{ T.project_search_label }}">
+      <label class="sr-only" for="project-search">{{ T.project_search_label }}</label>
+      <input id="project-search" name="q" type="search" dir="auto" maxlength="100" value="{{ project_query }}" placeholder="{{ T.project_search_placeholder }}">
+      <button type="submit" aria-label="{{ T.project_search_label }}" title="{{ T.project_search_label }}">{% icon "search" 20 %}</button>
+    </form>
+    {% if project_query %}
+    <div class="ed-search-summary">
+      <p role="status">
+        {% if search_results %}
+          {% if is_en %}Results: {{ search_results|length }}{% else %}تعداد نتایج: {{ search_results|length }}{% endif %}
+        {% elif is_en %}No matching projects found.{% else %}پروژه‌ای مطابق جست‌وجو پیدا نشد.{% endif %}
+      </p>
+      <a href="{% url 'website:projects_list' %}#project-search">{% if is_en %}Clear search{% else %}پاک‌کردن جست‌وجو{% endif %}</a>
+    </div>
+    {% else %}
+    <nav class="portfolio-status-links" aria-label="{% if is_en %}Project status{% else %}وضعیت پروژه‌ها{% endif %}">
+      <a class="ed-text-link" href="#ongoing">{{ T.projects_ongoing_title }} <span class="ed-down">{% icon "arrow-up" 14 %}</span></a>
+      <a class="ed-text-link" href="#completed">{{ T.projects_completed_title }} <span class="ed-down">{% icon "arrow-up" 14 %}</span></a>
+    </nav>
+    {% endif %}
   </div>
-  {% endif %}
 </div>
 {% if project_query %}
   {% if search_results %}
@@ -46,13 +47,5 @@
 {% else %}
 {% include "website/projects/_editorial_group.html" with group_id="ongoing" group_title=T.projects_ongoing_title projects=ongoing_projects %}
 {% include "website/projects/_editorial_group.html" with group_id="completed" group_title=T.projects_completed_title projects=completed_projects %}
-{% if note_section %}
-<section class="ed-band ed-band-alt" aria-label="{% if is_en %}{{ note_section.title_en|default:note_section.title }}{% else %}{{ note_section.title }}{% endif %}">
-  <div class="container ed-note">
-    <div class="ed-note-text">{% if is_en %}{{ note_section.content_en|default:note_section.content|linebreaks }}{% else %}{{ note_section.content|linebreaks }}{% endif %}</div>
-    <a class="ed-text-link" href="{% url 'website:about' %}">{{ T.home_about_link }} {% icon "arrow-up-right" 18 %}</a>
-  </div>
-</section>
-{% endif %}
 {% endif %}
 {% endblock %}

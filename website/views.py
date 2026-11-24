@@ -225,7 +225,8 @@ def projects_list(request):
     query = request.GET.get("q", "")[:100].strip()
     terms = _project_search_text(query).split()
     projects = list(Project.objects.filter(is_active=True))
-    context = {}
+    hero_key = SiteSection.KEY_PROJECTS_HERO
+    context = {"hero_section": _editorial_sections(hero_key).get(hero_key)}
     if terms:
         def matches(project):
             searchable = _project_search_text(" ".join((
@@ -236,10 +237,7 @@ def projects_list(request):
         projects = [project for project in projects if matches(project)]
         context.update(project_query=query, search_results=projects)
     else:
-        sections = _editorial_sections(SiteSection.KEY_PROJECTS_HERO, SiteSection.KEY_PROJECTS_NOTE)
         context.update(
-            hero_section=sections.get(SiteSection.KEY_PROJECTS_HERO),
-            note_section=sections.get(SiteSection.KEY_PROJECTS_NOTE),
             ongoing_projects=[project for project in projects if project.status == Project.STATUS_ONGOING],
             completed_projects=[project for project in projects if project.status == Project.STATUS_COMPLETED],
         )

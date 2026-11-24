@@ -1,0 +1,63 @@
+{% load site_icons %}
+<section class="project-gallery" id="project-gallery" aria-labelledby="gallery-title">
+  <h2 class="ed-heading" id="gallery-title">{{ T.project_gallery_title }}</h2>
+  <div class="project-gallery-grid">
+    {% for image in gallery %}
+      {% if image.image %}
+        {% if is_en %}
+          {% firstof image.caption_en image.caption as caption %}
+          {% firstof image.description_en image.description as description %}
+          {% firstof caption project.title_en project.title as image_label %}
+        {% else %}
+          {% firstof image.caption as caption %}
+          {% firstof image.description as description %}
+          {% firstof caption project.title as image_label %}
+        {% endif %}
+        <figure class="project-gallery-tile" id="project-gallery-image-{{ image.pk }}">
+          <a class="project-gallery-preview" href="#project-gallery-image-{{ image.pk }}" data-gallery-image
+             aria-label="{% if is_en %}Enlarge{% else %}بزرگ‌نمایی{% endif %} — {{ image_label }}">
+            <img src="{{ image.image.url }}" alt="{{ image_label }}" loading="lazy" decoding="async">
+            <span class="project-gallery-enlarge" aria-hidden="true">{% icon "arrow-up-right" 18 %}</span>
+          </a>
+          {% if caption or description %}
+          <figcaption class="project-gallery-caption">
+            {% if caption %}<span>{{ caption }}</span>{% endif %}
+            {% if description %}<span data-gallery-description>{{ description }}</span>{% endif %}
+          </figcaption>
+          {% endif %}
+          <a class="project-gallery-collapse" data-gallery-collapse href="#project-gallery">{% if is_en %}Collapse photo{% else %}کوچک‌کردن عکس{% endif %}</a>
+        </figure>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <dialog class="project-gallery-viewer" id="project-gallery-viewer" aria-labelledby="viewer-title"
+          data-gallery-total-label="{% if is_en %}of{% else %}از{% endif %}">
+    <div class="project-viewer-frame">
+      <header class="project-viewer-bar">
+        <h3 id="viewer-title">{{ T.project_gallery_title }}</h3>
+        <div class="project-viewer-actions">
+          <button type="button" data-gallery-prev hidden aria-label="{% if is_en %}Previous photo{% else %}عکس قبلی{% endif %}">
+            {% if is_en %}{% icon "arrow-left" 18 %}{% else %}{% icon "arrow-right" 18 %}{% endif %}
+          </button>
+          <button type="button" data-gallery-next hidden aria-label="{% if is_en %}Next photo{% else %}عکس بعدی{% endif %}">
+            {% if is_en %}{% icon "arrow-right" 18 %}{% else %}{% icon "arrow-left" 18 %}{% endif %}
+          </button>
+          <form method="dialog">
+            <button type="submit" data-gallery-close autofocus aria-label="{% if is_en %}Close{% else %}بستن{% endif %}"><span aria-hidden="true">×</span></button>
+          </form>
+        </div>
+      </header>
+      <div class="project-viewer-stage" data-gallery-stage>
+        <img alt="" draggable="false" decoding="async">
+      </div>
+      <div class="project-viewer-caption" role="status" aria-atomic="true">
+        <span data-gallery-position hidden></span>
+        <div>
+          <p data-gallery-caption></p>
+          <p data-gallery-note hidden></p>
+        </div>
+      </div>
+    </div>
+  </dialog>
+</section>

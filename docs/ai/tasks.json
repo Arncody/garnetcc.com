@@ -489,5 +489,30 @@
       "2026-11-23: Reproduced the issues on GNT-020; 60 Chromium layout checks, three browser submissions, 32 form validation cases, four direct POSTs, persisted numbers and real admin save/reset passed. Django checks, static collection, JS syntax and screenshot capture passed."
     ],
     "rollback": "Restore the GNT-020 files. Legacy saved colors remain available to GNT-020."
+  },
+  {
+    "id": "GNT-022",
+    "priority": "P1",
+    "title": "Refine the project portfolio, project pages and gallery",
+    "status": "done",
+    "depends_on": [
+      "GNT-021"
+    ],
+    "modules": [
+      "M01",
+      "M02",
+      "M03"
+    ],
+    "acceptance": [
+      "Show a compact image-free portfolio masthead and remove the portfolio About callout",
+      "Use compact cards and a shared editable charcoal and ivory palette",
+      "Combine the project story and gallery on desktop",
+      "Support touch swipe, pointer drag and keyboard in the project gallery",
+      "Keep related projects compact on mobile and verify FA and EN"
+    ],
+    "verification_evidence": [
+      "2026-11-24: Production-mode Django checks and static collection passed. Chromium FA/EN at five widths verified portfolio search, status links, project layouts, related cards and purchase prompt. Dedicated gallery tests verified gestures, keyboard, focus and inline fallback. Ten real admin colors saved and verified in the browser. Home and About routes returned 200."
+    ],
+    "rollback": "Restore the changed files from the supplied Gar.zip. No database migration is required."
   }
 ]

@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  document.querySelectorAll('a[href^="#"]').forEach((a) => {
+  document.querySelectorAll('a[href^="#"]:not([data-gallery-image], [data-gallery-collapse])').forEach((a) => {
     a.addEventListener('click', (event) => {
       const id = a.getAttribute('href');
       if (!id || id.length <= 1) return;
