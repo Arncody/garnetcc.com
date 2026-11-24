@@ -245,7 +245,7 @@ GROUPS = [
         Token("pd_chip_bg", "کپسول‌های کد / وضعیت / سال", "rgba(20,26,30,.28)", ".pd-chips li{background:{v}!important}"),
     ]),
     Group("project_presentation", "رنگ صفحات پروژه‌ها",
-          "پالت مشترک فهرست و جزئیات پروژه. متن‌ها، خط‌ها و سطوح روشن و تیره را جداگانه تنظیم کنید.", [
+          "پالت مشترک فهرست و جزئیات پروژه. زمینه و متن «پروژه‌های بیشتر» مستقل‌اند.", [
         Token("project_" + key, label, color,
               ".editorial-portfolio,.editorial-detail{--project-theme-" + key.replace("_", "-") + ":{v}}")
         for key, label, color in (
@@ -255,10 +255,12 @@ GROUPS = [
             ("dark_muted", "متن فرعی روی زمینهٔ تیره", "#CCC9C1"),
             ("dark_line", "خط و حاشیه روی زمینهٔ تیره", "#4B4A47"),
             ("light", "زمینهٔ شیری فهرست، معرفی و گالری", "#F4F1EA"),
-            ("light_surface", "سطح روشن جست‌وجو و پروژه‌های مرتبط", "#FBF9F4"),
+            ("light_surface", "سطح روشن جست‌وجو و دسته‌بندی پروژه‌ها", "#FBF9F4"),
             ("light_ink", "متن اصلی، دکمه‌ها و آیکون‌ها روی زمینهٔ روشن", CHARCOAL),
             ("light_muted", "متن فرعی روی زمینهٔ روشن", "#55534F"),
             ("light_line", "خط و حاشیه روی زمینهٔ روشن", "#D1CCC2"),
+            ("related_bg", "پروژه‌های بیشتر — رنگ زمینه", CHARCOAL),
+            ("related_ink", "پروژه‌های بیشتر — رنگ متن و دکمه", OFF_WHITE),
         )
     ]),
     Group("editorial_pages", "رنگ صفحه درباره گارنت",

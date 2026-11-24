@@ -119,7 +119,7 @@ html:has(.project-gallery-viewer[open]) { overflow: hidden; }
   cursor: pointer;
 }
 .project-viewer-close button:hover { background: var(--charcoal, #141414); }
-.site-shell .project-gallery-viewer .project-viewer-close button:focus-visible {
+.site-shell .project-gallery-viewer :is(.project-viewer-close button, .project-viewer-arrow):focus-visible {
   outline: 2px solid #fff !important;
   outline-offset: 2px;
   box-shadow: 0 0 0 5px #141414;
@@ -131,6 +131,7 @@ html:has(.project-gallery-viewer[open]) { overflow: hidden; }
   outline-offset: 2px;
 }
 .project-viewer-stage {
+  position: relative;
   display: grid;
   place-items: center;
   min-inline-size: 9rem;
@@ -139,10 +140,55 @@ html:has(.project-gallery-viewer[open]) { overflow: hidden; }
   background: var(--project-dark, #141414);
 }
 .project-viewer-stage.is-interactive {
+  min-block-size: 9.25rem;
   cursor: grab;
   touch-action: pan-y pinch-zoom;
   user-select: none;
 }
+/* The glass discs are smaller than their touch targets. */
+.project-viewer-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  inline-size: 44px;
+  block-size: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--off-white, #f8f8f6);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.project-viewer-arrow[data-gallery-step="-1"] { left: .25rem; }
+.project-viewer-arrow[data-gallery-step="1"] { right: .25rem; }
+.project-viewer-arrow::before,
+.project-viewer-arrow::after { content: ""; grid-area: 1 / 1; }
+.project-viewer-arrow::before {
+  inline-size: 1.95rem;
+  block-size: 1.95rem;
+  border: 1px solid rgba(248, 248, 246, .3);
+  border-radius: 50%;
+  background: rgba(20, 20, 20, .55);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.project-viewer-arrow:is(:hover, :active, :focus-visible)::before { background: rgba(20, 20, 20, .8); }
+.project-viewer-arrow::after {
+  inline-size: .45rem;
+  block-size: .45rem;
+  border: solid currentColor;
+  border-width: 1.5px 1.5px 0 0;
+  transform: translateX(-1px) rotate(45deg);
+}
+.project-viewer-arrow[data-gallery-step="-1"]::after { transform: translateX(1px) rotate(-135deg); }
+@media (forced-colors: active) {
+  .project-viewer-arrow::before { background: ButtonFace; }
+  .project-viewer-arrow::after { border-color: ButtonText; }
+}
+
 .project-viewer-stage.is-dragging { cursor: grabbing; }
 .project-viewer-stage img {
   display: block;

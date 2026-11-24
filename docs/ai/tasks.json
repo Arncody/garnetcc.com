@@ -536,5 +536,28 @@
       "2026-11-24: Chromium passed 12 modal configurations in FA/EN, including portrait/landscape images, a short landscape viewport, long captions, touch swipes, dragging, edge taps, keyboard navigation, focus restoration and inline fallbacks. Django checks and production static collection passed."
     ],
     "rollback": "Restore the GNT-022 gallery template, styles and script."
+  },
+  {
+    "id": "GNT-024",
+    "priority": "P2",
+    "title": "Add subtle gallery navigation and an editable related-projects surface",
+    "status": "done",
+    "depends_on": [
+      "GNT-023"
+    ],
+    "modules": [
+      "M01",
+      "M02",
+      "M03"
+    ],
+    "acceptance": [
+      "Overlay compact translucent photo arrows that respect RTL and LTR",
+      "Show a dark related-projects section with its own editable color and readable text",
+      "Verify gallery interactions, responsive rendering and real admin saves"
+    ],
+    "verification_evidence": [
+      "2026-11-24: Chromium passed twelve FA/EN viewport configurations, physical arrow placement and direction, 44px targets, gestures, keyboard, single image, and inline fallbacks. Verified actual admin saves and scoped computed colors plus Django checks and production static collection."
+    ],
+    "rollback": "Restore the GNT-023 gallery and project presentation files."
   }
 ]

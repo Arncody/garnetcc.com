@@ -34,8 +34,8 @@
   <dialog class="project-gallery-viewer" id="project-gallery-viewer" aria-label="{{ T.project_gallery_title }}"
           data-gallery-total-label="{% if is_en %}of{% else %}از{% endif %}">
     <p class="sr-only" id="gallery-navigation-help">
-      {% if is_en %}Swipe, drag, tap either edge of the photo, or use the left and right arrow keys to browse.
-      {% else %}برای جابه‌جایی، عکس را بکشید، روی لبهٔ راست یا چپ بزنید یا از کلیدهای جهت‌دار استفاده کنید.{% endif %}
+      {% if is_en %}Use the arrow buttons or keys, swipe, or drag the photo to browse.
+      {% else %}برای جابه‌جایی، از فلش‌ها یا کلیدهای جهت‌دار استفاده کنید یا عکس را بکشید.{% endif %}
     </p>
     <div class="project-viewer-frame">
       <form class="project-viewer-close" method="dialog">
@@ -43,6 +43,10 @@
       </form>
       <div class="project-viewer-stage" data-gallery-stage>
         <img alt="" draggable="false" decoding="async">
+        <button type="button" class="project-viewer-arrow" data-gallery-step="-1" hidden
+                aria-label="{% if is_en %}Previous photo{% else %}عکس بعدی{% endif %}"></button>
+        <button type="button" class="project-viewer-arrow" data-gallery-step="1" hidden
+                aria-label="{% if is_en %}Next photo{% else %}عکس قبلی{% endif %}"></button>
       </div>
       <div class="project-viewer-caption" role="status" aria-atomic="true">
         <div>

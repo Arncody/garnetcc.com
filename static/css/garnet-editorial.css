@@ -333,9 +333,14 @@
   font-size: clamp(1.45rem, 3vw, 2.4rem);
 }
 .editorial-detail .ed-related {
-  --ed-canvas: var(--project-light-surface);
-  --ed-volume: var(--project-light);
+  --ed-canvas: var(--project-theme-related-bg, var(--charcoal, #141414));
+  --ed-ink: var(--project-theme-related-ink, var(--off-white, #f8f8f6));
+  --ed-volume: color-mix(in srgb, var(--ed-ink) 10%, var(--ed-canvas));
+  --ed-muted: color-mix(in srgb, var(--ed-ink) 76%, var(--ed-canvas));
+  --ed-rule: color-mix(in srgb, var(--ed-ink) 24%, var(--ed-canvas));
+  --ed-accent: color-mix(in srgb, var(--ed-ink) 88%, var(--ed-canvas));
   padding-block: clamp(1.5rem, 4vw, 3.5rem);
+  color: var(--ed-ink);
 }
 .ed-related-head {
   display: flex;

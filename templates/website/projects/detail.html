@@ -3,7 +3,7 @@
 {% block meta_description %}{% if is_en %}{{ project.short_description_en|default:project.short_description }}{% else %}{{ project.short_description }}{% endif %}{% endblock %}
 {% block extra_head %}
   {{ block.super }}
-  {% if gallery %}<link rel="stylesheet" href="{% static 'css/project-gallery.css' %}?v=GNT-023">{% endif %}
+  {% if gallery %}<link rel="stylesheet" href="{% static 'css/project-gallery.css' %}?v=GNT-024">{% endif %}
 {% endblock %}
 {% block editorial_page_class %}editorial-detail{% endblock %}
 {% block editorial_content %}
@@ -112,5 +112,5 @@
 {% endif %}
 {% endblock %}
 {% block extra_scripts %}
-  {% if gallery %}<script src="{% static 'js/editorial-gallery.js' %}?v=GNT-023" defer></script>{% endif %}
+  {% if gallery %}<script src="{% static 'js/editorial-gallery.js' %}?v=GNT-024" defer></script>{% endif %}
 {% endblock %}

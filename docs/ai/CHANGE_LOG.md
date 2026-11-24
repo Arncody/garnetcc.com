@@ -123,3 +123,9 @@
 - Size the charcoal viewer to the uncropped photo and use a single overlaid close control. Preserve captions and the position indicator in a compact bar under the photo.
 - Keep touch swipes, desktop dragging, keyboard navigation and inline enlargement. Add single-tap navigation at the photo edges and describe the controls for assistive technology.
 - Chromium passed 12 bilingual modal configurations with portrait and landscape images, including a short landscape viewport. Checked the one-button layout, long captions, gestures, focus restoration, and expansion with JavaScript disabled or native dialog support unavailable. Django checks, production static collection and JavaScript syntax passed.
+
+## 2026-11-24 — GNT-024 · Gallery arrows and related projects
+
+- Add translucent navigation arrows on the left and right edges of the full-size photo. Visible discs use 44px touch targets and RTL-aware labels and navigation. Keep swipes, mouse dragging and the single-photo layout.
+- Use a charcoal default background for related projects. SiteTheme can set its background and foreground independently through the existing color controls.
+- Chromium passed 12 bilingual viewport configurations, gesture and keyboard navigation, the single-photo case and both inline fallbacks. Verified actual admin saves and rendered custom colors scoped to related projects. Django checks, production static collection and JavaScript syntax passed.

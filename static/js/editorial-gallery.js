@@ -53,16 +53,21 @@
     viewer.setAttribute('aria-describedby', 'gallery-navigation-help');
     position.hidden = false;
     stage.classList.add('is-interactive');
+    const move = (side) => show(index + (rtl ? -side : side));
+    for (const arrow of stage.querySelectorAll('[data-gallery-step]')) {
+      arrow.hidden = false;
+      arrow.addEventListener('click', () => move(Number(arrow.dataset.galleryStep)));
+    }
 
     viewer.addEventListener('keydown', (event) => {
       if (event.altKey || event.ctrlKey || event.metaKey) return;
       if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
       event.preventDefault();
-      show(index + ((event.key === 'ArrowRight') !== rtl ? 1 : -1));
+      move(event.key === 'ArrowRight' ? 1 : -1);
     });
 
     stage.addEventListener('pointerdown', (event) => {
-      if (!event.isPrimary || event.button !== 0) return;
+      if (!event.isPrimary || event.button !== 0 || event.target.closest('[data-gallery-step]')) return;
       gesture = { id: event.pointerId, x: event.clientX, y: event.clientY };
       stage.setPointerCapture(event.pointerId);
     });
@@ -86,12 +91,12 @@
       const dy = event.clientY - gesture.y;
       resetGesture();
       if (Math.abs(dx) >= 40 && Math.abs(dx) > 1.25 * Math.abs(dy)) {
-        show(index + ((dx < 0) !== rtl ? 1 : -1));
+        move(dx < 0 ? 1 : -1);
       } else if (Math.abs(dx) <= 8 && Math.abs(dy) <= 8) {
         const bounds = stage.getBoundingClientRect();
         const offset = (event.clientX - bounds.left) / bounds.width;
-        if (offset >= 0 && offset <= .24) show(index + (rtl ? 1 : -1));
-        else if (offset >= .76 && offset <= 1) show(index + (rtl ? -1 : 1));
+        if (offset >= 0 && offset <= .24) move(-1);
+        else if (offset >= .76 && offset <= 1) move(1);
       }
     });
 
